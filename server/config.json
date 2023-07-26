@@ -1,0 +1,4 @@
+{
+    "connectionString": "mongodb+srv://iceboltz:123654789@cluster0.zcrbfgq.mongodb.net/?retryWrites=true&w=majority",
+    "secret": "token"
+}
