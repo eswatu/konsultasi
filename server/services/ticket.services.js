@@ -17,21 +17,32 @@ async function getTicketById(id) {
     const ticket = await getTicket(id);
     return basicDetails(ticket);
 }
-async function updateTicket(id, params) {
-    const ticket = await getTicket(id);
-    if (ticket) {
-        Object.assign(ticket, params);
-    } 
-    await ticket.save();
-    ticket.updated = Date.now();
-    return basicDetails(ticket);
+async function updateTicket(req) {
+    try {
+        const result = await db.Ticket.updateOne({_id: req.params.id},
+            {$set: {
+                aju: req.body.aju,
+                nopen: req.body.nopen,
+                pendate: req.body.pendate,
+                name: req.body.name,
+                problem: req.body.problem
+                }
+        });
+        if (result.modifiedCount > 0) {
+            console.log('berhasil');
+        } else {
+            console.log('gagal');
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
 }
 async function createTicket(req) {
-    console.log(req);
     const ticket = new db.Ticket({
         aju: req.aju,
-        nopen: req?.nopen,
-        pendate: req?.pendate,
+        nopen: req.nopen,
+        pendate: req.pendate,
         name: req.name,
         problem: req.problem
     });
@@ -39,8 +50,8 @@ async function createTicket(req) {
 }
 
 async function deleteTicket(id) {
-    const ticket = await getById(id);
-    return await ticket.remove();
+    const res = await db.Ticket.deleteOne({id: id});
+    return res;
 }
 
 // helper functions
@@ -52,6 +63,6 @@ async function getTicket(id) {
 }
 
 function basicDetails(ticket) {
-    const { aju, nopen, pendate, name, problem, isSolved } = ticket;
-    return { aju, nopen, pendate, name, problem, isSolved };
+    const { id, aju, nopen, pendate, name, problem, isSolved } = ticket;
+    return { id, aju, nopen, pendate, name, problem, isSolved };
 }

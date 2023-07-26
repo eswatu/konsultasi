@@ -20,10 +20,9 @@ schema.set('toJSON', {
         delete ret._id;
     },
     },
-    {
-        timestamps:
-            {createdAt: 'createdAt', updatedAt: 'updatedAt'}
-    }
+        {
+        timestamps:true
+        }
 );
 
 module.exports = mongoose.model('Ticket', schema);

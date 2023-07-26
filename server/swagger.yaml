@@ -8,6 +8,7 @@ servers:
     description: Local development server
 
 paths:
+# users
   /users/authenticate:
     post:
       summary: Authenticate user credentials and return a JWT token and a cookie with a refresh token
@@ -330,3 +331,168 @@ components:
               message:
                 type: string
                 example: "Not Found"
+# ticket
+  /tickets:
+    get:
+      summary: Get a list of all tickets
+      description: Restricted to admin users.
+      operationId: getAllTickets
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  aju:
+                    type: string
+                    example: "060100-054321230-etc"
+                  nopen:
+                    type: number
+                    example: 123456
+                  name:
+                    type: string
+                    example: "PT. Asal Saja"
+                  problem:
+                    type: string
+                    example: "Tolong dibantu notulnya"
+                  isSolved:
+                    type: Boolean
+                    example: true
+                  priority:
+                    type: Boolean
+                    example: false
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /tickets/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Ticket id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single ticket by id
+      description: Admin users can access any user record, regular users are restricted to their own user record.
+      operationId: getTicketById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified Ticket
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  aju:
+                    type: string
+                    example: "060100-054321230-etc"
+                  nopen:
+                    type: number
+                    example: 123456
+                  name:
+                    type: string
+                    example: "PT. Asal Saja"
+                  problem:
+                    type: string
+                    example: "Tolong dibantu notulnya"
+                  isSolved:
+                    type: Boolean
+                    example: true
+                  priority:
+                    type: Boolean
+                    example: false
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Changne a single ticket by id
+      description: Admin users can change any ticket record, regular users are restricted to their own ticket record.
+      operationId: updateTicketById
+      security:
+        - bearerAuth: []
+      body:
+        aju:
+          type: string
+          example: "060100-054321230-etc"
+        nopen:
+          type: number
+          example: 123456
+        name:
+          type: string
+          example: "PT. Asal Saja"
+        problem:
+          type: string
+          example: "Tolong dibantu notulnya"
+        isSolved:
+          type: Boolean
+          example: true
+        priority:
+          type: Boolean
+          example: false
+      responses:
+        "200":
+          description: Details of the specified Ticket
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  aju:
+                    type: string
+                    example: "060100-054321230-etc"
+                  nopen:
+                    type: number
+                    example: 123456
+                  name:
+                    type: string
+                    example: "PT. Asal Saja"
+                  problem:
+                    type: string
+                    example: "Tolong dibantu notulnya"
+                  isSolved:
+                    type: Boolean
+                    example: true
+                  priority:
+                    type: Boolean
+                    example: false
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a single ticket by id
+      description: Admin users can delete any user record, regular users are restricted to their own user record.
+      operationId: deleteTicketById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: message status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
