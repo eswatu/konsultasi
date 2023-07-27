@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const creatorSchema = new Schema({
     id: String,
     name: String,
@@ -9,15 +10,17 @@ const creatorSchema = new Schema({
 });
 
 const schema = new Schema({
-    aju: { type: String, required: false },
-    nopen: { type: Number, required: false },
-    pendate: { type: Date,  required: false },
-    name: { type: String, required: true },
-    problem: {type: String, required: true},
-    isSolved: {type: Boolean, required:true, default: false},
-    creator: creatorSchema
-    },{
-    timestamps: true
+    ticketId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Ticket'
+    },
+    creator: creatorSchema,
+    message: { type: String,  required: false },
+    isKey: {type: Boolean, required: true, default: false}
+}, {
+    timestamps: {
+        createdAt: 'responseTime'
+    }
 });
 
 schema.set('toJSON', {
@@ -31,4 +34,4 @@ schema.set('toJSON', {
 
 );
 
-module.exports = mongoose.model('Ticket', schema);
+module.exports = mongoose.model('Reply', schema);

@@ -8,8 +8,8 @@ const ticketService = require('services/ticket.services');
 
 // routes
 router.post('/', authorize(),createSchema, createTicket);
-router.get('/', /*authorize(Role.Admin), */ getAll);
-router.get('/:id', /* authorize(),  */ getById);
+router.get('/', authorize(Role.Admin), getAll);
+router.get('/:id', authorize(), getById);
 router.put('/:id',/* authorize(), */ updateSchema, updateById);
 router.delete('/:id', /* authorize(),*/ deleteById);
 
@@ -39,12 +39,15 @@ function updateSchema(req,res,next) {
 }
 
 function createTicket(req,res, next) {
-    const ticket = req.body;
-    console.log(ticket);
-    if (ticket) {
-        ticketService.createTicket(ticket)
-        .then(() => res.json({ message: 'Berhasil input tiket' }))
-        .catch(next);
+    try {
+        const ticket = req.body;
+        if (ticket) {
+            ticketService.createTicket(req.auth, ticket)
+            .then(() => res.json({ message: 'Berhasil input tiket' }))
+            .catch(next);
+        }
+    } catch (error) {
+        
     }
 }
 

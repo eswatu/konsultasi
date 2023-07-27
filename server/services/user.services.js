@@ -14,7 +14,7 @@ module.exports = {
 };
 
 async function authenticate({ username, password, ipAddress }) {
-    const user = await db.User.findOne({ username });
+    const user = await db.User.findOne({ username }).select('+passwordHash');
 
     if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
         throw 'Username or password is incorrect';
@@ -121,6 +121,6 @@ function randomTokenString() {
 }
 
 function basicDetails(user) {
-    const { id, firstName, lastName, username, role } = user;
-    return { id, firstName, lastName, username, role };
+    const { id, name, username, role } = user;
+    return { id, name, username, role };
 }

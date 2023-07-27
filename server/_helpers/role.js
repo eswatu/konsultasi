@@ -3,3 +3,8 @@ module.exports = {
     Worker: 'Worker',
     Client: 'Client'
 }
+
+module.exports = {
+    Respons: 'Respons',
+    Key: 'Key'
+}

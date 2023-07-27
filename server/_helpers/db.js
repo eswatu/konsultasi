@@ -7,6 +7,7 @@ module.exports = {
     User: require('model/user.model'),
     RefreshToken: require('model/refresh-token.model'),
     Ticket: require('model/ticket.model'),
+    Reply: require('model/reply.model'),
     isValidId
 };
 

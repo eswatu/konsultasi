@@ -38,14 +38,23 @@ async function updateTicket(req) {
         console.error(error);
     }
 }
-async function createTicket(req) {
+async function createTicket(au, req) {
+    const us = await db.User.findById(au.id);
+    // console.log('us adalah ' + JSON.stringify(us));
     const ticket = new db.Ticket({
         aju: req.aju,
         nopen: req.nopen,
         pendate: req.pendate,
         name: req.name,
-        problem: req.problem
+        problem: req.problem,
+        creator: {
+            us,
+            name: us.name,
+            company: us.company,
+            role: us.role
+        }
     });
+    console.log('isi tiket adalah ' + JSON.stringify(ticket));
     await ticket.save();
 }
 

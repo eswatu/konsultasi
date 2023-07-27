@@ -23,6 +23,7 @@ app.use('/api-docs', require('_helpers/swagger'));
 // api routes
 app.use('/users', require('./controllers/user.controller'));
 app.use('/tickets', require('./controllers/ticket.controller'));
+app.use('/replies', require('./controllers/reply.controller'));
 
 // global error handler
 app.use(errorHandler);
