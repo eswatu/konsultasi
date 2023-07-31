@@ -1,17 +1,73 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
 
-import { AuthenticationService } from './_services';
-import { User } from './_models';
+import { AuthenticationService } from '@app/_services';
 
-@Component({ selector: 'app-root', templateUrl: 'app.component.html' })
-export class AppComponent {
-    user?: User | null;
+@Component({ 
+    selector:'app-login',
+    templateUrl: 'login.component.html',
+    styleUrls: ['login.component.css']
+})
+export class LoginComponent implements OnInit {
+    loginForm!: FormGroup;
+    loading = false;
+    submitted = false;
+    error = '';
 
-    constructor(private authenticationService: AuthenticationService) {
-        this.authenticationService.user.subscribe(x => this.user = x);
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) { 
+        // redirect to home if already logged in
+        if (this.authenticationService.userValue) { 
+            this.router.navigate(['/']);
+        }
     }
 
-    logout() {
-        this.authenticationService.logout();
+    ngOnInit() {
+        this.loginForm = this.formBuilder.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
     }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.loginForm.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // stop here if form is invalid
+        if (this.loginForm.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.authenticationService.login(this.f['username'].value, this.f['password'].value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from route parameters or default to '/'
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    this.router.navigate([returnUrl]);
+                },
+                error: error => {
+                    this.error = error;
+                    this.loading = false;
+                }
+            });
+    }
+    //error message
+get ErrorMessageUsername() : string{
+    const c: FormControl = (this.loginForm.get('username') as FormControl);
+    return c.untouched ? 'Username' :  c.hasError('required') ? 'Username tidak boleh kosong': '';
+}
+get ErrorMessagePassword() : string{
+    const c: FormControl = (this.loginForm.get('password') as FormControl);
+    return c.untouched ? "Password" : c.hasError('required') ? 'Password tidak boleh kosong': '';
+}
 }

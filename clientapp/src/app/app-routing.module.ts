@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home';
-import { LoginComponent } from './login';
+import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_helpers';
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-    { path: 'login', component: LoginComponent },
-
-    // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    {path: 'login', component: LoginComponent },
+    {path:'tickets', loadChildren:() => import('./menu/tickets/tickets.module').then(m => m.TicketsModule), canActivate: [AuthGuard]},
+    {path:'profil', loadChildren:() => import('./menu/profil/profil.module').then(m => m.ProfilModule),canActivate: [AuthGuard]},
+    {path: '**', redirectTo: 'angkakredit'}
 ];
 
 @NgModule({

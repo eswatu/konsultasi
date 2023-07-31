@@ -1,10 +1,31 @@
 import { Component } from '@angular/core';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
+import { AuthenticationService } from './_services';
+import { User } from './_models';
+
+@Component({ selector: 'app-root',
+            templateUrl: 'app.component.html' })
 export class AppComponent {
-  title = 'clientapp';
+    user?: User | null;
+    loading = false;
+    title = 'Konsultasi';
+    
+    constructor(private authenticationService: AuthenticationService) {
+        this.authenticationService.user.subscribe(x => this.user = x);
+    }
+  
+    get isAdmin() {
+        return this.user && this.user.role === "Admin";
+    }
+    get isAuthorized() {
+      return this.user;
+    }
+  
+    logout() {
+        this.authenticationService.logout();
+    }
+    ngOnInit() {
+      this.loading = true;
+      console.log(this.user);
+    }
 }

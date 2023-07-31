@@ -5,9 +5,9 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
@@ -19,19 +19,22 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    // "typeRoots": [
+    //   "node_modules/@types"
+    // ],
     "lib": [
       "ES2022",
       "dom"
     ],
     "paths": {
       "@app/*": ["src/app/*"],
-      "@environtment/*": ["src/environtments/*"]
+      "@environments/*": ["src/environments/*"]
     }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": false
   }
 }

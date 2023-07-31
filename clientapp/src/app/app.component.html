@@ -1,12 +1,27 @@
-<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark px-3" *ngIf="user">
-  <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/" routerLinkActive="active">Home</a>
-      <button class="btn btn-link nav-item nav-link" (click)="logout()">Logout</button>
-  </div>
-</nav>
+<mat-toolbar color="primary" fxLayout="row" *ngIf="isAuthorized">
+  <button  mat-button fxFlex  [routerLink]="['']">
+    <mat-icon>dashboard</mat-icon>
+    Dashboard
+  </button>
 
-<!-- main app container -->
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
+  <button  mat-button fxFlex  routerLink="tickets">
+    <mat-icon>work</mat-icon>
+    Tickets
+  </button>
+
+  <button  mat-button fxFlex routerLink="profil">
+    <mat-icon>badge</mat-icon>
+    Profil
+  </button>
+
+  <button mat-button>
+    Andal Login Sebagai {{user!.name}}
+  </button>
+
+  <button mat-button fxFlex (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    LogOut
+  </button>
+
+</mat-toolbar>
+<router-outlet></router-outlet>

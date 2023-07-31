@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { User } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
+
 export class AuthenticationService {
     private userSubject: BehaviorSubject<User | null>;
     public user: Observable<User | null>;
@@ -27,8 +28,9 @@ export class AuthenticationService {
     login(username: string, password: string) {
         return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password }, { withCredentials: true })
             .pipe(map(user => {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('user', JSON.stringify(user));
                 this.userSubject.next(user);
-                this.startRefreshTokenTimer();
                 return user;
             }));
     }
@@ -36,6 +38,8 @@ export class AuthenticationService {
     logout() {
         this.http.post<any>(`${environment.apiUrl}/users/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
+        // remove user from local storage to log user out
+        localStorage.removeItem('user');
         this.userSubject.next(null);
         this.router.navigate(['/login']);
     }
