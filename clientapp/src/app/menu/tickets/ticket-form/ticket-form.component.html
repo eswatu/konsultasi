@@ -1,1 +1,46 @@
-<p>ticket-form works!</p>
+<form [formGroup]="formInput" (ngSubmit)="onSubmit()">
+    <mat-form-field fxLayout="column" appearance="fill">
+        <mat-label>Nomor Surat</mat-label>
+        <input formControlName="ltNumber" id="ltNumber" matInput placeholder="Nomor Surat Misalnya: ST-xx/yy/zzz">
+        <mat-hint align="end">{{input?.length?.value || 0}} / 40</mat-hint>
+        <mat-error>{{ErrorMessageltNumber}}</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" fxLayout="column">
+        <mat-label>Tanggal Surat</mat-label>
+        <input formControlName="ltDate" id="ltDate" matInput [matDatepicker]="picking">
+        <mat-hint>Tanggal Surat (dd/MM/yyyy)</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picking"></mat-datepicker-toggle>
+        <mat-datepicker #picking></mat-datepicker>
+        <mat-error>{{ErrorMessageltDate}}</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" fxLayout="column" >
+        <mat-label>Masukkan periode penugasan (Awal s.d Akhir)</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Tanggal Mulai" #dateRangeStart formControlName="ltDateStart">
+            <input matEndDate placeholder="Tanggal Selesai" #dateRangeEnd formControlName="ltDateEnd">
+        </mat-date-range-input>
+        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error>{{ErrorMessageltDatePeriod}}</mat-error>
+    </mat-form-field>
+    
+    <mat-slide-toggle formControlName="ltActive" ngDefaultControl>Aktif?</mat-slide-toggle>
+
+    <mat-form-field fxLayout="column" appearance="fill">
+        <mat-label>Catatan</mat-label>
+        <textarea matInput formControlName="ltNote" id="ltNote" placeholder="Catatan Surat Tugas. Contoh: Untuk Jenjang x/y/z saja" >
+            </textarea>
+        <mat-hint align="end">{{input?.length?.value || 0}} / 100</mat-hint>
+    </mat-form-field>
+
+    <div fxLayoutGap="12px">
+        <button type="submit" mat-raised-button color="primary" 
+            fxFlex="20"
+        class="btn btn-success" [disabled]="formInput.invalid" [hidden]="formInput.invalid">Simpan</button>
+    
+        <button type="button" mat-raised-button fxFlex="10" color="warn"(click)='closeDialog()' >Batal</button>
+    </div>
+</form>

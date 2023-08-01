@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
+import { HttpParams, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Ticket } from '@app/_models/ticket';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TicketService extends BaseService{
+export class ReplyService extends BaseService {
   url;
   getData<ApiResult>(pageIndex: number, pageSize: number,
             sortColumn: string, sortOrder: 'asc' | 'desc',
@@ -23,22 +22,21 @@ export class TicketService extends BaseService{
       }
       return this.http.get<ApiResult>(this.url, {params});
   }
-  get<Ticket>(id: string): Observable<Ticket> {
+  get<Reply>(id: string): Observable<Reply> {
     let myurl = this.url + id;
-    return this.http.get<Ticket>(myurl);
+    return this.http.get<Reply>(myurl);
   }
-  put<Ticket>(item: any): Observable<Ticket> {
+  put<Reply>(item: any): Observable<Reply> {
     let myurl = this.url + item.id;
-    return this.http.put<Ticket>(myurl, item);
+    return this.http.put<Reply>(myurl, item);
   }
-  post<Ticket>(item: Ticket): Observable<Ticket> {
-    return this.http.post<Ticket>(this.url, item);
+  post<Reply>(item: Reply): Observable<Reply> {
+    return this.http.post<Reply>(this.url, item);
   }
-
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
       super(http, baseUrl);
-      this.url = baseUrl + 'api/tickets/';
+      this.url = baseUrl + 'api/replies/';
      }
 
 }
