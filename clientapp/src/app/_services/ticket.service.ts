@@ -2,15 +2,15 @@ import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Ticket } from '@app/_models/ticket';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketService extends BaseService{
-  url;
+  url: string;
   getData<ApiResult>(pageIndex: number, pageSize: number,
-            sortColumn: string, sortOrder: 'asc' | 'desc',
+            sortColumn: string, sortOrder: 'asc' | 'desc' | '',
             filterColumn: string, filterQuery: string): Observable<ApiResult> {
       var params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
@@ -21,6 +21,7 @@ export class TicketService extends BaseService{
         params = params.set('filterColumn', filterColumn)
                         .set('filterQuery', filterQuery);
       }
+      console.log(this.url);
       return this.http.get<ApiResult>(this.url, {params});
   }
   get<Ticket>(id: string): Observable<Ticket> {
@@ -38,7 +39,7 @@ export class TicketService extends BaseService{
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
       super(http, baseUrl);
-      this.url = baseUrl + 'api/tickets/';
+      this.url = `${environment.apiUrl}/tickets`;
      }
 
 }

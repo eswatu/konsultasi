@@ -13,6 +13,7 @@ import { HomeComponent } from './menu/home/home.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
+import { environment } from '@environments/environment';
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import { MaterialModule } from './material.module';
         LoginComponent,
     ],
     providers: [
+        {provide: "BASE_URL", useValue: environment.apiUrl},
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

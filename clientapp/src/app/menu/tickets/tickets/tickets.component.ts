@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../ticket-form/ticket-form.component';
-
 @Component({
   selector: 'tickets-component',
   templateUrl: './tickets.component.html',
@@ -19,12 +18,11 @@ export class TicketsComponent {
   public tickets: MatTableDataSource<Ticket>;
 
   authUserId: number;
-  isAdmin: boolean;
   user;
   defaultPageIndex: number = 0;
   defaultPageSize: number = 5;
   public defaultSortColumn: string = "id";
-  public defaultSortOrder : SortDirection = "desc";
+  public defaultSortOrder: 'asc' | 'desc' = "desc";
 
   defaultFilterColumn: string = null;
   filterQuery: string = null;
@@ -39,7 +37,6 @@ export class TicketsComponent {
         this.user = u;
         if (this.user) {
           this.authUserId = u.id;
-          this.isAdmin = ( u.role === "Admin") ? true : false;
         }
       });
     }
@@ -62,7 +59,7 @@ export class TicketsComponent {
   getData(event: PageEvent) { 
     this.tickets = null;
     var sortColumn = (this.sort) ? this.sort.active : this.defaultSortColumn;
-    var sortOrder = (this.sort) ? this.sort.direction : this.defaultSortOrder;
+    var sortOrder = (this.sort) ? this.sort.direction as 'asc' | 'desc' : this.defaultSortOrder;
     var filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
     var filterQuery = (this.filterQuery) ? this.filterQuery : null;
   
@@ -80,9 +77,10 @@ export class TicketsComponent {
   openForm(tc:Ticket){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-    dialogConfig.restoreFocus; true;
+    dialogConfig.restoreFocus = true;
     dialogConfig.minWidth = 400;
-    dialogConfig.minHeight = 400;
+    dialogConfig.minHeight = 480;
+    dialogConfig.maxHeight = 800;
     if (tc) {
       dialogConfig.data = {  id: tc.id};
     }

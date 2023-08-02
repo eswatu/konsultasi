@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Ticket } from '@app/_models/ticket';
 import { TicketService } from '@app/_services/ticket.service';
+import Swal from 'sweetalert2';
+import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: 'ticket-form',
@@ -21,58 +24,48 @@ export class TicketFormComponent {
         this.idtc = data.id;
       }
       this.formInput = fb.group({
-        ltNumber: ['', [Validators.required, Validators.maxLength(40)]],
-        ltDate: [new Date(), Validators.required],
-        ltDateStart: ['', Validators.required],
-        ltDateEnd: ['', Validators.required],
-        ltNote: ['', Validators.maxLength(100)],
-        ltActive: [this.active]
+        aju: ['', [Validators.minLength(40), Validators.minLength(40)]],
+        nopen: ['', Validators.required],
+        pendate: [new Date(), Validators.required],
+        name: ['', Validators.required],
+        problem: ['', Validators.maxLength(100)]
       });
  }
  //error message
- get ErrorMessageltNumber() : string{
-  const c: UntypedFormControl = (this.formInput.get('ltNumber') as UntypedFormControl);
-  return c.hasError('required') ? 'Nomor Surat Harus diisi': '';
+ get ErrorMessageaju() : string{
+  const c: FormControl = (this.formInput.get('aju') as FormControl);
+  return c.hasError('required') ? 'Nomor Aju atau Pendaftaran harus diisi': '';
 }
-get ErrorMessageltDate() : string{
-  const c: UntypedFormControl = (this.formInput.get('ltDate') as UntypedFormControl);
-  return c.hasError('required') ? 'Tanggal Surat Tugas Harus diisi': '';
+ get ErrorMessagenopen() : string{
+  const c: FormControl = (this.formInput.get('nopen') as FormControl);
+  return c.hasError('required') ? 'Nomor Pendaftaran Harus diisi': '';
 }
-get ErrorMessageltDatePeriod() : string{
-  const c: UntypedFormControl = (this.formInput.get('ltDateStart') as UntypedFormControl);
-  const d: UntypedFormControl = (this.formInput.get('ltDateEnd') as UntypedFormControl);
-
-  return c.hasError('required') ? 'Tanggal Mulai Surat Tugas Harus diisi': 
-          d.hasError('required') ? 'Tanggal Selesai Surat Tugas Harus diisi': '';
+get ErrorMessagePendate() : string{
+  const c: FormControl = (this.formInput.get('pendate') as FormControl);
+  return c.hasError('required') ? 'Jika Nomor Daftar diisi, maka Tanggal Pendaftaran juga harus diisi': '';
 }
-
   ngOnInit() {
-    this.asgnLetter = <assignLetter>{};
+    this.ticket = <Ticket>{};
     this.loadData();
   }
   loadData(){
-    if (this.idAL) {
-      this.als.get<assignLetter>(this.idAL).subscribe(result => {
-        this.asgnLetter = result;
+    if (this.idtc) {
+      this.tcService.get<Ticket>(this.idtc).subscribe(result => {
+        this.ticket = result;
 
         this.formInput.patchValue({
-          ltNumber: this.asgnLetter.ltNumber,
-          ltDate: new Date(this.asgnLetter.ltDate),
-          ltNote: this.asgnLetter.ltNote,
-          ltActive: this.asgnLetter.ltActive,
-          ltDateStart: new Date(this.asgnLetter.ltDateStart),
-          ltDateEnd: new Date(this.asgnLetter.ltDateEnd)
+          aju: this.ticket.aju,
+          pendate: new Date(this.ticket.pendate),
+          nopen: this.ticket.nopen,
+          name: this.ticket.name,
+          problem: this.ticket.problem,
+          creator: this.ticket.creator
         });
 
       }, error => console.error(error));
     }
   }
-  // dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
-  //     this.sd = dateRangeStart.value;
-  //     this.ed = dateRangeEnd.value;
-  // }
-  //dd-MM-YYYY
   stringDate(inp:string) {
     let d = inp.substring(0,2);
     let m = inp.substring(3,5);
@@ -80,16 +73,15 @@ get ErrorMessageltDatePeriod() : string{
     return String(m + '/' + d + '/' +y);
   }
   onSubmit(){
-    this.asgnLetter.ltNumber = this.formInput.get('ltNumber').value;
-    this.asgnLetter.ltDate = this.formInput.get('ltDate').value;
-    this.asgnLetter.ltNote = this.formInput.get('ltNote').value;
-    this.asgnLetter.ltDateStart = new Date(this.formInput.get('ltDateStart').value);
-    this.asgnLetter.ltDateEnd = new Date(this.formInput.get('ltDateEnd').value);
-    this.asgnLetter.ltActive = this.formInput.get('ltActive').value;
+    this.ticket.aju = this.formInput.get('aju').value;
+    this.ticket.pendate = new Date(this.formInput.get('pendate').value);
+    this.ticket.nopen = this.formInput.get('nopen').value;
+    this.ticket.name = this.formInput.get('name').value;
+    this.ticket.problem = this.formInput.get('problem').value;
     
-    if (this.idAL) {
-      this.asgnLetter.id = this.idAL;
-      this.als.put<assignLetter>(this.asgnLetter).subscribe(result => {
+    if (this.idtc) {
+      this.ticket.id = this.idtc;
+      this.tcService.put<Ticket>(this.ticket).subscribe(result => {
         if (result) {
           this.closeDialog();
         }
@@ -99,10 +91,10 @@ get ErrorMessageltDatePeriod() : string{
       });
 
     } else {
-      this.als.post<assignLetter>(this.asgnLetter).subscribe(
+      this.tcService.post<Ticket>(this.ticket).subscribe(
         result => {
         if (result) {
-          Swal.fire(result.message);
+          Swal.fire('result');
           this.closeDialog();
         }
       }, error => {

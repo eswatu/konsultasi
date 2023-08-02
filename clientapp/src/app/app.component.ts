@@ -13,10 +13,6 @@ export class AppComponent {
     constructor(private authenticationService: AuthenticationService) {
         this.authenticationService.user.subscribe(x => this.user = x);
     }
-  
-    get isAdmin() {
-        return this.user && this.user.role === "Admin";
-    }
     get isAuthorized() {
       return this.user;
     }

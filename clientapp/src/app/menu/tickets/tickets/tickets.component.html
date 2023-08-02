@@ -1,4 +1,4 @@
-<div *ngIf="!tickets" fxLayoutAlign="center center">
+  <div *ngIf="!tickets" fxLayoutAlign="center center">
     <mat-spinner></mat-spinner>
   </div>
   
@@ -11,7 +11,7 @@
   
   <table mat-table [dataSource]="tickets" class="mat-elevation-z8" [hidden]="!tickets"
       matSort (matSortChange)="loadData()"
-      matSortActive="{{defaultSortColumn}}" [matSortDirection]="defaultSortOrder">
+      matSortActive="defaultSortColumn" [matSortDirection]="defaultSortOrder">
   
     <!-- Id Column -->
     <ng-container matColumnDef="id">
@@ -29,7 +29,7 @@
     <ng-container matColumnDef="replies">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Jawaban</th>
       <td mat-cell *matCellDef="let tc" class="tcenter">{{tc.problem}} </td>
-    </ng-container> -->
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>

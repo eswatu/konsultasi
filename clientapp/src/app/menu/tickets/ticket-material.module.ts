@@ -7,6 +7,11 @@ import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from "@angular/material/table";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSortModule } from "@angular/material/sort";
+import { MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDialogModule} from '@angular/material/dialog';
+
 
 const modules = [
   MatButtonModule,
@@ -17,6 +22,10 @@ const modules = [
   MatDividerModule,
   MatToolbarModule,
   MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatDatepickerModule,
+  MatDialogModule,
 ];
 
 @NgModule({
