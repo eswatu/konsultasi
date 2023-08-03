@@ -1,4 +1,5 @@
 const db = require('_helpers/db');
+const paginateTicket = require('_helpers/paginate');
 
 module.exports = {
     getAllTicket,
@@ -8,9 +9,10 @@ module.exports = {
     deleteTicket
 };
 
-async function getAllTicket() {
-    const tickets = await db.Ticket.find();
-    return tickets.map(x => basicDetails(x));
+async function getAllTicket(req) {
+    // console.log(req);
+    console.log(req.query);
+    return await paginateTicket(db.Ticket, req);
 }
 
 async function getTicketById(id) {
@@ -48,13 +50,12 @@ async function createTicket(au, req) {
         name: req.name,
         problem: req.problem,
         creator: {
-            us,
+            id: us._id,
             name: us.name,
             company: us.company,
             role: us.role
         }
     });
-    console.log('isi tiket adalah ' + JSON.stringify(ticket));
     await ticket.save();
 }
 

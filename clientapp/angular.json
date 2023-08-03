@@ -15,7 +15,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
-              "sweetalert2"
+              "sweetalert2",
+              "moment"
             ],
             "outputPath": "dist/clientapp",
             "index": "src/index.html",

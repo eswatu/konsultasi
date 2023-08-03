@@ -1,39 +1,48 @@
-  <div *ngIf="!tickets" fxLayoutAlign="center center">
+  <div *ngIf="!tickets" >
     <mat-spinner></mat-spinner>
   </div>
-  
-  <div *ngIf="tickets" class="tomboltambah">
+  <div *ngIf="tickets">
     <button mat-raised-button color="primary" (click)="openForm(null)"
-    matTooltip="Tambah Tiket">
+      matTooltip="Tambah Tiket" *ngIf="!isSolved">
         Buat Tiket Baru
     </button>
+
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let tkt of tickets">
+        <mat-expansion-panel-header>
+            <mat-panel-title>{{tkt.name}}</mat-panel-title>
+            <mat-panel-description>{{tkt.creator.company + '-' + tkt.creator.name}}</mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>{{tkt.problem}}</p>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
   
-  <table mat-table [dataSource]="tickets" class="mat-elevation-z8" [hidden]="!tickets"
+  <!-- <table mat-table [dataSource]="tickets" class="mat-elevation-z8" [hidden]="!tickets"
       matSort (matSortChange)="loadData()"
       matSortActive="defaultSortColumn" [matSortDirection]="defaultSortOrder">
-  
+   -->
     <!-- Id Column -->
-    <ng-container matColumnDef="id">
+    <!-- <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef style="width: 1% !important;">Nomor</th>
       <td mat-cell *matCellDef="let tc" class="tcenter">{{tc.id}}</td>
-    </ng-container> 
+    </ng-container>  -->
 
     <!-- Kolom Tiket -->
-    <ng-container matColumnDef="ticketId">
+    <!-- <ng-container matColumnDef="ticketId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nomor Tiket</th>
       <td mat-cell *matCellDef="let tc" >{{tc.id}}</td>
-    </ng-container>
+    </ng-container> -->
   
     <!-- Replies -->
-    <ng-container matColumnDef="replies">
+    <!-- <ng-container matColumnDef="replies">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Jawaban</th>
       <td mat-cell *matCellDef="let tc" class="tcenter">{{tc.problem}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
-  </table>
+  </table> -->
   <!-- Pagination directive -->
   <mat-paginator [hidden]="!tickets"
       (page)="getData($event)"

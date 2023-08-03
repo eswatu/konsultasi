@@ -1,10 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Ticket } from '@app/_models/ticket';
 import { TicketService } from '@app/_services/ticket.service';
 import Swal from 'sweetalert2';
-import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: 'ticket-form',
@@ -15,6 +14,8 @@ export class TicketFormComponent {
   formInput: FormGroup;
   idtc;
   ticket: Ticket;
+  isFieldAjuVisible = true;
+  isFieldNopenVisible = true;
 
   constructor(private tcService: TicketService,
     private dialogRef: MatDialogRef<TicketFormComponent>,
@@ -24,26 +25,57 @@ export class TicketFormComponent {
         this.idtc = data.id;
       }
       this.formInput = fb.group({
-        aju: ['', [Validators.minLength(40), Validators.minLength(40)]],
-        nopen: ['', Validators.required],
-        pendate: [new Date(), Validators.required],
+        aju: '',
+        nopen: '',
+        pendate: [new Date()],
         name: ['', Validators.required],
-        problem: ['', Validators.maxLength(100)]
+        problem: ['', [Validators.required, Validators.maxLength(200)]]
+      },{validators: this.validateFields});
+
+      this.formInput.get('aju')?.valueChanges.subscribe(value => {
+        if (value || value === '') {
+          this.formInput.get('nopen')?.reset();
+          this.formInput.get('pendate')?.reset();
+          this.formInput.get('nopen')?.disable();
+          this.isFieldAjuVisible = true;
+          this.isFieldNopenVisible = false;
+        } else {
+          this.formInput.get('nopen')?.enable();
+          this.isFieldAjuVisible = false;
+          this.isFieldNopenVisible = true;
+        }
+      });
+
+      this.formInput.get('nopen')?.valueChanges.subscribe(value => {
+        if (value) {
+          this.formInput.get('pendate')?.enable();
+          this.isFieldAjuVisible = false;
+        } else {
+          this.formInput.get('pendate')?.reset();
+          this.formInput.get('pendate')?.disable();
+          this.isFieldAjuVisible = true;
+        }
       });
  }
- //error message
- get ErrorMessageaju() : string{
-  const c: FormControl = (this.formInput.get('aju') as FormControl);
-  return c.hasError('required') ? 'Nomor Aju atau Pendaftaran harus diisi': '';
-}
- get ErrorMessagenopen() : string{
-  const c: FormControl = (this.formInput.get('nopen') as FormControl);
-  return c.hasError('required') ? 'Nomor Pendaftaran Harus diisi': '';
-}
-get ErrorMessagePendate() : string{
-  const c: FormControl = (this.formInput.get('pendate') as FormControl);
-  return c.hasError('required') ? 'Jika Nomor Daftar diisi, maka Tanggal Pendaftaran juga harus diisi': '';
-}
+ validateFields(formGroup: FormGroup) {
+   const aju = formGroup.get('aju')?.value;
+   const nopen = formGroup.get('nopen')?.value;
+   const pendate = formGroup.get('pendate')?.value;
+
+   // Cek jika field1 atau field2 diisi
+   if (aju && !nopen ) {
+     return null;
+   }
+   if (nopen && (!aju || aju.length < 1)) {
+     return null;
+   }
+   // Cek jika field2 diisi dan field3 kosong
+   if (nopen && !pendate) {
+     return { field3Required: true };
+   }
+   return null;
+ }
+
   ngOnInit() {
     this.ticket = <Ticket>{};
     this.loadData();
@@ -66,12 +98,6 @@ get ErrorMessagePendate() : string{
     }
   }
 
-  stringDate(inp:string) {
-    let d = inp.substring(0,2);
-    let m = inp.substring(3,5);
-    let y = inp.substring(6,10);
-    return String(m + '/' + d + '/' +y);
-  }
   onSubmit(){
     this.ticket.aju = this.formInput.get('aju').value;
     this.ticket.pendate = new Date(this.formInput.get('pendate').value);

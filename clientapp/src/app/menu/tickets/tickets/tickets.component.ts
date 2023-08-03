@@ -1,8 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
@@ -15,7 +14,9 @@ import { TicketFormComponent } from '../ticket-form/ticket-form.component';
 })
 export class TicketsComponent {
   public displayedColumns;
-  public tickets: MatTableDataSource<Ticket>;
+  public tickets : Ticket[];
+
+  @Input() isSolved :boolean; 
 
   authUserId: number;
   user;
@@ -42,7 +43,7 @@ export class TicketsComponent {
     }
 
   ngOnInit(): void {
-    this.loadData(null);
+    this.loadData('null');
   }
   loadData(q: string = null) {
     var pageEvent = new PageEvent();
@@ -53,26 +54,25 @@ export class TicketsComponent {
     }
     this.getData(pageEvent);
   }
-  editable(uid:number){
-    return this.authUserId == uid;
-  }
   getData(event: PageEvent) { 
-    this.tickets = null;
     var sortColumn = (this.sort) ? this.sort.active : this.defaultSortColumn;
     var sortOrder = (this.sort) ? this.sort.direction as 'asc' | 'desc' : this.defaultSortOrder;
     var filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
     var filterQuery = (this.filterQuery) ? this.filterQuery : null;
-  
+    var isSolved = this.isSolved!;
     //use service
-    this.tService.getData<ApiResult<Ticket>>(
+    this.tService.getsData<ApiResult<Ticket>>(
       event.pageIndex, event.pageSize,
       sortColumn, sortOrder,
-      filterColumn, filterQuery).subscribe(result => {
-        this.paginator.length = result.totalCount;
-        this.paginator.pageIndex = result.pageIndex;
-        this.paginator.pageSize = result.pageSize;
-        this.tickets = new MatTableDataSource<Ticket>(result.data);
-      }, error => console.error(error));
+      isSolved,
+      filterColumn, filterQuery).subscribe({
+        next: (result) => {
+            this.paginator.length = result.totalCount;
+            this.paginator.pageIndex = result.pageIndex;
+            this.paginator.pageSize = result.pageSize;
+            this.tickets = result.data;
+            },
+        error: error => console.error(error)});
   }
   openForm(tc:Ticket){
     const dialogConfig = new MatDialogConfig();

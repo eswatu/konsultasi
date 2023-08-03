@@ -8,7 +8,7 @@ const ticketService = require('services/ticket.services');
 
 // routes
 router.post('/', authorize(),createSchema, createTicket);
-router.get('/', authorize(Role.Admin), getAll);
+router.get('/', authorize(Role.Admin),getAll);
 router.get('/:id', authorize(), getById);
 router.put('/:id',/* authorize(), */ updateSchema, updateById);
 router.delete('/:id', /* authorize(),*/ deleteById);
@@ -52,7 +52,7 @@ function createTicket(req,res, next) {
 }
 
 function getAll(req, res, next) {
-    ticketService.getAllTicket()
+    ticketService.getAllTicket(req)
         .then(tickets => res.json(tickets))
         .catch(next);
 }

@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const creatorSchema = new Schema({
+const creatorSchema = {
     id: String,
     name: String,
-    company: String,
-    role: String
-});
+    company: String
+};
 
 const schema = new Schema({
     aju: { type: String, required: false },
@@ -30,5 +29,6 @@ schema.set('toJSON', {
     },
 
 );
+schema.index({aju:'text',nopen: Number, name: 'text', problem: 'text'});
 
 module.exports = mongoose.model('Ticket', schema);

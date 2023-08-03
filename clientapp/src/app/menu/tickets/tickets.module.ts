@@ -7,8 +7,8 @@ import { TicketMaterialModule } from './ticket-material.module';
 import { TicketRoutingModule } from './ticket-routing.module';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
-
-
+import { NomorAjuDirective } from "@app/_helpers/pipe/nomorajudirective";
+import { TicketTabComponent } from './ticket-tab/ticket-tab.component';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'MM/DD/YYYY'
@@ -23,7 +23,9 @@ export const MY_FORMATS = {
 @NgModule({
   declarations: [
     TicketsComponent,
-    TicketFormComponent
+    TicketFormComponent,
+    NomorAjuDirective,
+    TicketTabComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +34,7 @@ export const MY_FORMATS = {
     TicketMaterialModule,
     TicketRoutingModule,
     MatNativeDateModule,
-    MatMomentDateModule
+    MatMomentDateModule,
   ],
   providers: [
     DatePipe,
