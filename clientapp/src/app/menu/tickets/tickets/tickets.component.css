@@ -1,3 +1,17 @@
 :host {
     display: grid;
 }
+.mainPanel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+#item-a {
+    justify-self: start;
+}
+#item-b {
+    justify-self: end;
+}
+#item-c {
+    grid-column-start: 1;
+    grid-column-end: 4;
+}

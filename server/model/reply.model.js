@@ -2,17 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const creatorSchema = new Schema({
+const creatorSchema = {
     id: String,
     name: String,
     company: String,
-    role: String
-});
+};
 
 const schema = new Schema({
-    ticketId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ticket'
+    ticket: {
+        _id : mongoose.Schema.Types.ObjectId,
     },
     creator: creatorSchema,
     message: { type: String,  required: false },

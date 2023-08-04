@@ -9,7 +9,7 @@ module.exports = {
 };
 
 async function getAllRepliesTicket(ticketId) {
-    const replies = await db.Reply.find({ticketId : ticketId});
+    const replies = await db.Reply.find({ticket : ticketId});
     return replies.map(x => basicDetails(x));
 }
 
@@ -42,12 +42,11 @@ async function createReply(au, ticketId, req) {
     const reply = new db.Reply({
         message: req.message,
         isKey: req.isKey,
-        ticketId: tckt,
+        ticket: tckt,
         creator: {
-            us,
+            id: us.id,
             name: us.name,
             company: us.company,
-            role: us.role
         }
     });
     await reply.save();
@@ -65,7 +64,7 @@ async function deleteReply(id) {
 // helper functions
 async function getReply(id) {
     if (!db.isValidId(id)) throw 'Reply tidak ditemukan';
-    const reply = await db.Reply.findById(id);
+    const reply = await db.Reply.findOne({_id: id});
     if (!reply) throw 'Reply not found';
     return reply;
 }

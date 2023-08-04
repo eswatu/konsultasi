@@ -7,8 +7,8 @@ const Role = require('_helpers/role');
 const replyService = require('services/reply.services');
 
 // routes
-router.post('/', authorize(),createSchema, createReply);
-router.get('/', authorize(Role.Admin), getAll);
+router.post('/:id', authorize(),createSchema, createReply);
+router.get('/', authorize(), getAllbyTicketId);
 router.get('/:id', authorize(), getById);
 router.put('/:id',/* authorize(), */ updateSchema, updateById);
 router.delete('/:id', /* authorize(),*/ deleteById);
@@ -35,7 +35,7 @@ function createReply(req,res, next) {
     try {
         const reply = req.body;
         if (reply) {
-            replyService.createReply(req.auth, req.ticketId, reply)
+            replyService.createReply(req.auth, req.query.ticketId, reply)
             .then(() => res.json({ message: 'Berhasil input reply' }))
             .catch(next);
         }
@@ -44,7 +44,7 @@ function createReply(req,res, next) {
     }
 }
 
-function getAll(req, res, next) {
+function getAllbyTicketId(req, res, next) {
     replyService.getAllRepliesTicket(req.params.ticketId)
         .then(replies => res.json(replies))
         .catch(next);

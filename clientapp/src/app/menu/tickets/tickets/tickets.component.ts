@@ -15,7 +15,7 @@ import { TicketFormComponent } from '../ticket-form/ticket-form.component';
 export class TicketsComponent {
   public displayedColumns;
   public tickets : Ticket[];
-
+  showTable = false;
   @Input() isSolved :boolean; 
 
   authUserId: number;
@@ -86,5 +86,8 @@ export class TicketsComponent {
     }
     const dialogRef = this.dialog.open(TicketFormComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => this.loadData(null) );
+  }
+  toggleTable() {
+    this.showTable = !this.showTable;
   }
 }
