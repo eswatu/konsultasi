@@ -36,5 +36,5 @@ export class ReplyTableComponent {
           this.replies = result;
         }, error => console.error(error));
     }
-    
+    //test ai
 }
