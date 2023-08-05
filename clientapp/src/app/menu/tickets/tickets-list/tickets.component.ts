@@ -1,4 +1,4 @@
-import { Component, Injector, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -7,8 +7,7 @@ import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../ticket-form/ticket-form.component';
-import { ReplyModule } from '@app/menu/reply/reply.module';
-
+import { ReplyTableComponent } from '@app/menu/reply/reply-table/reply-table.component';
 @Component({
   selector: 'tickets-component',
   templateUrl: './tickets.component.html',
@@ -19,8 +18,8 @@ export class TicketsComponent {
   public displayedColumns;
   public tickets : Ticket[];
   showTable = false;
-  isTableLoaded = false;
-  replyModuleInjector: Injector;
+  replyTableComponent = ReplyTableComponent;
+  lazyLoadInjector : Injector;
   @Input() isSolved :boolean; 
 
   authUserId: number;
@@ -43,11 +42,11 @@ export class TicketsComponent {
           this.authUserId = u.id;
         }
       });
-    // Create a child Injector with TableModule as parent
-    this.replyModuleInjector = Injector.create({
-      providers: [{ provide: ReplyModule, useClass: ReplyModule }],
-      parent: parentInjector
-    });
+      this.lazyLoadInjector = Injector.create({
+        providers:[],
+        parent: this.parentInjector,
+        name: 'replyTableComponent'
+      });
     }
 
   ngOnInit(): void {
@@ -97,6 +96,5 @@ export class TicketsComponent {
   }
   toggleTable() {
     this.showTable = !this.showTable;
-    this.isTableLoaded = true;
   }
 }

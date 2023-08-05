@@ -13,6 +13,11 @@ export class ReplyTableComponent {
   displayedColumns = ['id', 'createdAt', 'message'];
   user;
   replies: Reply[] = [];
+  showForm = false;
+  newReply() {
+    this.showForm = !this.showForm;
+  }
+  @Input() solved;
   @Input() ticketId;
   constructor(private rplService:ReplyService,
     private authService: AuthenticationService) {

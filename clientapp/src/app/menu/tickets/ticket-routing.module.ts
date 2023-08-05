@@ -4,7 +4,8 @@ import { TicketTabComponent } from './ticket-tab/ticket-tab.component';
 
 
 const routes: Routes = [
-  {path: '', component: TicketTabComponent}
+  {path: '', component: TicketTabComponent},
+  {path:'replyTable', loadChildren: () => import('../reply/reply.module').then(m => m.ReplyModule)},
 ]
 
 @NgModule({

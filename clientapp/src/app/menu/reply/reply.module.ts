@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReplyTableComponent } from './reply-table/reply-table.component';
 import { ReplyMaterialModule } from './reply.material.module';
+import { ReplyformComponent } from './replyform/replyform.component';
 
 @NgModule({
-  declarations: [ReplyTableComponent],
+  declarations: [ReplyTableComponent, ReplyformComponent],
   imports: [
     CommonModule,
-    ReplyMaterialModule
+    ReplyMaterialModule,
   ],
   exports: [ReplyTableComponent]
 })
