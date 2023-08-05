@@ -1,34 +1,34 @@
 const db = require('_helpers/db');
 
 async function paginateTicket(collection, req) {
+  const {
+    pageIndex = 0,
+    pageSize = 10,
+    sortColumn = '',
+    sortOrder = '',
+    filterColumn = '',
+    filterQuery = '',
+    isSolved = '',
+    auth: { role, id } = {},
+  } = req.query;
 
-  const pageIndex = req.query.pageIndex;
-  const pageSize = req.query.pageSize;
-  const sortColumn = req.query.sortColumn;
-  const sortOrder = req.query.sortOrder;
-  const filterColumn = req.query.filterColumn;
-  const filterQuery = req.query.filterQuery;
-  const role = req.auth.role;
-  const isSolved = req.query.isSolved;
-  const page = parseInt(pageIndex) || 0;
-  const take = parseInt(pageSize) || 10;
+  const page = parseInt(pageIndex);
+  const take = parseInt(pageSize);
   const skip = page * take;
 
   const sort = {};
   sort[sortColumn] = sortOrder.toUpperCase() === 'DESC' ? -1 : 1;
 
   const filter = {};
-  if (isSolved === 'true') {
-    filter.isSolved = { $eq: true };
-  } else if (isSolved === 'false') {
-    filter.isSolved = { $eq: false };
+  if (isSolved === 'true' || isSolved === 'false') {
+    filter.isSolved = { $eq: isSolved === 'true' };
   } else {
     filter.isSolved = { $in: [true, false] };
   }
   if (role !== 'admin') {
-    filter['creator.id'] = { $eq: req.auth.id };
+    filter['creator.id'] = { $eq: id };
   }
-  
+
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     if (filterQuery !== "" && filterColumn !== "") {
       if (!isNaN(filterQuery)) {
@@ -52,7 +52,7 @@ async function paginateTicket(collection, req) {
   const totalPages = Math.ceil(totalCount / take);
   const hasPreviousPage = page > 0;
   const hasNextPage = page < totalPages - 1;
-  console.log(data);
+
   return {
     data,
     pageIndex: page,

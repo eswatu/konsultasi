@@ -1,14 +1,16 @@
 <button mat-raised-button color="primary" (click)="newReply()" matTooltip="Tambah Tanggapan" *ngIf="!solved">
     Tambah Baru
 </button>
+
 <div class="form-container" *ngIf="showForm">
   <input type="text" placeholder="Masukkan sesuatu" [(ngModel)]="inputValue" />
   <button (click)="sendData()">Kirim</button>
 </div>
+
 <div *ngIf="!replies">
    <h2>Belum ada tanggapan...</h2>
 </div>
-<!-- kalau sudah ada reply buat tabel -->
+
 <table mat-table [dataSource]="replies" class="mat-elevation-z8" [hidden]="!replies">
   <!-- Id Column -->
   <ng-container matColumnDef="id">

@@ -8,7 +8,7 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent },
     {path:'tickets', loadChildren:() => import('./menu/tickets/tickets.module').then(m => m.TicketsModule), canActivate: [AuthGuard]},
     {path:'profil', loadChildren:() => import('./menu/profil/profil.module').then(m => m.ProfilModule), canActivate: [AuthGuard]},
-    {path: '**', redirectTo: 'angkakredit'}
+    {path: '**', redirectTo: 'tickets'}
 ];
 
 @NgModule({

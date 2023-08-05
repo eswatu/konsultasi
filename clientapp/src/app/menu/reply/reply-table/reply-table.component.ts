@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SortDirection } from '@angular/material/sort';
 import { Reply } from '@app/_models/reply';
-import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService, ReplyService } from '@app/_services';
 
 @Component({
@@ -25,16 +23,17 @@ export class ReplyTableComponent {
     };
 
     ngOnInit(): void {
-      this.loadData();
+      this.rplService.getData(this.ticketId).subscribe(result => {
+        this.replies = result;
+      }, error => console.error(error));
     }
-    loadData() {
-      this.getData(this.ticketId);
-    }
+
     getData(ticketId: string) {
-          //use service
       this.rplService.getData(ticketId).subscribe(result => {
-          this.replies = result;
-        }, error => console.error(error));
+        this.replies = result;
+      }, error => {
+        // handle error in a user-friendly way
+        alert('Error loading replies. Please try again later.');
+      });
     }
-    
 }

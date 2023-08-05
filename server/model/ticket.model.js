@@ -22,10 +22,10 @@ const schema = new Schema({
 schema.set('toJSON', {
     virtuals: true,
     versionKey: false,
-    transform: function (doc, ret) {
-        // remove these props when object is serialized
-        delete ret._id;
-    },
+    transform: (doc, ret) => {
+            // remove these props when object is serialized
+            delete ret._id;
+        }
     },
 
 );

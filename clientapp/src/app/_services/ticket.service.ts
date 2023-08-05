@@ -9,20 +9,38 @@ import { environment } from '@environments/environment';
 })
 export class TicketService extends BaseService{
   url: string;
-  getsData<ApiResult>(pageIndex: number, pageSize: number,
-            sortColumn: string, sortOrder: 'asc' | 'desc' | '', isSolved: boolean,
-            filterColumn: string, filterQuery?: string): Observable<ApiResult> {
-      var params = new HttpParams()
+  getsData<ApiResult>(
+    pageIndex: number, 
+    pageSize: number,
+    sortColumn: string, 
+    sortOrder: 'asc' | 'desc' | '', 
+    isSolved: boolean,
+    filterColumn: string, 
+    filterQuery?: string
+  ): Observable<ApiResult> {
+    // Create a new instance of HttpParams to store the query parameters
+    var params = new HttpParams()
+      // Set the pageIndex parameter with the provided value
       .set('pageIndex', pageIndex.toString())
+      // Set the pageSize parameter with the provided value
       .set('pageSize', pageSize.toString())
+      // Set the sortColumn parameter with the provided value
       .set('sortColumn', sortColumn)
+      // Set the sortOrder parameter with the provided value
       .set('sortOrder', sortOrder)
+      // Set the isSolved parameter with the provided value
       .set('isSolved', isSolved);
-      if (filterQuery) {
-        params = params.set('filterColumn', filterColumn)
-                        .set('filterQuery', filterQuery);
-      }
-      return this.http.get<ApiResult>(this.url, {params});
+    
+    // Check if filterQuery is provided
+    if (filterQuery) {
+      // Set the filterColumn parameter with the provided value
+      params = params.set('filterColumn', filterColumn)
+        // Set the filterQuery parameter with the provided value
+        .set('filterQuery', filterQuery);
+    }
+    
+    // Make a GET request to the specified URL with the params as query parameters
+    return this.http.get<ApiResult>(this.url, {params});
   }
 getData<ApiResult>(pageIndex: number, pageSize: number,
     sortColumn: string, sortOrder: 'asc' | 'desc' | '',

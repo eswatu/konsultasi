@@ -1,15 +1,15 @@
-<mat-toolbar color="primary" fxLayout="row" *ngIf="isAuthorized">
-  <button  mat-button fxFlex  [routerLink]="['']">
+<mat-toolbar color="primary" *ngIf="isAuthorized">
+  <button mat-button [routerLink]="['']">
     <mat-icon>dashboard</mat-icon>
     Dashboard
   </button>
 
-  <button  mat-button fxFlex routerLink="tickets">
+  <button  mat-button routerLink="tickets">
     <mat-icon>work</mat-icon>
     Tiket
   </button>
 
-  <button  mat-button fxFlex routerLink="profil">
+  <button  mat-button routerLink="profil">
     <mat-icon>badge</mat-icon>
     Profil
   </button>
@@ -18,7 +18,7 @@
     Andal Login Sebagai {{user!.name}}
   </button>
 
-  <button mat-button fxFlex (click)="logout()">
+  <button mat-button (click)="logout()">
     <mat-icon>logout</mat-icon>
     LogOut
   </button>

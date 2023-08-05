@@ -62,25 +62,27 @@ export class TicketsComponent {
     this.getData(pageEvent);
   }
   getData(event: PageEvent) { 
-    var sortColumn = (this.sort) ? this.sort.active : this.defaultSortColumn;
-    var sortOrder = (this.sort) ? this.sort.direction as 'asc' | 'desc' : this.defaultSortOrder;
-    var filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
-    var filterQuery = (this.filterQuery) ? this.filterQuery : null;
-    var isSolved = this.isSolved!;
-    //use service
+    const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
+    const sortOrder = this.sort ? this.sort.direction as 'asc' | 'desc' : this.defaultSortOrder;
+    const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
+    const filterQuery = this.filterQuery ? this.filterQuery : null;
+    const isSolved = this.isSolved ?? false;
+  
     this.tService.getsData<ApiResult<Ticket>>(
       event.pageIndex, event.pageSize,
       sortColumn, sortOrder,
       isSolved,
       filterColumn, filterQuery).subscribe({
         next: (result) => {
-            this.paginator.length = result.totalCount;
-            this.paginator.pageIndex = result.pageIndex;
-            this.paginator.pageSize = result.pageSize;
-            this.tickets = result.data;
-            },
-        error: error => console.error(error)});
+          this.paginator.length = result.totalCount;
+          this.paginator.pageIndex = result.pageIndex;
+          this.paginator.pageSize = result.pageSize;
+          this.tickets = result.data;
+        },
+        error: error => console.error(error)
+      });
   }
+  
   openForm(tc:Ticket){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
