@@ -1,17 +1,19 @@
-import { Inject, Injectable } from '@angular/core';
-import { BaseService } from './base.service';
+import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { Ticket } from '@app/_models/ticket';
+import { Reply } from '@app/_models/reply';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ReplyService{
   url;
-  http: any;
-  getData(ticketId:string): Observable<Ticket> {
+  getData(ticketId:string): Observable<Reply[]> {
     var params = new HttpParams()
-      .set('ticketId', ticketId)
-      return this.http.get<Ticket[]>(this.url, {params});
+      .set('ticketId', ticketId);
+      return this.http.get<Reply[]>(this.url, {params});
   }
   get<Reply>(id: string): Observable<Reply> {
     let myurl = this.url + id;
@@ -21,10 +23,11 @@ export class ReplyService{
     let myurl = this.url + item.id;
     return this.http.put<Reply>(myurl, item);
   }
-  post<Reply>(item: Reply): Observable<Reply> {
-    return this.http.post<Reply>(this.url, item);
+  post<Reply>(item: Reply, ticketId:string): Observable<Reply> {
+    let myurl = this.url + ticketId;
+    return this.http.post<Reply>(myurl, item);
   }
-  constructor(http: HttpClient) {
+  constructor(private http: HttpClient) {
       this.url = `${environment.apiUrl}/replies/`;
      }
 

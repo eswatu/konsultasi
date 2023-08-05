@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Injector, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -7,15 +7,20 @@ import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../ticket-form/ticket-form.component';
+import { ReplyModule } from '@app/menu/reply/reply.module';
+
 @Component({
   selector: 'tickets-component',
   templateUrl: './tickets.component.html',
   styleUrls: ['./tickets.component.css']
 })
 export class TicketsComponent {
+  panelStatus: boolean[] = [false, false, false]; // False: Panel ditutup, True: Panel terbuka
   public displayedColumns;
   public tickets : Ticket[];
   showTable = false;
+  isTableLoaded = false;
+  replyModuleInjector: Injector;
   @Input() isSolved :boolean; 
 
   authUserId: number;
@@ -27,19 +32,22 @@ export class TicketsComponent {
 
   defaultFilterColumn: string = null;
   filterQuery: string = null;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
   constructor(private tService:TicketService,
     private authService: AuthenticationService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog, private parentInjector: Injector) {
       this.authService.user.subscribe(u => {
         this.user = u;
         if (this.user) {
           this.authUserId = u.id;
         }
       });
+    // Create a child Injector with TableModule as parent
+    this.replyModuleInjector = Injector.create({
+      providers: [{ provide: ReplyModule, useClass: ReplyModule }],
+      parent: parentInjector
+    });
     }
 
   ngOnInit(): void {
@@ -89,5 +97,6 @@ export class TicketsComponent {
   }
   toggleTable() {
     this.showTable = !this.showTable;
+    this.isTableLoaded = true;
   }
 }

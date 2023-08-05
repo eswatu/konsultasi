@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TicketFormComponent } from './ticket-form/ticket-form.component';
-import { TicketsComponent } from './tickets/tickets.component';
+import { TicketsComponent } from './tickets-list/tickets.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TicketMaterialModule } from './ticket-material.module';
 import { TicketRoutingModule } from './ticket-routing.module';
@@ -25,7 +25,7 @@ export const MY_FORMATS = {
     TicketsComponent,
     TicketFormComponent,
     NomorAjuDirective,
-    TicketTabComponent
+    TicketTabComponent,
   ],
   imports: [
     CommonModule,
