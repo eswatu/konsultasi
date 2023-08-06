@@ -16,8 +16,8 @@ const replyService = require('services/reply.services');
 router.post('/:id', authorize(), createSchema, createReply);
 router.get('/', authorize(), getAllByTicketId);
 router.get('/:id', authorize(), getById);
-router.put('/:id', /* authorize(), */ updateSchema, updateById);
-router.delete('/:id', /* authorize(), */ deleteById);
+router.put('/:id', authorize(), updateSchema, updateById);
+router.delete('/:id', authorize(),  deleteById);
 
 module.exports = router;
 
@@ -33,7 +33,6 @@ function createSchema(req, res, next) {
     message: Joi.string().allow(null, ''),
     isKey: Joi.bool().default(false),
   });
-
   validateRequest(req, next, schema);
 }
 
@@ -43,12 +42,11 @@ function createSchema(req, res, next) {
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-const updateSchema = (req, res, next) => {
+function updateSchema(req, res, next) {
   const schema = Joi.object({
     message: Joi.string().allow(null, ''),
     isKey: Joi.bool().default(false),
   }).prefs({ abortEarly: false });
-  
   validateRequest(req, next, schema);
 };
 

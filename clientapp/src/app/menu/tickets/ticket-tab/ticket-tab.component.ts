@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthenticationService } from '@app/_services';
 
 @Component({
@@ -6,17 +7,27 @@ import { AuthenticationService } from '@app/_services';
   templateUrl: './ticket-tab.component.html',
   styleUrls: ['./ticket-tab.component.css']
 })
-export class TicketTabComponent {
-  isAdmin;
-  user;
-  constructor(private authSrvc: AuthenticationService) {
-    this.authSrvc.user.subscribe(x => this.user = x);
-    if (this.user) {
-        this.isAdmin = this.user.role === 'Admin';
-    } 
-  }
+export class TicketTabComponent implements OnInit, OnDestroy {
+  isAdmin: boolean;
+  user: any;
+  private userSubscription: Subscription;
+
+  constructor(private authSrvc: AuthenticationService) {}
 
   ngOnInit(): void {
+    this.userSubscription = this.authSrvc.user.subscribe(x => {
+      this.user = x;
+      if (this.user) {
+        this.isAdmin = this.user.role === 'Admin';
+      }
+    });
   }
 
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+
+  private setIsAdmin(value: boolean) {
+    this.isAdmin = value;
+  }
 }

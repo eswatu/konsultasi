@@ -18,7 +18,7 @@ const paginateTicket = require('_helpers/paginate');
  */
 async function getAllTicket(req) {
     const { query } = req;
-    return await paginateTicket(db.Ticket, query);
+    return await paginateTicket(db.Ticket, query, req.auth);
 }
 
 /**

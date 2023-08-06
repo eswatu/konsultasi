@@ -19,15 +19,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+//create set of allowed origins
+const allowedOrigins = new Set(['http://localhost:4200', 'https://localhost:4200']);
 app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: 'http://localhost:4200',
   credentials: true
 }));
 

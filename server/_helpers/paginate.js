@@ -1,46 +1,60 @@
-const db = require('_helpers/db');
-
-async function paginateTicket(collection, req) {
+// const db = require('_helpers/db');
+const Roles = require('_helpers/role');
+/**
+ * Paginates the ticket collection based on the provided query.
+ *
+ * @param {Object} collection - The collection to paginate.
+ * @param {Object} query - The query object containing pagination parameters and filters.
+ * @returns {Object} An object containing the paginated data and metadata.
+ */
+async function paginateTicket(collection, query, _auth) {
+  // Destructure query object
   const {
-    pageIndex = 0,
-    pageSize = 10,
-    sortColumn = '',
-    sortOrder = '',
-    filterColumn = '',
-    filterQuery = '',
-    isSolved = '',
-    auth: { role, id } = {},
-  } = req.query;
-
-  const page = parseInt(pageIndex);
-  const take = parseInt(pageSize);
-  const skip = page * take;
+    pageIndex = 0, // Default page index is 0
+    pageSize = 10, // Default page size is 10
+    sortColumn = '', // Default sort column is empty string
+    sortOrder = '', // Default sort order is empty string
+    filterColumn = '', // Default filter column is empty string
+    filterQuery = '', // Default filter query is empty string
+    isSolved = '', // Default isSolved is empty string
+  } = query;
+  const {
+    auth: { role, id } = {}, // Destructure auth object and assign role and id
+  } = _auth;
+  
+  const page = parseInt(pageIndex); // Convert page index to integer
+  const take = parseInt(pageSize); // Convert page size to integer
+  const skip = page * take; // Calculate number of documents to skip
 
   const sort = {};
-  sort[sortColumn] = sortOrder.toUpperCase() === 'DESC' ? -1 : 1;
+  sort[sortColumn] = sortOrder.toUpperCase() === 'DESC' ? -1 : 1; // Set sort order
 
   const filter = {};
   if (isSolved === 'true' || isSolved === 'false') {
-    filter.isSolved = { $eq: isSolved === 'true' };
+    // If isSolved is 'true' or 'false'
+    filter.isSolved = { $eq: isSolved === 'true' }; // Set filter for isSolved
   } else {
-    filter.isSolved = { $in: [true, false] };
+    filter.isSolved = { $in: [true, false] }; // Set filter for isSolved with values true and false
   }
-  if (role !== 'admin') {
-    filter['creator.id'] = { $eq: id };
+  if (role !==  Roles.Admin) {
+    filter['creator.id'] = { $eq: id }; // Set filter for creator id if role is not admin
   }
 
   if (filterColumn !== 'null' && filterQuery !== 'null') {
+    // If filterColumn and filterQuery are not 'null'
     if (filterQuery !== "" && filterColumn !== "") {
+      // If filterQuery and filterColumn are not empty
       if (!isNaN(filterQuery)) {
-        filter[filterColumn] = parseInt(filterQuery);
+        filter[filterColumn] = parseInt(filterQuery); // Set filter for numeric values
       } else if (filterQuery === 'true' || filterQuery === 'false') {
-        filter[filterColumn] = filterQuery === 'true';
+        filter[filterColumn] = filterQuery === 'true'; // Set filter for boolean values
       } else {
-        filter[filterColumn] = { $text: filterQuery };
+        filter[filterColumn] = { $text: filterQuery }; // Set filter for text search
       }
     }
   }
 
+  // Execute query with pagination parameters
   const data = await collection
     .find(filter)
     .sort(sort)
@@ -48,11 +62,13 @@ async function paginateTicket(collection, req) {
     .limit(take)
     .exec();
 
+  // Get total count of documents matching the filter
   const totalCount = await collection.countDocuments(filter);
-  const totalPages = Math.ceil(totalCount / take);
-  const hasPreviousPage = page > 0;
-  const hasNextPage = page < totalPages - 1;
+  const totalPages = Math.ceil(totalCount / take); // Calculate total number of pages
+  const hasPreviousPage = page > 0; // Check if there is a previous page
+  const hasNextPage = page < totalPages - 1; // Check if there is a next page
 
+  // Return paginated data and metadata
   return {
     data,
     pageIndex: page,

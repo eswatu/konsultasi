@@ -8,25 +8,26 @@
     </button>
 
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let tkt of tickets" (opened)="toggleTable()">
+      <mat-expansion-panel *ngFor="let tkt of tickets" >
         <mat-expansion-panel-header>
             <mat-panel-title>{{tkt.name}}</mat-panel-title>
             <mat-panel-description>{{tkt.creator.company + '-' + tkt.creator.name}}</mat-panel-description>
         </mat-expansion-panel-header>
         <div class="mainPanel">
           <div class="item" id="item-a">
-            <p>{{tkt.problem}}</p>
+            <p>{{tkt.problem + ' '+ tkt.id}}</p>
           </div>
           <div class="item" id="item-b">
-            <button mat-stroked-button (click)="toggleTable()">
+            <button mat-stroked-button (click)="toggleTable(tkt)">
               {{ showTable ? 'Hide Table' : 'Show Table' }}
             </button>
           </div>
           <!-- Add the table inside ng-container to conditionally render it -->
           <div id="item-c" class="item">
-            <ng-container *ngIf="showTable">
+            <ng-container *ngIf="tkt.showTable">
               <!-- lazy loading -->
-              <ng-container *ngComponentOutlet="replyTableComponent; injector: parentInjector" [solved]="true"></ng-container>
+              <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector(tkt);"></ng-container>
+              
                 <!-- Your table content goes here -->
             </ng-container>
           </div>
