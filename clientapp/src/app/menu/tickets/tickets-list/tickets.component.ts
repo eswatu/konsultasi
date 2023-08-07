@@ -7,7 +7,6 @@ import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../ticket-form/ticket-form.component';
-import { ReplyTableComponent } from '@app/menu/reply/reply-table/reply-table.component';
 import { User } from '@app/_models';
 @Component({
   selector: 'tickets-component',
@@ -16,18 +15,13 @@ import { User } from '@app/_models';
 })
 export class TicketsComponent implements OnInit {
   tickets: Ticket[];
-  showTable = false;
-  replyTableComponent = ReplyTableComponent;
-  lazyLoadInjector: Injector;
-  @Input() isSolved: boolean;
-
   authUserId: number;
   user: User;
   defaultPageIndex = 0;
   defaultPageSize = 5;
   defaultSortColumn = 'id';
   defaultSortOrder: 'asc' | 'desc' = 'desc';
-
+  @Input() isSolved;
   defaultFilterColumn: string = null;
   filterQuery: string = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -37,7 +31,7 @@ export class TicketsComponent implements OnInit {
     private tService: TicketService,
     private authService: AuthenticationService,
     public dialog: MatDialog,
-    private parentInjector: Injector
+    
   ) { }
   // createInjector(tkt: Ticket): Injector {
   //   return Injector.create({
@@ -48,15 +42,7 @@ export class TicketsComponent implements OnInit {
   //     name: this.replyTableComponent.name
   //   });
   // }
-  createInjector(tkt: Ticket): Injector {
-    return Injector.create({
-      providers: [{
-        provide: 'ticketId', useValue: tkt.id
-      }],
-      parent: this.parentInjector,
-      name: this.replyTableComponent.name
-    });
-  }
+
   ngOnInit(): void {
     this.authService.user.subscribe((u) => {
       this.user = u;
@@ -85,7 +71,6 @@ async getData(event: PageEvent) {
   const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
   const filterQuery = this.filterQuery ? this.filterQuery : null;
   const isSolved = this.isSolved ?? false;
-
   try {
     this.tService.getsData<ApiResult<Ticket>>(
       event.pageIndex,
@@ -103,7 +88,6 @@ async getData(event: PageEvent) {
       //debug tickets
       // console.log(this.tickets);
     });
-
   } catch (error) {
     console.error(error);
   }
@@ -121,9 +105,5 @@ async getData(event: PageEvent) {
     }
     const dialogRef = this.dialog.open(TicketFormComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => this.loadData(null));
-  }
-
-  toggleTable(tkt:any): void {
-    tkt.showTable = !tkt.showTable;
   }
 }
