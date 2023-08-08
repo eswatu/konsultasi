@@ -15,11 +15,11 @@
         </div>
         <!-- Add the table inside ng-container to conditionally render it -->
         <div id="item-c" class="item">
-          <ng-template *ngIf="showTable">
+          <ng-container *ngIf="showTable">
             <!-- lazy loading -->
-            <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector(ticket.id);"></ng-container>
+            <!-- <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector();"></ng-container> -->
               <!-- Your table content goes here -->
-          </ng-template>
+          </ng-container>
         </div>
 
       </div>
