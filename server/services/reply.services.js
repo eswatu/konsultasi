@@ -71,16 +71,18 @@ async function updateReply(req) {
  * @param {Object} req - The request object containing the properties for the new reply (message, isKey).
  */
 async function createReply(au, ticketId, req) {
-    const us = await db.User.findById(au.id);
-    const tckt = await db.Ticket.findById(ticketId);
+    const { id } = au;
+    const { message, isKey } = req;
+    const user = await db.User.findById(id);
+    const ticket = await db.Ticket.findById(ticketId);
     const reply = new db.Reply({
-        message: req.message,
-        isKey: req.isKey,
-        ticket: tckt,
+        message,
+        isKey,
+        ticket,
         creator: {
-            id: us.id,
-            name: us.name,
-            company: us.company,
+            id: user.id,
+            name: user.name,
+            company: user.company,
         }
     });
     await reply.save();

@@ -19,8 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-//create set of allowed origins
-const allowedOrigins = new Set(['http://localhost:4200', 'https://localhost:4200']);
+
 app.use(cors({
   origin: 'http://localhost:4200',
   credentials: true

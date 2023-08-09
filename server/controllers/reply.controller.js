@@ -57,14 +57,16 @@ function updateSchema(req, res, next) {
  * @param {Function} next - The next middleware function.
  */
 async function createReply(req, res, next) {
+  console.log(req);
   try {
-    const { body, auth, query } = req;
-    if (body) {
-      await replyService.createReply(auth, query.ticketId, body);
-      res.json({ message: 'Successfully created reply' });
-    } else {
+    const { body, auth, params } = req;
+    if (!body) {
       res.status(400).json({ message: 'Bad Request' });
+      return;
     }
+
+    await replyService.createReply(auth, params.ticketId, body);
+    res.json({ message: 'Successfully created reply' });
   } catch (error) {
     next(error);
   }
