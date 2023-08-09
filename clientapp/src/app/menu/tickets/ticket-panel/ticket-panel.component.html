@@ -1,27 +1,27 @@
-<mat-accordion multi="true">
+<mat-accordion >
     <mat-expansion-panel>
       <mat-expansion-panel-header>
           <mat-panel-title>{{ticket.name}}</mat-panel-title>
           <mat-panel-description>{{ticket.creator.company + '-' + ticket.creator.name}}</mat-panel-description>
       </mat-expansion-panel-header>
-      <div class="mainPanel">
-        <div class="item" id="item-a">
+      <div class="container">
+        <div id="item-a">
           <p>{{ticket.problem + ' '+ ticket.id}}</p>
         </div>
-        <div class="item" id="item-b">
+        <div id="item-b">
           <button mat-stroked-button (click)="toggleTable()">
             {{ showTable ? 'Hide Table' : 'Show Table' }}
           </button>
         </div>
         <!-- Add the table inside ng-container to conditionally render it -->
-        <div id="item-c" class="item">
+        <div id="item-c" >
           <ng-container *ngIf="showTable">
             <!-- lazy loading -->
+            <reply-table [ticketId]="ticket.id"></reply-table>
             <!-- <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector();"></ng-container> -->
               <!-- Your table content goes here -->
           </ng-container>
         </div>
-
       </div>
     </mat-expansion-panel>
   </mat-accordion>

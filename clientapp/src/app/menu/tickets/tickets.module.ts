@@ -10,6 +10,7 @@ import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment
 import { NomorAjuDirective } from "@app/_helpers/pipe/nomorajudirective";
 import { TicketTabComponent } from './ticket-tab/ticket-tab.component';
 import { TicketPanelComponent } from './ticket-panel/ticket-panel.component';
+import { ReplyTableComponent } from './reply-table/reply-table.component';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'MM/DD/YYYY'
@@ -28,6 +29,7 @@ export const MY_FORMATS = {
     NomorAjuDirective,
     TicketTabComponent,
     TicketPanelComponent,
+    ReplyTableComponent
   ],
   imports: [
     CommonModule,

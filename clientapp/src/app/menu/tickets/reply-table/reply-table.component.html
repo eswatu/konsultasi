@@ -1,19 +1,8 @@
-<button mat-raised-button matTooltip="Tambah Tanggapan" *ngIf="!solved" (click)="newReply()" id="item-a" >
-    Tambah Baru
-</button>
-<div id="item-b" *ngIf="showForm">
-  <input matInput class="item" placeholder="Tanggapan anda..." formControlName="replytext">
-  <button mat-icon-button class="item" matTooltip="Kirim" >
-      <mat-icon>send</mat-icon>
-  </button>
-</div>
  <div id="item-c">
   <p>The ticket ID is: {{ ticketId }}</p>
-
    <div *ngIf="!replies">
       <h2>Belum ada tanggapan...</h2>
    </div>
-   
    <table mat-table [dataSource]="replies" class="mat-elevation-z8" [hidden]="!replies">
      <!-- Id Column -->
      <ng-container matColumnDef="id">
@@ -36,5 +25,10 @@
      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
    </table>
-
+   <button mat-raised-button (click)="showInput = true" *ngIf="!showInput">Tambah Tanggapan</button>
+   <div *ngIf="showInput" class="input-row">
+     <mat-form-field class="input-field">
+       <input matInput placeholder="Tanggapan" [(ngModel)]="reply.message">
+     </mat-form-field>
+     <button mat-raised-button (click)="addRow()">Submit</button>
  </div>
