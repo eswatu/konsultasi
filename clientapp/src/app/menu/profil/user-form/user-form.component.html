@@ -1,0 +1,9 @@
+<form #userForm="ngForm">
+    <mat-form-field>
+      <input matInput placeholder="Username" name="username" [(ngModel)]="user.username" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" name="password" [(ngModel)]="user.password" required>
+    </mat-form-field>
+    <!-- add more fields for name, company, role, contact and jwtToken -->
+  </form>

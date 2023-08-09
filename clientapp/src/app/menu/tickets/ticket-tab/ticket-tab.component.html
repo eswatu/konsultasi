@@ -9,4 +9,9 @@
             <tickets-component [isSolved]="true"></tickets-component>
         </ng-template>
     </mat-tab>
+    <mat-tab label="History" *ngIf="!isUser">
+        <ng-template matTabContent>
+            <tickets-component [isSolved]=""></tickets-component>
+        </ng-template>
+    </mat-tab>
 </mat-tab-group>

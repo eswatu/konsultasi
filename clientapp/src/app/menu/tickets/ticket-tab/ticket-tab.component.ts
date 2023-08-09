@@ -8,7 +8,7 @@ import { AuthenticationService } from '@app/_services';
   styleUrls: ['./ticket-tab.component.css']
 })
 export class TicketTabComponent implements OnInit, OnDestroy {
-  isAdmin: boolean;
+  isUser: boolean;
   user: any;
   private userSubscription: Subscription;
 
@@ -18,16 +18,11 @@ export class TicketTabComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authSrvc.user.subscribe(x => {
       this.user = x;
       if (this.user) {
-        this.isAdmin = this.user.role === 'Admin';
+        this.isUser = this.user.role === 'User';
       }
     });
   }
-
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
-  }
-
-  private setIsAdmin(value: boolean) {
-    this.isAdmin = value;
   }
 }

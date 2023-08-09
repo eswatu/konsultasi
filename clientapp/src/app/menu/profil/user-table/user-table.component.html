@@ -1,0 +1,16 @@
+<mat-table [dataSource]="users">
+    <!-- Define columns -->
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.username}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="password">
+      <mat-header-cell *matHeaderCellDef> Password </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.password}} </mat-cell>
+    </ng-container>
+    <!-- add more columns for name, company, role, contact and jwtToken -->
+    <!-- Define header row and data row -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  

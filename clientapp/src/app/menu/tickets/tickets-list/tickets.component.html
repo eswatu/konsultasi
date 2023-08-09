@@ -6,6 +6,15 @@
       matTooltip="Tambah Tiket" *ngIf="!isSolved">
         Buat Tiket Baru
     </button>
+    <mat-form-field>
+      <input matInput placeholder="Search" [(ngModel)]="searchTerm">
+      <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="search()">
+        <mat-icon>search</mat-icon>
+      </button>
+      <mat-select placeholder="Options" [(value)]="selectedOption">
+        <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <div *ngFor="let ticket of tickets">
       <ticket-panel [ticket]="ticket"></ticket-panel>
     </div>
@@ -14,4 +23,5 @@
       (page)="getData($event)"
       [pageSize]="10"
       [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons></mat-paginator>
+      showFirstLastButtons>
+    </mat-paginator>

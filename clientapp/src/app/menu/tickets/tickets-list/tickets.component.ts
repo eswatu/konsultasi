@@ -19,7 +19,7 @@ export class TicketsComponent implements OnInit {
   user: User;
   defaultPageIndex = 0;
   defaultPageSize = 5;
-  defaultSortColumn = 'id';
+  defaultSortColumn = 'createdAt';
   defaultSortOrder: 'asc' | 'desc' = 'desc';
   @Input() isSolved;
   defaultFilterColumn: string = null;
@@ -27,21 +27,20 @@ export class TicketsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  selectedOption: string;
+  options: string[] = ['Option 1', 'Option 2', 'Option 3'];
+  searchTerm: string;
+
+  search() {
+    // your search logic here
+  }
+
   constructor(
     private tService: TicketService,
     private authService: AuthenticationService,
     public dialog: MatDialog,
     
   ) { }
-  // createInjector(tkt: Ticket): Injector {
-  //   return Injector.create({
-  //     providers: [{
-  //       provide: 'ticketId', useValue: tkt.id
-  //     }],
-  //     parent: this.parentInjector,
-  //     name: this.replyTableComponent.name
-  //   });
-  // }
 
   ngOnInit(): void {
     this.authService.user.subscribe((u) => {
