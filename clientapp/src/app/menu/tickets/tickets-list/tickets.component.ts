@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,28 +8,39 @@ import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../ticket-form/ticket-form.component';
 import { User } from '@app/_models';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'tickets-component',
   templateUrl: './tickets.component.html',
   styleUrls: ['./tickets.component.css']
 })
 export class TicketsComponent implements OnInit {
+  @Input() isSolved;
   tickets: Ticket[];
   authUserId: number;
   user: User;
   defaultPageIndex = 0;
-  defaultPageSize = 5;
+  defaultPageSize = 10;
   defaultSortColumn = 'createdAt';
   defaultSortOrder: 'asc' | 'desc' = 'desc';
-  @Input() isSolved;
-  defaultFilterColumn: string = null;
+  defaultFilterColumn: string = 'name';
   filterQuery: string = null;
+  filterColumn = new FormControl();
+  filterQ = new FormControl();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  selectedOption: string;
-  options: string[] = ['Option 1', 'Option 2', 'Option 3'];
-  searchTerm: string;
+  filterTextChanged: Subject<string> = new Subject<string>();
+
+  selectedOption: {key:string, value: string};
+  options: { key: string, value: string }[] = [
+    { key: 'Nomor Pendaftaran', value: 'nopen' },
+    { key: 'Nama Perusahaan', value: 'name' },
+    { key: 'Permasalahan', value: 'problem' },
+    { key: 'Nama Pembuat', value: 'creator.name'},
+    {key: 'Perusahaan Pembuat', value: 'creator.company'},
+  ];
 
   search() {
     // your search logic here
@@ -49,27 +60,27 @@ export class TicketsComponent implements OnInit {
         this.authUserId = u.id;
       }
     });
-    this.loadData('null');
-
+    this.loadData(null);
   }
 
   loadData(q: string = null): void {
     const pageEvent = new PageEvent();
     pageEvent.pageIndex = this.defaultPageIndex;
     pageEvent.pageSize = this.defaultPageSize;
-    if (q) {
+    if (q && this.defaultFilterColumn !== '') {
       this.filterQuery = q;
+      this.defaultFilterColumn = this.filterColumn.value;
     }
     this.getData(pageEvent);
-
+    console.log(this.tickets);
   }
 
 async getData(event: PageEvent) {
   const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
   const sortOrder = this.sort ? (this.sort.direction as 'asc' | 'desc') : this.defaultSortOrder;
-  const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
+  const filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
   const filterQuery = this.filterQuery ? this.filterQuery : null;
-  const isSolved = this.isSolved ?? false;
+  const isSolved = this.isSolved ? false : null;
   try {
     this.tService.getsData<ApiResult<Ticket>>(
       event.pageIndex,
@@ -105,4 +116,15 @@ async getData(event: PageEvent) {
     const dialogRef = this.dialog.open(TicketFormComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => this.loadData(null));
   }
+  onFilterTextChanged(filterText: string) {
+    if (this.filterTextChanged.observers.length === 0) {
+        this.filterTextChanged
+            .pipe(debounceTime(1000), distinctUntilChanged())
+          .subscribe(query => {
+            this.tickets = null;
+              this.loadData(query);
+            });
+    }
+    this.filterTextChanged.next(filterText);
+   }
 }

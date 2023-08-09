@@ -8,18 +8,17 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('@hapi/joi');
 const validateRequest = require('_middleware/validate-request');
-const authorize = require('_middleware/authorize')
-const Role = require('_helpers/role');
+const authorize = require('_middleware/authorize');
 const replyService = require('services/reply.services');
+const { logger } = require('../_helpers/logger');
 
 // routes
-router.post('/:id', authorize(), createSchema, createReply);
+router.post('/:ticketId', authorize(), createSchema, createReply);
 router.get('/', authorize(), getAllByTicketId);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), updateSchema, updateById);
 router.delete('/:id', authorize(),  deleteById);
 
-module.exports = router;
 
 /**
  * Validates the request body for creating a reply.
@@ -29,7 +28,6 @@ module.exports = router;
  */
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    ticketId: Joi.string().required(),
     message: Joi.string().allow(null, ''),
     isKey: Joi.bool().default(false),
   });
@@ -56,18 +54,20 @@ function updateSchema(req, res, next) {
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-async function createReply(req, res, next) {
-  console.log(req);
+function createReply(req, res, next) {
   try {
     const { body, auth, params } = req;
     if (!body) {
+      console.log('Bad Request: Request body is missing');
       res.status(400).json({ message: 'Bad Request' });
       return;
     }
-
-    await replyService.createReply(auth, params.ticketId, body);
+    console.log('Before creating reply');
+    replyService.createReply(auth, params.ticketId, body);
+    console.log('After creating reply');
     res.json({ message: 'Successfully created reply' });
   } catch (error) {
+    console.error('Error:', error);
     next(error);
   }
 }
@@ -78,10 +78,16 @@ async function createReply(req, res, next) {
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-function getAllByTicketId(req, res, next) {
-  replyService.getAllRepliesTicket(req.params.ticketId)
-    .then(replies => res.json(replies))
-    .catch(next);
+async function getAllByTicketId(req, res, next) {
+  console.log(req);
+  try {
+    const replies = await replyService.getAllRepliesTicket(req.query.ticketId);
+    console.log('replies:', replies);
+    res.json(replies);
+  } catch (error) {
+    console.log('error:', error);
+    next(error);
+  }
 }
 
 /**
@@ -119,3 +125,5 @@ function deleteById(req, res, next) {
     .then(() => res.json({ message: "Successfully deleted reply" }))
     .catch(next);
 }
+
+module.exports = router;

@@ -8,6 +8,8 @@
  */
 
 const db = require('_helpers/db');
+const logger = require('winston');
+
 
 module.exports = {
     getAllRepliesTicket,
@@ -24,8 +26,10 @@ module.exports = {
  * @returns {Array} - Array of reply objects with basic details (id, message, isKey, responseTime).
  */
 async function getAllRepliesTicket(ticketId) {
-    const replies = await db.Reply.find({ticket : ticketId});
-    return replies.map(x => basicDetails(x));
+    console.log("isi message req adalah : " + JSON.stringify(ticketId));
+    const replies = await db.Reply.find({ticket: ticketId});
+    console.log("replies:", replies);
+    return replies.map((x) => basicDetails(x));
 }
 
 /**
@@ -71,10 +75,16 @@ async function updateReply(req) {
  * @param {Object} req - The request object containing the properties for the new reply (message, isKey).
  */
 async function createReply(au, ticketId, req) {
+    console.log('repl service ticketId: '+ ticketId);
+    console.log('repl service req: '+ req);
     const { id } = au;
     const { message, isKey } = req;
     const user = await db.User.findById(id);
     const ticket = await db.Ticket.findById(ticketId);
+
+    console.log('User:', user);
+    console.log('Ticket:', ticket);
+
     const reply = new db.Reply({
         message,
         isKey,
@@ -85,8 +95,12 @@ async function createReply(au, ticketId, req) {
             company: user.company,
         }
     });
+
+    console.log('Reply:', reply);
+
     await reply.save();
 }
+
 
 /**
  * Delete a reply by ID.

@@ -26,7 +26,7 @@ app.use(cors({
 }));
 
 // swagger docs route
-app.use('/api-docs', require('_helpers/swagger'));
+// app.use('/api-docs', require('_helpers/swagger'));
 
 // api routes
 app.use('/users', userController);
@@ -51,5 +51,6 @@ const env = process.env.NODE_ENV || 'development';
 const port = config[env].port;
 
 app.listen(port, () => {
+  console.log('server is running in '+ env);
     console.log(`Server listening on port ${port}`);
 });

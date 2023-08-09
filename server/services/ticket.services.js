@@ -71,6 +71,7 @@ async function updateTicket(req) {
  * @param {Object} req - The request object containing the ticket data.
  */
 async function createTicket(au, req) {
+
     const us = await db.User.findById(au.id);
     const ticket = new db.Ticket({
         aju: req.aju,

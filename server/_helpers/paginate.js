@@ -49,7 +49,9 @@ async function paginateTicket(collection, query, _auth) {
       } else if (filterQuery === 'true' || filterQuery === 'false') {
         filter[filterColumn] = filterQuery === 'true'; // Set filter for boolean values
       } else {
-        filter[filterColumn] = { $text: filterQuery }; // Set filter for text search
+        const regex = new RegExp(filterQuery, 'i');
+        filter[filterColumn] = { $regex: regex }; // Set filter for text search
+        // filter[filterColumn] = { $text: { $search: filterQuery } } ; // Set filter for text search
       }
     }
   }

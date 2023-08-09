@@ -12,6 +12,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 
 const modules = [
   MatButtonModule,
@@ -26,7 +27,9 @@ const modules = [
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatTabsModule,
-  MatTableModule
+  MatTableModule,
+  MatSelectModule,
+  MatProgressSpinnerModule
 ];
 
 @NgModule({
