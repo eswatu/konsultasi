@@ -1,16 +1,43 @@
-<mat-table [dataSource]="users">
-    <!-- Define columns -->
-    <ng-container matColumnDef="username">
-      <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.username}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="password">
-      <mat-header-cell *matHeaderCellDef> Password </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.password}} </mat-cell>
-    </ng-container>
-    <!-- add more columns for name, company, role, contact and jwtToken -->
-    <!-- Define header row and data row -->
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-  
+<table mat-table [dataSource]="users">
+  <!-- ID column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let user"> {{ user.id }} </td>
+  </ng-container>
+
+  <!-- Username column -->
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef> Username </th>
+    <td mat-cell *matCellDef="let user"> {{ user.username }} </td>
+  </ng-container>
+
+  <!-- Name column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
+  </ng-container>
+
+  <!-- Company column -->
+  <ng-container matColumnDef="company">
+    <th mat-header-cell *matHeaderCellDef> Company </th>
+    <td mat-cell *matCellDef="let user"> {{ user.company }} </td>
+  </ng-container>
+
+  <!-- Role column -->
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef> Role </th>
+    <td mat-cell *matCellDef="let user"> {{ user.role }} </td>
+  </ng-container>
+
+  <!-- Contact column -->
+  <ng-container matColumnDef="contact">
+    <th mat-header-cell *matHeaderCellDef> Contact </th>
+    <td mat-cell *matCellDef="let user"> {{ user.contact }} </td>
+  </ng-container>
+
+  <!-- Define the header row -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+  <!-- Define the data rows -->
+  <tr mat-row *matRowDef="let user; columns: displayedColumns;"></tr>
+</table>

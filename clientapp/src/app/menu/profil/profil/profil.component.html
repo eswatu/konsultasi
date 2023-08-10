@@ -1,39 +1,29 @@
-<div fxLayout="row" fxLayoutAlign="center">
-    <div fxLayout="column">
-        <form>
-          <mat-form-field>
-            <mat-label>Username</mat-label>
-            <input matInput type="text" name="username">
-          </mat-form-field>
-          <br><br>
-        
-          <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input matInput type="text" name="name">
-          </mat-form-field>
-          <br><br>
-        
-          <mat-form-field>
-            <mat-label>Company</mat-label>
-            <input matInput type="text" name="company">
-          </mat-form-field>
-          <br><br>
-        
-          <mat-form-field>
-            <mat-label>Role</mat-label>
-            <input matInput type="text" name="role">
-          </mat-form-field>
-          <br><br>
-        
-          <mat-form-field>
-            <mat-label>Contact</mat-label>
-            <input matInput type="text" name="contact">
-          </mat-form-field>
-          <br><br>
-        
-          <button mat-raised-button color="primary">Submit</button>
-        </form>
-        
-    </div>
+<div class="container">
+  <form [formGroup]="form" class="form">
+    <mat-form-field class="form-field">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" type="text" name="username">
+    </mat-form-field>
+  
+    <mat-form-field class="form-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName='name' type="text" name="name">
+    </mat-form-field>
+  
+    <mat-form-field class="form-field">
+      <mat-label>Company</mat-label>
+      <input matInput formControlName='company' type="text" name="company">
+    </mat-form-field>
+  
+    <mat-form-field class="form-field">
+      <mat-label>Role</mat-label>
+      <input matInput formControlName='role' type="text" name="role">
+    </mat-form-field>
+  
+    <mat-form-field class="form-field">
+      <mat-label>Contact</mat-label>
+      <input matInput formControlName='contact' type="text" name="contact">
+    </mat-form-field>
+    <button mat-raised-button color="primary">Submit</button>
+  </form>
 </div>
-

@@ -138,6 +138,6 @@ async function getReply(id) {
  * @returns {Object} - Object with basic details (id, message, isKey, responseTime) for the reply.
  */
 function basicDetails(reply) {
-    const { id, message, isKey, responseTime } = reply;
-    return { id, message, isKey, responseTime };
+    const { id, message, isKey, creator, responseTime } = reply;
+    return { id, message, isKey, creator, responseTime };
 }

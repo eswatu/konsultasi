@@ -17,7 +17,7 @@
         <div id="item-c" >
           <ng-container *ngIf="showTable">
             <!-- lazy loading -->
-            <reply-table [ticketId]="ticket.id"></reply-table>
+            <reply-table [ticketId]="ticket.id" [isSolved]="ticket.isSolved"></reply-table>
             <!-- <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector();"></ng-container> -->
               <!-- Your table content goes here -->
           </ng-container>

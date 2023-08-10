@@ -10,7 +10,7 @@ export const ticketId = new InjectionToken<string>('ticketId');
   styleUrls: ['./reply-table.component.css']
 })
 export class ReplyTableComponent {
-  displayedColumns = ['id', 'createdAt', 'message'];
+  displayedColumns = ['createdAt','creator', 'message'];
   user: any;
 
   replies: Reply[] = [];
@@ -25,10 +25,12 @@ export class ReplyTableComponent {
   addRow() {
     this.rplService.post<Reply>(this.reply, this.ticketId).subscribe(data => {
       this.replies.push(data);
-    })
+    });
+    this.getData(this.ticketId);
     this.showInput = false;
   }
   @Input({required:true}) ticketId;
+  @Input({required:true}) isSolved;
 
   constructor(private rplService:ReplyService,
     private authService: AuthenticationService) {
@@ -41,12 +43,17 @@ export class ReplyTableComponent {
     } catch (error) {
       console.error(error);
     }
-  console.log(this.ticketId);
 }
-
+  ngonchanges(changes: SimpleChanges) {
+    if (changes.replies) {
+      console.log('replies changed: ', this.replies);
+    }
+  }
 getData(tkt: string) {
   try {
-    this.rplService.getData(tkt).subscribe(data => this.replies = data);
+    this.rplService.getData(tkt).subscribe(data => {
+      this.replies = data;
+    } );
   } catch (error) {
     // handle error in a user-friendly way
     alert('Error loading replies. Please try again later.');

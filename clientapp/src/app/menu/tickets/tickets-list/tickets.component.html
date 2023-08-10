@@ -8,7 +8,7 @@
     </button>
     <div class="search-container">
       <mat-form-field class="options-field">
-        <mat-select placeholder="Options" [formControl]="filterColumn" (change)="loadData(null)">
+        <mat-select placeholder="Filter Kolom" [formControl]="filterColumn" (change)="loadData(null)">
           <mat-option *ngFor="let option of options" [value]="option.value">{{option.key}}</mat-option>
         </mat-select>
       </mat-form-field>

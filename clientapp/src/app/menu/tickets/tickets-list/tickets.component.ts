@@ -16,7 +16,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./tickets.component.css']
 })
 export class TicketsComponent implements OnInit {
-  @Input() isSolved;
+  @Input({required:true}) isSolved;
   tickets: Ticket[];
   authUserId: number;
   user: User;
@@ -42,9 +42,6 @@ export class TicketsComponent implements OnInit {
     {key: 'Perusahaan Pembuat', value: 'creator.company'},
   ];
 
-  search() {
-    // your search logic here
-  }
 
   constructor(
     private tService: TicketService,
@@ -72,7 +69,6 @@ export class TicketsComponent implements OnInit {
       this.defaultFilterColumn = this.filterColumn.value;
     }
     this.getData(pageEvent);
-    console.log(this.tickets);
   }
 
 async getData(event: PageEvent) {
@@ -80,14 +76,14 @@ async getData(event: PageEvent) {
   const sortOrder = this.sort ? (this.sort.direction as 'asc' | 'desc') : this.defaultSortOrder;
   const filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
   const filterQuery = this.filterQuery ? this.filterQuery : null;
-  const isSolved = this.isSolved ? false : null;
+  const solved = this.isSolved;
   try {
     this.tService.getsData<ApiResult<Ticket>>(
       event.pageIndex,
       event.pageSize,
       sortColumn,
       sortOrder,
-      isSolved,
+      solved,
       filterColumn,
       filterQuery
     ).subscribe(result => {
@@ -96,7 +92,7 @@ async getData(event: PageEvent) {
       this.paginator.pageSize = result.pageSize;
       this.tickets = result.data;
       //debug tickets
-      // console.log(this.tickets);
+      //console.log(result.data);
     });
   } catch (error) {
     console.error(error);

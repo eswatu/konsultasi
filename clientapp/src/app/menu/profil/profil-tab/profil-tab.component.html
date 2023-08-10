@@ -1,0 +1,13 @@
+<mat-tab-group mat-stretch-tabs >
+    <mat-tab label="Profilku" >
+        <ng-template matTabContent>
+            <profil></profil>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Daftar User" *ngIf="isAdmin">
+        <ng-template matTabContent>
+            <user-table></user-table>
+        </ng-template>
+    </mat-tab>
+
+</mat-tab-group>

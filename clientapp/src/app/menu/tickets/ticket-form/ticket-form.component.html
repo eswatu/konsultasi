@@ -1,7 +1,7 @@
 <form [formGroup]="formInput" (ngSubmit)="onSubmit()" class="form">
 
     <div *ngIf="isFieldAjuVisible">
-        <mat-form-field fxLayout="column" appearance="fill" class="item" >
+        <mat-form-field appearance="fill" class="item" >
             <mat-label>Nomor Aju</mat-label>
             <input formControlName="aju" id="aju" matInput nomorAjuDirective
             placeholder="Nomor Aju: 000000-000000-000000-000000" >
@@ -11,7 +11,7 @@
         </mat-form-field>    
     </div>
 <div *ngIf="isFieldNopenVisible">
-    <mat-form-field fxLayout="column" appearance="fill" class="item" >
+    <mat-form-field appearance="fill" class="item" >
         <mat-label>Nomor Pendaftaran</mat-label>
         <input formControlName="nopen" id="nopen" matInput 
             placeholder="Nomor Pendaftaran 6 digit angka: 000000"

@@ -1,34 +1,35 @@
- <div id="item-c">
-  <p>The ticket ID is: {{ ticketId }}</p>
    <div *ngIf="!replies">
       <h2>Belum ada tanggapan...</h2>
    </div>
    <table mat-table [dataSource]="replies" class="mat-elevation-z8" [hidden]="!replies">
-     <!-- Id Column -->
-     <ng-container matColumnDef="id">
-       <th mat-header-cell *matHeaderCellDef style="width: 1% !important;">Nomor</th>
-       <td mat-cell *matCellDef="let rpl" class="tcenter">{{rpl.id}}</td>
-     </ng-container>
-   
+     
      <!-- Waktu tanggapan -->
      <ng-container matColumnDef="createdAt">
-       <th mat-header-cell *matHeaderCellDef >Waktu Tanggapan</th>
-       <td mat-cell *matCellDef="let rpl" >{{rpl.createdAt | date: 'dd-MM-yy HH:mm'}}</td>
-     </ng-container> 
-   
+       <th mat-header-cell *matHeaderCellDef style="width:160px;">Waktu Tanggapan</th>
+       <td mat-cell *matCellDef="let rpl" style="width:160px;">{{rpl.responseTime | date: 'dd-MM-yy HH:mm:ss'}}</td>
+      </ng-container> 
+      
+      <!-- Id Column -->
+      <ng-container matColumnDef="creator">
+        <th mat-header-cell *matHeaderCellDef style="width: 180px;">Pengguna</th>
+        <td mat-cell *matCellDef="let rpl" class="tcenter">{{rpl.creator.name + '/' + rpl.creator.company}}</td>
+      </ng-container>
+
      <!-- Isi Pesan -->
      <ng-container matColumnDef="message">
-       <th mat-header-cell *matHeaderCellDef>Pesan</th>
+       <th mat-header-cell *matHeaderCellDef style="flex: 1;">Pesan</th>
        <td mat-cell *matCellDef="let rpl">{{rpl.message}} </td>
      </ng-container>
    
      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
    </table>
-   <button mat-raised-button (click)="showInput = true" *ngIf="!showInput">Tambah Tanggapan</button>
-   <div *ngIf="showInput" class="input-row">
-     <mat-form-field class="input-field">
-       <input matInput placeholder="Tanggapan" [(ngModel)]="reply.message">
-     </mat-form-field>
-     <button mat-raised-button (click)="addRow()">Submit</button>
- </div>
+   <ng-container *ngIf="!isSolved">
+     <button mat-raised-button (click)="showInput = true" *ngIf="!showInput">Tambah Tanggapan</button>
+      <div *ngIf="showInput" class="input-row">
+       <mat-form-field class="input-field">
+         <input matInput placeholder="Tanggapan" [(ngModel)]="reply.message">
+       </mat-form-field>
+       <button mat-raised-button (click)="addRow()">Submit</button>
+      </div>
+   </ng-container>

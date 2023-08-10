@@ -1,16 +1,87 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { User } from '@app/_models';
+import { UserService } from '@app/_services';
+import { ApiResult } from '@app/_services/base.service';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-  selector: 'app-user-table',
+  selector: 'user-table',
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css']
 })
 export class UserTableComponent {
-  users: User[] = [
-    // some sample users
-    {username: 'alice', password: '1234', name: 'Alice', company: 'ABC', role: 'admin', contact: 'alice@abc.com', jwtToken: 'token1'},
-    {username: 'bob', password: '5678', name: 'Bob', company: 'XYZ', role: 'user', contact: 'bob@xyz.com', jwtToken: 'token2'}
+  users: User[];
+  defaultPageIndex = 0;
+  defaultPageSize = 10;
+  defaultSortColumn = 'createdAt';
+  defaultSortOrder: 'asc' | 'desc' = 'desc';
+  defaultFilterColumn: string = 'name';
+  filterQuery: string = null;
+  filterColumn = new FormControl();
+  filterQ = new FormControl();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  filterTextChanged: Subject<string> = new Subject<string>();
+  selectedOption: {key:string, value: string};
+  options: { key: string, value: string }[] = [
+    { key: 'Nama Orang', value: 'name' },
+    { key: 'Nama Perusahaan', value: 'company' },
   ];
-  displayedColumns: string[] = ['username', 'password', 'name', 'company', 'role', 'contact', 'jwtToken'];
+  constructor(private userService: UserService) {
+  }
+
+  ngonInit(): void {
+    this.loadData(null);
+  }
+  loadData(q: string = null): void {
+    const pageEvent = new PageEvent();
+    pageEvent.pageIndex = this.defaultPageIndex;
+    pageEvent.pageSize = this.defaultPageSize;
+    if (q && this.defaultFilterColumn !== '') {
+      this.filterQuery = q;
+      this.defaultFilterColumn = this.filterColumn.value;
+    }
+    this.getData(pageEvent);
+  }
+async getData(event: PageEvent) {
+  const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
+  const sortOrder = this.sort ? (this.sort.direction as 'asc' | 'desc') : this.defaultSortOrder;
+  const filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
+  const filterQuery = this.filterQuery ? this.filterQuery : null;
+  try {
+    this.userService.getData<ApiResult<User>>(
+      event.pageIndex,
+      event.pageSize,
+      sortColumn,
+      sortOrder,
+      filterColumn,
+      filterQuery
+    ).subscribe(result => {
+      this.paginator.length = result.totalCount;
+      this.paginator.pageIndex = result.pageIndex;
+      this.paginator.pageSize = result.pageSize;
+      this.users = result.data;
+      //debug tickets
+      console.log(result.data);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+onFilterTextChanged(filterText: string) {
+  if (this.filterTextChanged.observers.length === 0) {
+      this.filterTextChanged
+          .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe(query => {
+          this.users = null;
+            this.loadData(query);
+          });
+  }
+  this.filterTextChanged.next(filterText);
+  }
+  displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact'];
 }
