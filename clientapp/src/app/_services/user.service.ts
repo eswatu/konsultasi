@@ -11,6 +11,7 @@ export class UserService extends BaseService {
     getData<ApiResult>(pageIndex: number, pageSize: number,
         sortColumn: string, sortOrder: 'asc' | 'desc',
         filterColumn: string, filterQuery: string): Observable<ApiResult> {
+
         var params = new HttpParams()
         // Set the pageIndex parameter with the provided value
         .set('pageIndex', pageIndex.toString())
@@ -27,7 +28,6 @@ export class UserService extends BaseService {
             // Set the filterQuery parameter with the provided value
             .set('filterQuery', filterQuery);
         }
-        
         // Make a GET request to the specified URL with the params as query parameters
         return this.http.get<ApiResult>(this.url, {params});
     }
@@ -47,6 +47,5 @@ export class UserService extends BaseService {
             super(http, baseUrl);
             this.url = `${environment.apiUrl}/users`;
         }
-
 
 }

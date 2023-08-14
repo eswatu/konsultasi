@@ -71,7 +71,7 @@ function revokeToken(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    userService.getAll()
+    userService.getAllUser(req)
         .then(users => res.json(users))
         .catch(next);
 }

@@ -6,5 +6,6 @@ export class User {
     company?: string;
     role?: string;
     contact?: string;
+    isActive: boolean;
     jwtToken?: string;
 }

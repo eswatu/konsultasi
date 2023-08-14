@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { User } from '@app/_models';
-import { UserService } from '@app/_services';
+import { AuthenticationService, UserService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
   selector: 'user-table',
@@ -31,10 +33,11 @@ export class UserTableComponent {
     { key: 'Nama Orang', value: 'name' },
     { key: 'Nama Perusahaan', value: 'company' },
   ];
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,public dialog: MatDialog) {
+
   }
 
-  ngonInit(): void {
+  ngOnInit(): void {
     this.loadData(null);
   }
   loadData(q: string = null): void {
@@ -83,5 +86,18 @@ onFilterTextChanged(filterText: string) {
   }
   this.filterTextChanged.next(filterText);
   }
-  displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact'];
+  openForm(usr: User){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.restoreFocus = true;
+    dialogConfig.minWidth = 400;
+    dialogConfig.minHeight = 480;
+    dialogConfig.maxHeight = 800;
+    if (usr) {
+      dialogConfig.data = { id: usr.id };
+    }
+    const dialogRef = this.dialog.open(UserFormComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(() => this.loadData(null));
+  }
+  displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact', 'aksi'];
 }

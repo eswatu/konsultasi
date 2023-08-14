@@ -8,4 +8,7 @@ import { User } from '@app/_models';
 })
 export class UserFormComponent {
   user: User = new User();
+  closeDialog() {
+    
+  }
 }

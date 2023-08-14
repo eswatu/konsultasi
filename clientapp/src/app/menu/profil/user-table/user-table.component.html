@@ -1,3 +1,7 @@
+<button mat-raised-button 
+(click)="openForm(null)"
+>Tambah Pengguna</button>
+
 <table mat-table [dataSource]="users">
   <!-- ID column -->
   <ng-container matColumnDef="id">
@@ -35,9 +39,23 @@
     <td mat-cell *matCellDef="let user"> {{ user.contact }} </td>
   </ng-container>
 
+    <!-- Action column -->
+    <ng-container matColumnDef="aksi">
+      <th mat-header-cell *matHeaderCellDef> Tindakan </th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-raised-button (click)="openForm(user)">Edit</button>
+        </td>
+    </ng-container>
+
   <!-- Define the header row -->
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
   <!-- Define the data rows -->
   <tr mat-row *matRowDef="let user; columns: displayedColumns;"></tr>
 </table>
+<mat-paginator [hidden]="!users"
+(page)="getData($event)"
+[pageSize]="10"
+[pageSizeOptions]="[5, 10, 20]"
+showFirstLastButtons>
+</mat-paginator>

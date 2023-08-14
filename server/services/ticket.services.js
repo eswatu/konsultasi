@@ -7,7 +7,7 @@
  */
 
 const db = require('_helpers/db');
-const paginateTicket = require('_helpers/paginate');
+const {paginateTicket} = require('_helpers/paginate');
 
 /**
  * Retrieves a paginated list of tickets.

@@ -1,9 +1,44 @@
-<form #userForm="ngForm">
+<form #userForm="ngForm" class="user-form">
+  <div class="input-container">
     <mat-form-field>
       <input matInput placeholder="Username" name="username" [(ngModel)]="user.username" required>
     </mat-form-field>
+  </div>
+  <div class="input-container">
     <mat-form-field>
       <input matInput placeholder="Password" name="password" [(ngModel)]="user.password" required>
     </mat-form-field>
+  </div>
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Nama" name="name" [(ngModel)]="user.name" required>
+    </mat-form-field>    
+  </div>
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Perusahaan" name="company" [(ngModel)]="user.company" required>
+    </mat-form-field>    
+  </div>
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Role" name="role" [(ngModel)]="user.role" required>
+    </mat-form-field>    
+  </div>
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Kontak" name="contact" [(ngModel)]="user.contact" required>
+    </mat-form-field>    
+  </div>
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Aktif" name="isActive" [(ngModel)]="user.isActive" required>
+    </mat-form-field>    
+  </div>
     <!-- add more fields for name, company, role, contact and jwtToken -->
+  <div class="input-container">
+      <button type="submit" mat-raised-button color="primary" 
+      [disabled]="userForm.invalid" [hidden]="userForm.invalid">Simpan</button>
+      <button type="button" mat-raised-button color="warn"(click)='closeDialog()' >Batal</button>
+  </div>
   </form>
+

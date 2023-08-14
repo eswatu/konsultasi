@@ -85,7 +85,73 @@ async function paginateTicket(collection, query, _auth) {
     filterQuery,
   };
 }
+async function paginateUser(collection, query) {
+  // Destructure query object
+  const {
+    pageIndex = 0, // Default page index is 0
+    pageSize = 10, // Default page size is 10
+    sortColumn = '', // Default sort column is empty string
+    sortOrder = '', // Default sort order is empty string
+    filterColumn = '', // Default filter column is empty string
+    filterQuery = '', // Default filter query is empty string
+    isSolved = '', // Default isSolved is empty string
+  } = query;
+  
+  const page = parseInt(pageIndex); // Convert page index to integer
+  const take = parseInt(pageSize); // Convert page size to integer
+  const skip = page * take; // Calculate number of documents to skip
 
-module.exports = paginateTicket;
+  const sort = {};
+  sort[sortColumn] = sortOrder.toUpperCase() === 'DESC' ? -1 : 1; // Set sort order
+
+  const filter = {};
+
+  if (filterColumn !== 'null' && filterQuery !== 'null') {
+    // If filterColumn and filterQuery are not 'null'
+    if (filterQuery !== "" && filterColumn !== "") {
+      // If filterQuery and filterColumn are not empty
+      if (!isNaN(filterQuery)) {
+        filter[filterColumn] = parseInt(filterQuery); // Set filter for numeric values
+      } else if (filterQuery === 'true' || filterQuery === 'false') {
+        filter[filterColumn] = filterQuery === 'true'; // Set filter for boolean values
+      } else {
+        const regex = new RegExp(filterQuery, 'i');
+        filter[filterColumn] = { $regex: regex }; // Set filter for text search
+        // filter[filterColumn] = { $text: { $search: filterQuery } } ; // Set filter for text search
+      }
+    }
+  }
+
+  // Execute query with pagination parameters
+  const data = await collection
+    .find(filter)
+    .sort(sort)
+    .skip(skip)
+    .limit(take)
+    .exec();
+
+  // Get total count of documents matching the filter
+  const totalCount = await collection.countDocuments(filter);
+  const totalPages = Math.ceil(totalCount / take); // Calculate total number of pages
+  const hasPreviousPage = page > 0; // Check if there is a previous page
+  const hasNextPage = page < totalPages - 1; // Check if there is a next page
+
+  // Return paginated data and metadata
+  return {
+    data,
+    pageIndex: page,
+    pageSize: take,
+    totalCount,
+    totalPages,
+    hasPreviousPage,
+    hasNextPage,
+    sortColumn,
+    sortOrder,
+    filterColumn,
+    filterQuery,
+  };
+}
+
+module.exports = { paginateTicket, paginateUser };
 
 

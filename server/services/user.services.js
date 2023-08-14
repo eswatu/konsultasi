@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const db = require('_helpers/db');
+const {paginateUser} = require('_helpers/paginate');
 
 module.exports = {
     authenticate,
     refreshToken,
     revokeToken,
-    getAll,
+    getAllUser,
     getById,
     getRefreshTokens
 };
@@ -67,9 +68,9 @@ async function revokeToken({ token, ipAddress }) {
     await refreshToken.save();
 }
 
-async function getAll() {
-    const users = await db.User.find();
-    return users.map(x => basicDetails(x));
+async function getAllUser(req) {
+    const {query} = req
+    return await paginateUser(db.User, query)
 }
 
 async function getById(id) {
