@@ -24,7 +24,9 @@ export class ReplyTableComponent {
 
   addRow() {
     this.rplService.post<Reply>(this.reply, this.ticketId).subscribe(data => {
-      this.replies.push(data);
+      if (data){
+        this.replies.push(data);
+      }
     });
     this.getData(this.ticketId);
     this.showInput = false;

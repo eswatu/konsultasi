@@ -58,12 +58,15 @@ async function updateReply(req) {
         });
         if (result.modifiedCount > 0) {
             console.log('Update successful');
+            return res.status(200).json({ success: true, message: 'Update successful' });
         } else {
             console.log('Update failed');
+            return res.status(404).json({ success: false, message: 'Update failed: reply not found' });
         }
     }
     catch (error) {
-        console.error(error);
+        console.error("error update reply: ",error);
+        return res.status(500).json({ success: false, message: 'An error occurred while updating the reply' });
     }
 }
 
@@ -75,30 +78,38 @@ async function updateReply(req) {
  * @param {Object} req - The request object containing the properties for the new reply (message, isKey).
  */
 async function createReply(au, ticketId, req) {
-    console.log('repl service ticketId: '+ ticketId);
-    console.log('repl service req: '+ req);
-    const { id } = au;
-    const { message, isKey } = req;
-    const user = await db.User.findById(id);
-    const ticket = await db.Ticket.findById(ticketId);
+    try {
+        console.log('repl service ticketId: '+ ticketId);
+        console.log('repl service req: '+ req);
+        const { id } = au;
+        const { message, isKey } = req;
+        const user = await db.User.findById(id);
+        const ticket = await db.Ticket.findById(ticketId);
+    
+        console.log('User:', user);
+        console.log('Ticket:', ticket);
+    
+        const reply = new db.Reply({
+            message,
+            isKey,
+            ticket,
+            creator: {
+                id: user.id,
+                name: user.name,
+                company: user.company,
+            }
+        });
+    
+        console.log('Reply:', reply);
+    
+        await reply.save();
+        // Sending a success response
+        return {success: true, message: 'success creating reply!'};        
+    } catch (error) {
+        // Sending an error response
+        return { success: false, message: 'An error occurred while creating the reply' };
+    }
 
-    console.log('User:', user);
-    console.log('Ticket:', ticket);
-
-    const reply = new db.Reply({
-        message,
-        isKey,
-        ticket,
-        creator: {
-            id: user.id,
-            name: user.name,
-            company: user.company,
-        }
-    });
-
-    console.log('Reply:', reply);
-
-    await reply.save();
 }
 
 

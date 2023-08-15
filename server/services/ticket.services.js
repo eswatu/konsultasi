@@ -56,10 +56,13 @@ async function updateTicket(req) {
         );
 
         if (result.nModified === 0) {
-            throw new Error('Update failed');
+            return {success: false, message: 'gagal, tiket tidak berubah'};
+        } else {
+            return {success: true, message: 'success update ticket'};
         }
     } catch (error) {
         console.error(error);
+        return {success: false, message: 'eror' + error};
     }
 }
 

@@ -35,6 +35,33 @@ function createSchema(req, res, next) {
 }
 
 /**
+ * Creates a new reply.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ */
+async function createReply(req, res) {
+  try {
+    const { body, auth, params } = req;
+    if (!body) {
+      console.log('Bad Request: Request body is missing');
+      res.status(400).json({ message: 'Bad Request' });
+      return;
+    }
+    const response = await replyService.createReply(auth, params.ticketId, body);
+    if (response.success) {
+      res.status(201).json({success:true, message: response.message});
+    } else {
+      // Send an error response
+      res.status(500).json({ success: false, message: response.message });
+  }
+  } catch (error) {
+    console.error('Error in creating reply:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while processing your request' });
+  }
+}
+
+/**
  * Validates the request body for updating a reply.
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
@@ -48,29 +75,7 @@ function updateSchema(req, res, next) {
   validateRequest(req, next, schema);
 };
 
-/**
- * Creates a new reply.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
-function createReply(req, res, next) {
-  try {
-    const { body, auth, params } = req;
-    if (!body) {
-      console.log('Bad Request: Request body is missing');
-      res.status(400).json({ message: 'Bad Request' });
-      return;
-    }
-    console.log('Before creating reply');
-    replyService.createReply(auth, params.ticketId, body);
-    console.log('After creating reply');
-    res.json({ message: 'Successfully created reply' });
-  } catch (error) {
-    console.error('Error:', error);
-    next(error);
-  }
-}
+
 
 /**
  * Gets all replies for a ticket.

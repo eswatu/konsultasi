@@ -17,9 +17,8 @@
     <mat-form-field appearance="fill" class="item">
       <input matInput placeholder="Kontak" name="contact" [(ngModel)]="user.contact" required>
     </mat-form-field>    
-    <mat-form-field appearance="fill" class="item">
-      <input matInput placeholder="Aktif" name="isActive" [(ngModel)]="user.isActive" required>
-    </mat-form-field>    
+    <mat-slide-toggle [(ngModel)]="userForm.isActive">{{userForm.isActive ? 'aktif' : 'nonaktif'}}</mat-slide-toggle>
+  
     <!-- add more fields for name, company, role, contact and jwtToken -->
       <button type="submit" mat-raised-button color="primary" 
       [disabled]="userForm.invalid" [hidden]="userForm.invalid">Simpan</button>
