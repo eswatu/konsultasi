@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1",
+    "swagger-jsdoc": "^6.2.8",
     "winston": "^3.10.0"
   }
 }

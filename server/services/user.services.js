@@ -4,11 +4,13 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const db = require('_helpers/db');
 const {paginateUser} = require('_helpers/paginate');
+const Roles = require('../_helpers/role');
 
 module.exports = {
     authenticate,
     refreshToken,
     revokeToken,
+    createUser,
     getAllUser,
     getById,
     getRefreshTokens
@@ -67,10 +69,32 @@ async function revokeToken({ token, ipAddress }) {
     refreshToken.revokedByIp = ipAddress;
     await refreshToken.save();
 }
-
+async function createUser(au, req) {
+    if (au.role !== Roles.Admin ){
+        return;
+    }
+    try {
+        const pwhash = bcrypt.hashSync(req.password, 10);
+        const user = new db.User({
+            name: req.name,
+            username: req.username,
+            passwordHash: pwhash,
+            role: req.role,
+            company: req.company,
+            contact: req.contact,
+            isActive: req.isActive
+        });
+        console.log(' di service user berisi ' + JSON.stringify(user));
+        await user.save();
+        return {success: true, message: 'Berhasil membuat User baru'};            
+    } catch (error) {
+        console.log(error);
+        return {success: false, message: 'Gagal membuat user baru'};
+    }
+}
 async function getAllUser(req) {
-    const {query} = req
-    return await paginateUser(db.User, query)
+    const {query} = req;
+    return await paginateUser(db.User, query);
 }
 
 async function getById(id) {

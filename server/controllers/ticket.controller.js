@@ -161,10 +161,100 @@ async function deleteById(req, res, next) {
 }
 
 // routes
+   /**
+    * @swagger
+    * /users:
+    *   post:
+    *     summary: Create a new user
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             $ref: '#/components/schemas/User'
+    *     responses:
+    *       200:
+    *         description: User created successfully
+    *       400:
+    *         description: Invalid request
+    */
 router.post('/', authorize(), createSchema, createTicket);
+   /**
+    * @swagger
+    * /users:
+    *   post:
+    *     summary: Create a new user
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             $ref: '#/components/schemas/User'
+    *     responses:
+    *       200:
+    *         description: User created successfully
+    *       400:
+    *         description: Invalid request
+    */
 router.get('/', authorize(Role.Admin), getAll);
+   /**
+    * @swagger
+    * /users:
+    *   post:
+    *     summary: Create a new user
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             $ref: '#/components/schemas/User'
+    *     responses:
+    *       200:
+    *         description: User created successfully
+    *       400:
+    *         description: Invalid request
+    */
 router.get('/:id', authorize(), getById);
+   /**
+    * @swagger
+    * /users:
+    *   post:
+    *     summary: Create a new user
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             $ref: '#/components/schemas/User'
+    *     responses:
+    *       200:
+    *         description: User created successfully
+    *       400:
+    *         description: Invalid request
+    */
 router.put('/:id', /* authorize(), */ updateSchema, updateById);
+   /**
+    * @swagger
+    * /users:
+    *   post:
+    *     summary: Create a new user
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             $ref: '#/components/schemas/User'
+    *     responses:
+    *       200:
+    *         description: User created successfully
+    *       400:
+    *         description: Invalid request
+    */
 router.delete('/:id', /* authorize(),*/ deleteById);
 
 module.exports = router;

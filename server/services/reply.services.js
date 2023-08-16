@@ -79,16 +79,10 @@ async function updateReply(req) {
  */
 async function createReply(au, ticketId, req) {
     try {
-        console.log('repl service ticketId: '+ ticketId);
-        console.log('repl service req: '+ req);
         const { id } = au;
         const { message, isKey } = req;
         const user = await db.User.findById(id);
         const ticket = await db.Ticket.findById(ticketId);
-    
-        console.log('User:', user);
-        console.log('Ticket:', ticket);
-    
         const reply = new db.Reply({
             message,
             isKey,

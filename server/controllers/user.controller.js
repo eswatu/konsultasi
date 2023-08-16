@@ -7,6 +7,7 @@ const Role = require('_helpers/role');
 const userService = require('services/user.services');
 
 // routes
+router.post('/', authorize(Role.Admin), createSchema, createUser);
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
@@ -108,4 +109,35 @@ function setTokenCookie(res, token)
         expires: new Date(Date.now() + 7*24*60*60*1000)
     };
     res.cookie('refreshToken', token, cookieOptions);
+}
+
+function createSchema(req, res, next) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        role: Joi.string().required(),
+        company: Joi.string().required(),
+        contact: Joi.string().required(),
+        isActive: Joi.boolean().required()
+    });
+    validateRequest(req, next, schema);
+}
+async function createUser(req, res) {
+    try {
+        if (!body) {
+            console.log('Bad Request: Request body is missing');
+            res.status(400).json({ message: 'Bad Request' });
+            return;
+          }
+        const response = await userService.createUser(req.auth, req.body);
+        if (response.success) {
+            res.status(201).json({success: true, message: response.message});
+        } else {
+            res.status(500).json({success: false, message: response.message});
+        }
+        
+    } catch (error) {
+
+    }
 }

@@ -14,13 +14,30 @@ export class UserFormComponent {
   userForm: FormGroup;
   user: User;
   iduser;
-  constructor(private userService: UserService,private dialogRef: MatDialogRef<UserFormComponent>,
+  options:{ key: string, value: string }[]  = [
+    { key:'Administrator', value: 'Admin'},
+    { key:'Pekerja Kantor', value: 'Worker'},
+    { key:'Pengguna Biasa', value: 'Client'}
+  ];
+
+  constructor(private fb: FormBuilder, private userService: UserService,private dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
       if (data) {
         this.iduser = data.id;
       }
     }
-    ngOninit():void {
+    ngOnInit() {
+      this.userForm = this.fb.group({
+        username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9.]*$'), Validators.maxLength(20),Validators.pattern('^[^\\s]+$')]],
+        password: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9.]*$'), Validators.maxLength(20), Validators.pattern('^[^\\s]+$')]],
+        name: ['', Validators.required],
+        company: ['', Validators.required],
+        role: ['', Validators.required],
+        contact: ['', Validators.required],
+        isActive: [true]
+      });
+      
+
       if (this.iduser) {
         this.userService.get(this.iduser).subscribe(value => {
           this.user = value;
@@ -30,16 +47,29 @@ export class UserFormComponent {
     }
     onSubmit() {
       if (this.userForm.valid) {
-        this.user = this.userForm.value;
-        this.userService.post<User>(this.user).subscribe(respon => {
-          Swal.fire(JSON.stringify(respon));
-          this.closeDialog();
-        }, error => {
-          console.error(error);
-          Swal.fire(error.error.message);
-        })
+        const newUser: User = {
+          username: this.userForm.value.username,
+          password: this.userForm.value.password,
+          name: this.userForm.value.name,
+          company: this.userForm.value.company,
+          role: this.userForm.value.role,
+          contact: this.userForm.value.contact,
+          isActive: this.userForm.value.isActive
+        };
+    
+        this.userService.post<User>(newUser).subscribe(
+          response => {
+            Swal.fire(JSON.stringify(response));
+            this.closeDialog();
+          },
+          error => {
+            console.error(error);
+            Swal.fire(error.error.message);
+          }
+        );
       }
     }
+    
   closeDialog() {
     this.dialogRef.close();
   }

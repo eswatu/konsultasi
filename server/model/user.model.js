@@ -8,7 +8,8 @@ const schema = new Schema({
     passwordHash: { type: String, required: true , select: false},
     role: { type: String, required: true },
     company: {type: String, required: true},
-    contact: {type: String, required: true}
+    contact: {type: String, required: true},
+    isActive: {type: Boolean, required: true},
 });
 
 schema.set('toJSON', {

@@ -14,6 +14,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -32,7 +33,8 @@ const modules = [
   MatDialogModule,
   MatSortModule,
   MatPaginatorModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatTooltipModule
 ]
 
 @NgModule({
