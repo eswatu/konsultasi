@@ -4,8 +4,6 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('_middleware/error-handler');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 const replyController = require('./controllers/reply.controller');
@@ -24,69 +22,8 @@ app.use(cors({
   credentials: true
 }));
 
-// swagger docs route
-   // Swagger configuration options
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Dokumentasi API',
-      version: '1.0.0',
-      description: 'API documentation using Swagger',
-    },
-    servers:[
-      {
-        api:'http://localhost:4000/'
-      }
-    ]
-  },
-  apis: ['./swagger.js'],
-};
-
-// Generate Swagger specification
-const specs = swaggerJsdoc(options);
-
-// Serve Swagger documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
 // api routes
-/**
-* @swagger
-* /users:
-*   post:
-*     summary: Create a new user
-*     tags: [Users]
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             $ref: '#/components/schemas/User'
-*     responses:
-*       200:
-*         description: User created successfully
-*       400:
-*         description: Invalid request
-*/
 app.use('/users', userController);
-/**
-* @swagger
-* /tickets:
-*   post:
-*     summary: Create a new user
-*     tags: [Users]
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             $ref: '#/components/schemas/User'
-*     responses:
-*       200:
-*         description: User created successfully
-*       400:
-*         description: Invalid request
-*/
 app.use('/tickets', ticketController);
 app.use('/replies', replyController);
 

@@ -99,5 +99,5 @@ onFilterTextChanged(filterText: string) {
     const dialogRef = this.dialog.open(UserFormComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => this.loadData(null));
   }
-  displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact', 'aksi'];
+  displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact','isActive', 'aksi'];
 }

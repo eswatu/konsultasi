@@ -19,7 +19,7 @@ module.exports = {
 async function authenticate({ username, password, ipAddress }) {
     const user = await db.User.findOne({ username }).select('+passwordHash');
 
-    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
         throw 'Username or password is incorrect';
     }
 
@@ -69,28 +69,24 @@ async function revokeToken({ token, ipAddress }) {
     refreshToken.revokedByIp = ipAddress;
     await refreshToken.save();
 }
-async function createUser(au, req) {
-    if (au.role !== Roles.Admin ){
-        return;
+async function createUser(body) {
+    const existingUser = await db.User.findOne({ username: body.username });
+    if (existingUser) {
+        return { success: false, message: 'User already exists' };
     }
-    try {
-        const pwhash = bcrypt.hashSync(req.password, 10);
-        const user = new db.User({
-            name: req.name,
-            username: req.username,
-            passwordHash: pwhash,
-            role: req.role,
-            company: req.company,
-            contact: req.contact,
-            isActive: req.isActive
-        });
-        console.log(' di service user berisi ' + JSON.stringify(user));
-        await user.save();
-        return {success: true, message: 'Berhasil membuat User baru'};            
-    } catch (error) {
-        console.log(error);
-        return {success: false, message: 'Gagal membuat user baru'};
-    }
+    const pwhash = await bcrypt.hash(body.password, 10);
+    const user = new db.User({
+        name: body.name,
+        username: body.username,
+        passwordHash: pwhash,
+        role: body.role,
+        company: body.company,
+        contact: body.contact,
+        isActive: body.isActive
+    });
+    console.log('Creating new user:', { name: user.name, username: user.username, role: user.role, company: user.company, contact: user.contact, isActive: user.isActive });
+    await user.save();
+    return { success: true, message: 'Berhasil membuat User baru' };            
 }
 async function getAllUser(req) {
     const {query} = req;
@@ -98,7 +94,9 @@ async function getAllUser(req) {
 }
 
 async function getById(id) {
+    console.log('Fetching user by ID...');
     const user = await getUser(id);
+    console.log('User fetched:', user);
     return basicDetails(user);
 }
 

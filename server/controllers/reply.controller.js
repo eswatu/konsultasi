@@ -13,84 +13,13 @@ const replyService = require('services/reply.services');
 const { logger } = require('../_helpers/logger');
 
 // routes
-   /**
-    * @swagger
-    * /users:
-    *   post:
-    *     summary: Create a new user
-    *     tags: [Users]
-    *     requestBody:
-    *       required: true
-    *       content:
-    *         application/json:
-    *           schema:
-    *             $ref: '#/components/schemas/User'
-    *     responses:
-    *       200:
-    *         description: User created successfully
-    *       400:
-    *         description: Invalid request
-    */
-router.post('/:ticketId', authorize(), createSchema, createReply);
-   /**
-    * @swagger
-    * /users:
-    *   post:
-    *     summary: Create a new user
-    *     tags: [Users]
-    *     requestBody:
-    *       required: true
-    *       content:
-    *         application/json:
-    *           schema:
-    *             $ref: '#/components/schemas/User'
-    *     responses:
-    *       200:
-    *         description: User created successfully
-    *       400:
-    *         description: Invalid request
-    */
-router.get('/', authorize(), getAllByTicketId);
-   /**
-    * @swagger
-    * /users:
-    *   post:
-    *     summary: Create a new user
-    *     tags: [Users]
-    *     requestBody:
-    *       required: true
-    *       content:
-    *         application/json:
-    *           schema:
-    *             $ref: '#/components/schemas/User'
-    *     responses:
-    *       200:
-    *         description: User created successfully
-    *       400:
-    *         description: Invalid request
-    */
-router.get('/:id', authorize(), getById);
-   /**
-    * @swagger
-    * /users:
-    *   post:
-    *     summary: Create a new user
-    *     tags: [Users]
-    *     requestBody:
-    *       required: true
-    *       content:
-    *         application/json:
-    *           schema:
-    *             $ref: '#/components/schemas/User'
-    *     responses:
-    *       200:
-    *         description: User created successfully
-    *       400:
-    *         description: Invalid request
-    */
-router.put('/:id', authorize(), updateSchema, updateById);
 
-router.delete('/:id', authorize(),  deleteById);
+router.post('/:ticketId', authorize(), createSchema, createReply);
+router.get('/', authorize(), getAllByTicketId);
+router.get('/:id', authorize(), getById);
+router.put('/:id', authorize(), updateSchema, updateById);
+router.delete('/:id', authorize(), deleteById);
+
 
 
 /**

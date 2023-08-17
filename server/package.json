@@ -20,12 +20,10 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
     "rootpath": "^0.1.2",
-    "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",
-    "swagger-jsdoc": "^6.2.8",
     "winston": "^3.10.0"
   }
 }

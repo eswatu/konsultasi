@@ -18,7 +18,7 @@ import { FormControl } from '@angular/forms';
 export class TicketsComponent implements OnInit {
   @Input({required:true}) isSolved;
   tickets: Ticket[];
-  authUserId: number;
+  authUserId: string;
   user: User;
   defaultPageIndex = 0;
   defaultPageSize = 10;

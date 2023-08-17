@@ -74,22 +74,25 @@ async function updateTicket(req) {
  * @param {Object} req - The request object containing the ticket data.
  */
 async function createTicket(au, req) {
-
-    const us = await db.User.findById(au.id);
-    const ticket = new db.Ticket({
-        aju: req.aju,
-        nopen: req.nopen,
-        pendate: req.pendate,
-        name: req.name,
-        problem: req.problem,
-        creator: {
-            id: us._id,
-            name: us.name,
-            company: us.company,
-            role: us.role
-        }
-    });
-    await ticket.save();
+    try {
+        const us = await db.User.findById(au.id);
+        const ticket = new db.Ticket({
+            aju: req.aju,
+            nopen: req.nopen,
+            pendate: req.pendate,
+            name: req.name,
+            problem: req.problem,
+            creator: {
+                id: us._id,
+                name: us.name,
+                company: us.company,
+                role: us.role
+            }
+        });
+        await ticket.save();        
+    } catch (error) {
+        throw error;
+    }
 }
 
 /**

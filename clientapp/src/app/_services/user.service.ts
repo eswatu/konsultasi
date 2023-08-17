@@ -1,13 +1,25 @@
+import { catchError } from 'rxjs/operators';
 import { Inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { BaseService } from './base.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { User } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends BaseService {
-    url: string;
+    private url: string;
+
+    constructor(http: HttpClient,
+        @Inject('BASE_URL') baseUrl: string) {
+            super(http, baseUrl);
+            this.url = `${environment.apiUrl}/users`;
+        }
+
+    private constructUrl(id: string): string {
+        return `${this.url}/${id}`;
+    }
+
     getData<ApiResult>(pageIndex: number, pageSize: number,
         sortColumn: string, sortOrder: 'asc' | 'desc',
         filterColumn: string, filterQuery: string): Observable<ApiResult> {
@@ -31,21 +43,18 @@ export class UserService extends BaseService {
         // Make a GET request to the specified URL with the params as query parameters
         return this.http.get<ApiResult>(this.url, {params});
     }
+
     get<User>(id: string): Observable<User> {
-        let myurl = this.url + id;
+        const myurl = this.constructUrl(id);
         return this.http.get<User>(myurl);
     }
-    put<User>(item: any): Observable<User> {
-        let myurl = this.url + item.id;
-        return this.http.put<User>(myurl, item);
-    }
-    post<User>(item: User): Observable<User> {
-        return this.http.post<User>(this.url, item);
-    }
-    constructor(http: HttpClient,
-        @Inject('BASE_URL') baseUrl: string) {
-            super(http, baseUrl);
-            this.url = `${environment.apiUrl}/users`;
-        }
 
+put<T>(item: any): Observable<HttpResponse<T>> {
+    const myurl = `${this.url}${item.id}`;
+    return this.http.put<T>(myurl, item, {observe: 'response'});
+}
+
+    post<T>(item: User): Observable<HttpResponse<T>> {
+        return this.http.post<T>(this.url, item, {observe: 'response'});
+    }
 }

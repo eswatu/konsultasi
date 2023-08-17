@@ -1,0 +1,7 @@
+.inactive-row {
+    background-color: rgb(255, 170, 207);
+  }
+
+.active-row {
+    background-color: rgb(185, 243, 228);
+}

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { Ticket } from '@app/_models/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -64,8 +65,8 @@ return this.http.get<ApiResult>(this.url, {params});
     let myurl = this.url + item.id;
     return this.http.put<Ticket>(myurl, item);
   }
-  post<Ticket>(item: Ticket): Observable<Ticket> {
-    return this.http.post<Ticket>(this.url, item);
+  post<T>(item: Ticket): Observable<HttpResponse<T>> {
+    return this.http.post<T>(this.url, item, {observe: 'response'});
   }
 
   constructor(http: HttpClient,

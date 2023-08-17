@@ -1,6 +1,8 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '@app/_models';
 import { UserService } from '@app/_services';
 import Swal from 'sweetalert2';
@@ -20,7 +22,10 @@ export class UserFormComponent {
     { key:'Pengguna Biasa', value: 'Client'}
   ];
 
-  constructor(private fb: FormBuilder, private userService: UserService,private dialogRef: MatDialogRef<UserFormComponent>,
+  constructor(private fb: FormBuilder,
+    private userService: UserService,
+    private snackBar: MatSnackBar,
+    private dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
       if (data) {
         this.iduser = data.id;
@@ -57,14 +62,15 @@ export class UserFormComponent {
           isActive: this.userForm.value.isActive
         };
     
-        this.userService.post<User>(newUser).subscribe(
+        this.userService.post(newUser).subscribe(
           response => {
-            Swal.fire(JSON.stringify(response));
+            console.log(response);
+            this.snackBar.open(response.body['message'],'', {duration:5000});
             this.closeDialog();
           },
           error => {
             console.error(error);
-            Swal.fire(error.error.message);
+            this.snackBar.open(`Error: ${error}`,'' ,{duration:1500});
           }
         );
       }
