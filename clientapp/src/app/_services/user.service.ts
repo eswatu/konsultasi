@@ -50,11 +50,15 @@ export class UserService extends BaseService {
     }
 
 put<T>(item: any): Observable<HttpResponse<T>> {
-    const myurl = `${this.url}${item.id}`;
+    const myurl = this.constructUrl(item.id);
     return this.http.put<T>(myurl, item, {observe: 'response'});
 }
 
     post<T>(item: User): Observable<HttpResponse<T>> {
         return this.http.post<T>(this.url, item, {observe: 'response'});
+    }
+    pwput<T>(item: any): Observable<HttpResponse<T>> {
+        const myurl = this.constructUrl(item.id + '/password');
+        return this.http.put<T>(myurl, item, {observe: 'response'});
     }
 }

@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, Form, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '@app/_models';
@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./user-form.component.css']
 })
 export class UserFormComponent {
+  private successtime = 2000;
+  private failtime = 5500;
   userForm: FormGroup;
   user: User;
   iduser;
@@ -29,12 +31,13 @@ export class UserFormComponent {
     @Inject(MAT_DIALOG_DATA) data) {
       if (data) {
         this.iduser = data.id;
+
       }
     }
     ngOnInit() {
       this.userForm = this.fb.group({
         username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9.]*$'), Validators.maxLength(20),Validators.pattern('^[^\\s]+$')]],
-        password: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9.]*$'), Validators.maxLength(20), Validators.pattern('^[^\\s]+$')]],
+        password: ['', [this.passwordValidator(!this.iduser), Validators.pattern('^[a-zA-Z0-9.]*$'), Validators.maxLength(20), Validators.pattern('^[^\\s]+$')]],
         name: ['', Validators.required],
         company: ['', Validators.required],
         role: ['', Validators.required],
@@ -44,35 +47,60 @@ export class UserFormComponent {
       
 
       if (this.iduser) {
+        this.userForm.get('password').clearValidators();
+        this.userForm.get('password').updateValueAndValidity();
         this.userService.get(this.iduser).subscribe(value => {
           this.user = value;
+          this.userForm.patchValue(value);
         },
         error => error.error);
       }
+    }
+
+    passwordValidator(required: boolean): ValidatorFn {
+      return (control: AbstractControl): { [key: string]: any } | null => {
+        if (required && Validators.required(control)) {
+          return { required: true };
+        }
+        return null;
+      };
     }
     onSubmit() {
       if (this.userForm.valid) {
         const newUser: User = {
           username: this.userForm.value.username,
-          password: this.userForm.value.password,
+          password: this.userForm.value?.password,
           name: this.userForm.value.name,
           company: this.userForm.value.company,
           role: this.userForm.value.role,
           contact: this.userForm.value.contact,
           isActive: this.userForm.value.isActive
         };
-    
-        this.userService.post(newUser).subscribe(
-          response => {
-            console.log(response);
-            this.snackBar.open(response.body['message'],'', {duration:5000});
-            this.closeDialog();
-          },
-          error => {
-            console.error(error);
-            this.snackBar.open(`Error: ${error}`,'' ,{duration:1500});
-          }
-        );
+        if (this.iduser) {
+          newUser.id = this.iduser;
+          this.userService.put(newUser).subscribe(
+            response => {
+              console.log(response);
+              this.snackBar.open(response.body['message'],'', {duration:this.successtime});
+              this.closeDialog();
+            }, error => {
+              console.error(error);
+              this.snackBar.open(`Error: ${error}`,'' ,{duration:this.failtime});
+            }
+          )
+
+        }else {
+          this.userService.post(newUser).subscribe(
+            response => {
+              console.log(response);
+              this.snackBar.open(response.body['message'],'', {duration:this.successtime});
+              this.closeDialog();
+            }, error => {
+              console.error(error);
+              this.snackBar.open(`Error: ${error}`,'' ,{duration:this.failtime});
+            });
+
+        }
       }
     }
     

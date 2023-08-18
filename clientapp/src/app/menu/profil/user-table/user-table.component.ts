@@ -8,6 +8,8 @@ import { AuthenticationService, UserService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { UserFormComponent } from '../user-form/user-form.component';
+import { UserPwFormComponent } from '../user-pw-form/user-pw-form.component';
+import { DialogConfig } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'user-table',
@@ -28,10 +30,13 @@ export class UserTableComponent {
   @ViewChild(MatSort) sort: MatSort;
 
   filterTextChanged: Subject<string> = new Subject<string>();
+
   selectedOption: {key:string, value: string};
   options: { key: string, value: string }[] = [
     { key: 'Nama Orang', value: 'name' },
     { key: 'Nama Perusahaan', value: 'company' },
+    { key: 'Username', value: 'username' },
+    { key: 'Role', value: 'role'},
   ];
   constructor(private userService: UserService,public dialog: MatDialog) {
 
@@ -85,7 +90,7 @@ onFilterTextChanged(filterText: string) {
           });
   }
   this.filterTextChanged.next(filterText);
-  }
+ }
   openForm(usr: User){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
@@ -97,6 +102,19 @@ onFilterTextChanged(filterText: string) {
       dialogConfig.data = { id: usr.id };
     }
     const dialogRef = this.dialog.open(UserFormComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(() => this.loadData(null));
+  }
+  changePassword(usr:User) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.restoreFocus = true;
+    dialogConfig.minWidth = 400;
+    dialogConfig.minHeight = 200;
+    dialogConfig.maxHeight = 400;
+    if (usr) {
+      dialogConfig.data = { id: usr.id };
+    }
+    const dialogRef = this.dialog.open(UserPwFormComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => this.loadData(null));
   }
   displayedColumns: string[] = ['username', 'name', 'company', 'role', 'contact','isActive', 'aksi'];

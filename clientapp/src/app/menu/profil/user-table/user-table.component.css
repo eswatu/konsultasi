@@ -1,7 +1,51 @@
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px 10px;
+  row-gap: 10px;
+  column-gap: 4px;
+}
+.item-1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  min-height: 54px;
+  justify-self: start;
+}
+.item-2 {
+  grid-column-start: 3;
+  grid-column-end: 9;
+}
+.item-3 {
+  grid-column-start: 1;
+  grid-column-end: 9;
+}
+.item-4 {
+  grid-column-start: 1;
+  grid-column-end: 9;
+}
 .inactive-row {
     background-color: rgb(255, 170, 207);
   }
 
 .active-row {
     background-color: rgb(185, 243, 228);
+}
+
+.user-table {
+  border-collapse: collapse; /* merge table cell borders */
+  width: 100%; /* adjust table width as needed */
+  grid-column: 1 span 3;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid black; /* add border to table cells */
+  padding: 8px; /* adjust cell padding as needed */
+}
+.user-table tbody tr:hover {
+  background-color: rgb(243, 240, 97); /* change the background color to the desired color */
+}
+.header-cell {
+  font-weight: bold; /* make the header font bold */
+  font-size: 16px; /* adjust the header font size as needed */
 }

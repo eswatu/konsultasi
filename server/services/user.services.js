@@ -13,7 +13,9 @@ module.exports = {
     createUser,
     getAllUser,
     getById,
-    getRefreshTokens
+    getRefreshTokens,
+    updateUser,
+    updatePassword
 };
 
 async function authenticate({ username, password, ipAddress }) {
@@ -88,6 +90,50 @@ async function createUser(body) {
     await user.save();
     return { success: true, message: 'Berhasil membuat User baru' };            
 }
+
+async function updateUser(req) {
+  try {
+    console.log(req.body);
+    const { id } = req.params;
+    const { username, name, company, role, contact, isActive } = req.body;
+
+    await db.User.updateOne({ _id: id }, {
+      $set: {
+        username,
+        name,
+        company,
+        role,
+        contact,
+        isActive
+      }
+    });
+
+    console.log('User updated successfully');
+    return { success: true, message: 'berhasil update Data User' };
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    return { success: false, message: 'internal error' };
+  }
+}
+async function updatePassword(req) {
+    try {
+        const { id, oldpassword, newPassword} = req.body;
+        const user = await db.User.findOne({ username }).select('+passwordHash');
+
+        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+            throw 'Username or password is incorrect';
+        } else {
+            const pwhash = await bcrypt.hash(newPassword, 10);
+            await db.User.updateOne({ _id: id }, {
+                $set: {
+                    passwordHash: pwhash
+                }
+            });
+        }
+    } catch (error) {
+        
+    }
+}
 async function getAllUser(req) {
     const {query} = req;
     return await paginateUser(db.User, query);
@@ -144,6 +190,6 @@ function randomTokenString() {
 }
 
 function basicDetails(user) {
-    const { id, name, username, role } = user;
-    return { id, name, username, role };
+    const { id, name, username, role, company, contact, isActive } = user;
+    return { id, name, username, role, company, contact, isActive };
 }

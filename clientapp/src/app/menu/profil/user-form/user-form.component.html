@@ -27,9 +27,9 @@
   
     <!-- add more fields for name, company, role, contact and jwtToken -->
       <button type="submit" mat-raised-button color="primary" 
-      [disabled]="userForm.invalid" [hidden]="userForm.invalid" (click)="onSubmit()">Buat User</button>
+      [disabled]="userForm.invalid" [hidden]="userForm.invalid" (click)="onSubmit()">{{ iduser ? 'Update' : 'Buat User'}}</button>
       <button type="button" mat-raised-button color="warn"(click)='closeDialog()' >Batal</button>
   </form>
 
-<p>{{ userForm.value | json }}</p>
-<p>myForm status: {{ userForm.status | json }}</p>
+<!-- <p>{{ userForm.value | json }}</p>
+<p>myForm status: {{ userForm.status | json }}</p> -->

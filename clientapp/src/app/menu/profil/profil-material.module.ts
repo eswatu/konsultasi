@@ -16,6 +16,7 @@ import { MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -36,7 +37,8 @@ const modules = [
   MatPaginatorModule,
   MatSlideToggleModule,
   MatTooltipModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatIconModule
 ]
 
 @NgModule({

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { UserTableComponent } from './user-table/user-table.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { ProfilTabComponent } from './profil-tab/profil-tab.component';
+import { UserPwFormComponent } from './user-pw-form/user-pw-form.component';
 
 
 
@@ -15,7 +16,8 @@ import { ProfilTabComponent } from './profil-tab/profil-tab.component';
     ProfilComponent,
     UserTableComponent,
     UserFormComponent,
-    ProfilTabComponent
+    ProfilTabComponent,
+    UserPwFormComponent
   ],
   imports: [
     CommonModule,

@@ -14,7 +14,8 @@ router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
 router.get('/:id/refresh-tokens', authorize(), getRefreshTokens);
-
+router.put('/:id', authorize(), updateUser);
+router.put('/:id/password', authorize(), updatePassword);
 
 
 function authenticateSchema(req, res, next) {
@@ -80,19 +81,20 @@ function getAll(req, res, next) {
 function getById(req, res, next) {
     // regular users can get their own record and admins can get any record
     if (req.params.id === req.auth.id || req.auth.role === Role.Admin) {
-        console.log(req.params.id + ' dan ' + req.auth.id);
+        userService.getById(req.params.id)
+            .then(user => {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.sendStatus(404);
+                }
+            })
+            .catch(next);
+        } else {
+            console.log(req.params.id + ' dan ' + req.auth.id);
         return res.status(401).json({ message: 'Unauthorized' });
-    }
+        }
 
-    userService.getById(req.params.id)
-        .then(user => {
-            if (user) {
-                res.json(user);
-            } else {
-                res.sendStatus(404);
-            }
-        })
-        .catch(next);
 }
 
     
@@ -148,5 +150,36 @@ async function createUser(req, res, next) {
     }
 }
 
+async function updateUser(req, res, next) {
+    try {
+        if (!req.body) {
+            return res.status(400).json({ message: 'Bad Request' });
+        }
+
+        const response = await userService.updateUser(req);
+        if (response.success) {
+            return res.status(201).json({success: true, message: response.message});
+        } else {
+            return res.status(500).json({success: false, message: response.message});
+        }
+      } catch (error) {
+        next(error);
+      }
+}
+async function updatePassword(req, res, next) {
+    try {
+        if (!req.body) {
+            return res.status(400).json({message: 'Bad Request'});
+        }
+        const response = await userService.updatePassword(req);
+        if (response.success) {
+            return res.status(201).json({success: true, message: response.message});
+        } else {
+            return res.status(500).json({success: false, message: response.message});
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
 module.exports = router;

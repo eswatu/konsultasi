@@ -15,7 +15,7 @@
       <mat-form-field class="search-field">
         <input type="text" matInput placeholder="Cari" (keyup)="onFilterTextChanged($any($event.target).value)"
         [formControl]="filterQ">
-        <button matSuffix mat-icon-button aria-label="Search" (click)="search()">
+        <button matSuffix mat-icon-button aria-label="Search" >
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
