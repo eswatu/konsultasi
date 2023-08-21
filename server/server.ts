@@ -8,9 +8,12 @@ const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 const replyController = require('./controllers/reply.controller');
 
-const server = require('http').createServer(app);
-const { Server } = require('socket.io');
-const io = new Server(server);
+import { createServer } from 'http';
+import { Server }  from 'socket.io';
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  path: '/users',
+});
 
 io.on('connection', (socket) => {
   console.log('a user connected');
