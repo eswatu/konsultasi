@@ -155,7 +155,6 @@ async function updateUser(req, res, next) {
         if (!req.body) {
             return res.status(400).json({ message: 'Bad Request' });
         }
-
         const response = await userService.updateUser(req);
         if (response.success) {
             return res.status(201).json({success: true, message: response.message});

@@ -8,7 +8,6 @@
  */
 
 const db = require('_helpers/db');
-const logger = require('winston');
 
 
 module.exports = {

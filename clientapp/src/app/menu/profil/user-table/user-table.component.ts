@@ -108,8 +108,8 @@ onFilterTextChanged(filterText: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.restoreFocus = true;
-    dialogConfig.minWidth = 400;
-    dialogConfig.minHeight = 200;
+    dialogConfig.minWidth = 500;
+    dialogConfig.minHeight = 250;
     dialogConfig.maxHeight = 400;
     if (usr) {
       dialogConfig.data = { id: usr.id };

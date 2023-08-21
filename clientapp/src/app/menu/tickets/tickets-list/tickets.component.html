@@ -1,37 +1,50 @@
-  <div *ngIf="!tickets || tickets == null" >
-    <mat-spinner></mat-spinner>
+<!-- container -->
+<div *ngIf="tickets" class="container">
+  <!-- button -->
+  <div class="item-button" style="display: grid; grid-template-columns: 15% 45% 40%;">
+        <div>
+          <button mat-raised-button color="primary" (click)="openForm(null)"
+          matTooltip="Tambah Tiket" *ngIf="!isSolved || isSolved == null" style="height: 70%;">
+          Buat Tiket Baru
+          </button>
+        </div>
+        <div></div>
+        <!-- search -->
+        <div style="display: grid; grid-template-columns: 40% 60%; justify-self: end;">
+          <mat-form-field >
+            <mat-select placeholder="Filter Kolom" [formControl]="filterColumn" (change)="loadData(null)">
+              <mat-option *ngFor="let option of options" [value]="option.value">{{option.key}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field>
+            <input type="text" matInput placeholder="Cari" (keyup)="onFilterTextChanged($any($event.target).value)"
+            [formControl]="filterQ">
+            <button matSuffix mat-icon-button aria-label="Search" >
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+
+        </div>
   </div>
-  <div *ngIf="tickets">
-    <button mat-raised-button color="primary" (click)="openForm(null)"
-      matTooltip="Tambah Tiket" *ngIf="!isSolved">
-        Buat Tiket Baru
-    </button>
-    <div class="search-container">
-      <mat-form-field class="options-field">
-        <mat-select placeholder="Filter Kolom" [formControl]="filterColumn" (change)="loadData(null)">
-          <mat-option *ngFor="let option of options" [value]="option.value">{{option.key}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="search-field">
-        <input type="text" matInput placeholder="Cari" (keyup)="onFilterTextChanged($any($event.target).value)"
-        [formControl]="filterQ">
-        <button matSuffix mat-icon-button aria-label="Search" >
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <ng-container *ngIf="tickets.length < 1">
+
+<!-- item table -->
+    <ng-container *ngIf="!tickets || tickets == null" class="item-table">
+      <mat-spinner></mat-spinner>
+    </ng-container>
+    <ng-container *ngIf="tickets.length < 1" class="item-table">
       <h1>Hasil pencarian: Nihil</h1>
     </ng-container>
-    <ng-container *ngIf="tickets.length > 0">
+    <ng-container *ngIf="tickets.length > 0" class="item-table">
       <div *ngFor="let ticket of tickets">
         <ticket-panel [ticket]="ticket"></ticket-panel>
       </div>
     </ng-container>
   </div>
-  <mat-paginator [hidden]="!tickets"
-      (page)="getData($event)"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons>
+  <!-- paginator -->
+  <div class="item-paginator">
+    <mat-paginator [hidden]="!tickets" (page)="getData($event)"
+        [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons>
     </mat-paginator>
+  </div>

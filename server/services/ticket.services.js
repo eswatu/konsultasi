@@ -58,7 +58,7 @@ async function updateTicket(req) {
         if (result.nModified === 0) {
             return {success: false, message: 'gagal, tiket tidak berubah'};
         } else {
-            return {success: true, message: 'success update ticket'};
+            return {success: true, message: 'sukses update tiket'};
         }
     } catch (error) {
         console.error(error);
@@ -89,9 +89,10 @@ async function createTicket(au, req) {
                 role: us.role
             }
         });
-        await ticket.save();        
+        await ticket.save();
+        return {success: true, message: 'berhasil membuat tiket baru!'};        
     } catch (error) {
-        throw error;
+        return {success: false, message: 'error dalam pembuatan tiket'};
     }
 }
 

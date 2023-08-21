@@ -8,6 +8,14 @@ const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 const replyController = require('./controllers/reply.controller');
 
+const server = require('http').createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
 // create test user in db on startup if required
 if (process.env.NODE_ENV === 'development') {
   const createTestUser = require('_helpers/create-test-user');

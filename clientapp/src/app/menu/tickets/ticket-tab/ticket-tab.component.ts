@@ -18,7 +18,7 @@ export class TicketTabComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authSrvc.user.subscribe(x => {
       this.user = x;
       if (this.user) {
-        this.isUser = this.user.role === 'User';
+        this.isUser = this.user.role === 'Client';
       }
     });
   }

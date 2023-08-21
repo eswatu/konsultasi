@@ -1,28 +1,24 @@
-:host {
-    display: grid;
+:host .container{
+    row-gap: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+    grid-template-columns: 20% 40% 40%;
+    grid-template-rows: 8% 82% 10%;
+    grid-template-areas: 
+    "button"
+    "main"
+    "paginator";
 }
-.mainPanel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-#item-a {
+.item-button {
+    grid-area: button;
     justify-self: start;
 }
-#item-b {
-    justify-self: end;
-}
-#item-c {
-    grid-column-start: 1;
-    grid-column-end: 4;
-}
 
-.search-container {
-    display: flex;
+.item-table {
+    grid-area: main;
+}
+.item-paginator {
+    width: max-content;
     align-items: center;
-  }
-  
-  .search-field,
-  .options-field {
-    flex: 1;
-    margin-right: 10px; /* Add some spacing between the fields */
-  }
+}

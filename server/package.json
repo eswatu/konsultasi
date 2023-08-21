@@ -20,10 +20,9 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
     "rootpath": "^0.1.2",
-    "yamljs": "^0.3.0"
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "winston": "^3.10.0"
+    "nodemon": "^3.0.1"
   }
 }

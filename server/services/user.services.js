@@ -117,21 +117,22 @@ async function updateUser(req) {
 }
 async function updatePassword(req) {
     try {
-        const { id, oldpassword, newPassword} = req.body;
-        const user = await db.User.findOne({ username }).select('+passwordHash');
+        const { id, oldpassword, newpassword} = req.body;
+        const user = await db.User.findOne({ _id: id }).select('+passwordHash');
 
-        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        if (!user || !(await bcrypt.compare(oldpassword, user.passwordHash))) {
             throw 'Username or password is incorrect';
         } else {
-            const pwhash = await bcrypt.hash(newPassword, 10);
+            const pwhash = await bcrypt.hash(newpassword, 10);
             await db.User.updateOne({ _id: id }, {
                 $set: {
                     passwordHash: pwhash
                 }
             });
+            return { success: true, message: 'berhasil update Data User' };
         }
     } catch (error) {
-        
+        return { success: false, message: 'internal error' };
     }
 }
 async function getAllUser(req) {

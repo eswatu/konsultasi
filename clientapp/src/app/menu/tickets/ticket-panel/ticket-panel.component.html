@@ -2,7 +2,7 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
           <mat-panel-title>{{ticket.name}}</mat-panel-title>
-          <mat-panel-description>{{ticket.creator.company + '-' + ticket.creator.name}}</mat-panel-description>
+          <mat-panel-description>{{ticket.creator.company + '-' + ticket.creator.name + ' ----------> ' + ( ticket.createdAt | date: 'dd-MM-yyyy HH:mm:ss')}}</mat-panel-description>
       </mat-expansion-panel-header>
       <div class="container">
         <div id="item-a">

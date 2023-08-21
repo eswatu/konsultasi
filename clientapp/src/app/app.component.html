@@ -1,27 +1,33 @@
-<mat-toolbar color="primary" *ngIf="isAuthorized">
-  <button mat-button [routerLink]="['']">
-    <mat-icon>dashboard</mat-icon>
-    Dashboard
-  </button>
-
-  <button  mat-button routerLink="tickets">
-    <mat-icon>work</mat-icon>
-    Tiket
-  </button>
-
-  <button  mat-button routerLink="profil">
-    <mat-icon>badge</mat-icon>
-    Profil
-  </button>
-
-  <button mat-button>
-    Andal Login Sebagai {{user!.role}}
-  </button>
-
-  <button mat-button (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    LogOut
-  </button>
+<mat-toolbar color="primary" *ngIf="isAuthorized" style="display: grid; grid-template-columns: 15% 15% 15% 40% 15%;" >
+  <div class="dashboard">
+    <button mat-button [routerLink]="['']">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </button>
+  </div>
+  <div class="ticket">
+    <button  mat-button routerLink="tickets">
+      <mat-icon>work</mat-icon>
+      Tiket
+    </button>
+  </div>
+  <div class="profile">
+    <button  mat-button routerLink="profil">
+      <mat-icon>badge</mat-icon>
+      Profil
+    </button>
+  </div>
+  <div class="loginid">
+    <button mat-button>
+      Andal Login Sebagai {{user!.role}}
+    </button>
+  </div>
+  <div class="logout">
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      LogOut
+    </button>
+  </div>
 
 </mat-toolbar>
 <router-outlet></router-outlet>

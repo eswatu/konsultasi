@@ -1,18 +1,20 @@
 <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="main-form">
-    <mat-form-field appearance="fill" id="item-1">
-      <mat-label>Kata Sandi Saat Ini</mat-label>
-      <input matInput formControlName="currentPassword" type="password" placeholder="Kata Sandi Saat Ini">
-    </mat-form-field>
-    <mat-form-field appearance="fill" id="item-2">
-      <mat-label>Konfirmasi Kata Sandi Baru</mat-label>
-      <input matInput formControlName="confirmPassword" type="password" placeholder="Konfirmasi Kata Sandi Baru">
-    </mat-form-field>
-    <mat-form-field appearance="fill" id="item-3">
-      <mat-label>Kata Sandi Baru</mat-label>
-      <input matInput formControlName="newPassword" type="password" placeholder="Kata Sandi Baru">
-    </mat-form-field>
+  <mat-form-field appearance="fill" id="item-1">
+    <mat-label>Kata Sandi Baru</mat-label>
+    <input matInput formControlName="newpw1" type="password" placeholder="Kata Sandi Baru">
+  </mat-form-field>
+  <mat-form-field appearance="fill" id="item-2">
+    <mat-label>Konfirmasi Kata Sandi Baru</mat-label>
+    <input matInput formControlName="newpw2" type="password" placeholder="Konfirmasi Kata Sandi Baru">
+  </mat-form-field>
+  <mat-form-field appearance="fill" id="item-3">
+    <mat-label>Kata Sandi Saat Ini</mat-label>
+    <input matInput formControlName="oldpw" type="password" placeholder="Kata Sandi Saat Ini">
+  </mat-form-field>
     <div id="item-4">
-        <button mat-raised-button color="primary" type="submit">Simpan</button>
-        <button mat-raised-button color="warn" (click)="closeDialog()">Batal</button>
+        <button class="button" mat-raised-button color="primary" type="submit" *ngIf="passwordForm.valid" >Simpan</button>
+        <button class="button" mat-raised-button color="warn" (click)="closeDialog()">Batal</button>
     </div>
   </form>
+  <p>myForm value: {{ passwordForm.value | json }}</p>
+<p>myForm status: {{ passwordForm.status | json }}</p>

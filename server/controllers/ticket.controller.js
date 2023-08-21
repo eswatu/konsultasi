@@ -64,16 +64,19 @@ function updateSchema(req, res, next) {
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-function createTicket(req, res, next) {
+async function createTicket(req, res, next) {
     try {
-        const ticket = req.body;
-        if (ticket) {
-            ticketService.createTicket(req.auth, ticket)
-                .then(() => res.json({ message: 'Berhasil input tiket' }))
-                .catch(next);
+        if (!req.body) {
+            return res.status(400).json({ message: 'Bad Request' });
+        }
+        const response = await ticketService.createTicket(req.auth, req.body);
+        if (response.success) {
+            return res.status(201).json({success: true, message: response.message});
+        } else {
+            return res.status(500).json({success: false, message: response.message});
         }
     } catch (error) {
-
+        next(error);
     }
 }
 
@@ -128,15 +131,13 @@ async function getById(req, res, next) {
  * @param {Function} next - The next middleware function.
  */
 async function updateById(req, res, next) {
-    const { id } = req.params;
-    const { body } = req;
-
-    console.log(`nilai id: ${id}`);
-    console.log(`nilai body: ${JSON.stringify(body)}`);
-
     try {
-        await ticketService.updateTicket(req);
-        res.send({ message: "berhasil mengubah data" });
+        const result = await ticketService.updateTicket(req);
+        if (result.success) {
+            return res.status(201).json({ success: true, message: result.message });
+        } else {
+            return res.status(500).json({success: false, message: result.message})
+        }
     } catch (error) {
         next(error);
     }

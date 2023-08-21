@@ -10,7 +10,6 @@ const Joi = require('@hapi/joi');
 const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize');
 const replyService = require('services/reply.services');
-const { logger } = require('../_helpers/logger');
 
 // routes
 

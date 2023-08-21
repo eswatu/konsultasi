@@ -1,5 +1,4 @@
 // const db = require('_helpers/db');
-const Roles = require('_helpers/role');
 /**
  * Paginates the ticket collection based on the provided query.
  *
@@ -18,9 +17,7 @@ async function paginateTicket(collection, query, _auth) {
     filterQuery = '', // Default filter query is empty string
     isSolved = '', // Default isSolved is empty string
   } = query;
-  const {
-    auth: { role, id } = {}, // Destructure auth object and assign role and id
-  } = _auth;
+  const { role, id }  = _auth;
   
   const page = parseInt(pageIndex); // Convert page index to integer
   const take = parseInt(pageSize); // Convert page size to integer
@@ -36,10 +33,9 @@ async function paginateTicket(collection, query, _auth) {
   } else {
     filter.isSolved = { $in: [true, false] }; // Set filter for isSolved with values true and false
   }
-  if (role !==  Roles.Admin) {
-    filter['creator.id'] = { $eq: id }; // Set filter for creator id if role is not admin
+  if (role ===  'Client') {
+    filter['creator.id'] = { $eq: id }; // Set filter for creator id if role is Client
   }
-
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     // If filterColumn and filterQuery are not 'null'
     if (filterQuery !== "" && filterColumn !== "") {
@@ -69,7 +65,8 @@ async function paginateTicket(collection, query, _auth) {
   const totalPages = Math.ceil(totalCount / take); // Calculate total number of pages
   const hasPreviousPage = page > 0; // Check if there is a previous page
   const hasNextPage = page < totalPages - 1; // Check if there is a next page
-
+  // console.log('id query ' + id);
+  // console.log(data);
   // Return paginated data and metadata
   return {
     data,
