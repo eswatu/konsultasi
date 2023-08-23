@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const creatorSchema = new Schema({
+const creatorSchema = mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
     name: String,
     company: String,
 });
 
-const schema = new Schema({
+const schema = mongoose.Schema({
     ticket: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Ticket',
@@ -30,4 +29,11 @@ schema.set('toJSON', {
         delete ret._id;
     },
 });
-module.exports = mongoose.model('Reply', schema);
+schema.statics.addMessage = (message, callback) => {
+    message.save(callback);
+}
+schema.statics.getMessages = (callback) => {
+    Message.find({}, callback);
+};
+
+module.exports = mongoose.model('Message', schema);

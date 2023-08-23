@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const creatorSchema = {
+const creatorSchema =mongoose.Schema({
     id: String,
     name: String,
     company: String
-};
+});
 
-const schema = new Schema({
+const schema = mongoose.Schema({
     aju: { type: String, required: false },
     nopen: { type: Number, required: false },
     pendate: { type: Date,  required: false },
