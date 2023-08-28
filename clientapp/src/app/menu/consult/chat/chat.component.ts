@@ -13,7 +13,7 @@ export class ChatComponent {
 
   }
   ngOnInit(){
-    this.chatservice.getNewMessage().subscribe((message: string) => {
+    this.chatservice.getMessage().subscribe((message: string) => {
       this.messageList.push(message);
     })
   }

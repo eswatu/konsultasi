@@ -1,39 +1,23 @@
+/* eslint-disable no-console */
 const socketIo = require('socket.io');
-const Message = require('../model/message.model');
-const config = require('../config.json');
+// const Message = require('../model/message.model');
+// const config = require('../config.json');
 
-const users = [];
-const connections = [];
+function initializeSocket(server) {
+  const io = socketIo(server, { path: '/chat' });
 
-const initialize = server => {
-    const io = socketIo(server, { path: '/chat'});
+  io.on('connection', (socket) => {
+    socket.to('chat-room');
+    socket.emit('welcome', {
+      msg: 'welcome to chat server',
+    });
 
-    io.on('connection', socket => {
-        connections.push(socket);
-        socket.to('chat-room');
-        socket.emit('welcome', {
-            msg: 'welcome to chat server'
-        });
-        socket.on('name', data=> {
-            if (data.name) {
-                socket.name = data.name;
-                let user = {name:socket.name, id: socket.id};
-                let existing = searchUser(user.name);
-                if (!existing)  {
-                    users.push(socket.username);
-                    }
-                io.emit('active', users);
-                console.log(`[$s] connected`, socket.name);
-                console.log('<users>:', users);
-            }
-        })
-
-        socket.on('getactive', () => {
-            io.emit('active', users);
-        });
-
-        socket.on('message', data=> {
-
-        })
-    })
+    socket.on('name', (data) => {
+      if (data.name) {
+        console.log(data);
+      }
+    });
+  });
 }
+
+module.exports = initializeSocket;

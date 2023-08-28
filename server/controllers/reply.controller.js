@@ -1,25 +1,10 @@
-/**
- * This code snippet provides routes and functions for managing replies to tickets in a helpdesk system.
- * It uses Express.js for routing, Joi for input validation, and middleware for authentication and authorization.
- * The code allows users to create, get, update, and delete replies to a ticket.
- */
-
 const express = require('express');
+
 const router = express.Router();
 const Joi = require('@hapi/joi');
-const validateRequest = require('_middleware/validate-request');
-const authorize = require('_middleware/authorize');
-const replyService = require('services/reply.services');
-
-// routes
-
-router.post('/:ticketId', authorize(), createSchema, createReply);
-router.get('/', authorize(), getAllByTicketId);
-router.get('/:id', authorize(), getById);
-router.put('/:id', authorize(), updateSchema, updateById);
-router.delete('/:id', authorize(), deleteById);
-
-
+const validateRequest = require('../_middleware/validate-request');
+const authorize = require('../_middleware/authorize');
+const replyService = require('../services/reply.services');
 
 /**
  * Validates the request body for creating a reply.
@@ -45,19 +30,19 @@ async function createReply(req, res) {
   try {
     const { body, auth, params } = req;
     if (!body) {
-      console.log('Bad Request: Request body is missing');
+      // console.log('Bad Request: Request body is missing');
       res.status(400).json({ message: 'Bad Request' });
       return;
     }
     const response = await replyService.createReply(auth, params.ticketId, body);
     if (response.success) {
-      res.status(201).json({success:true, message: response.message});
+      res.status(201).json({ success: true, message: response.message });
     } else {
       // Send an error response
       res.status(500).json({ success: false, message: response.message });
-  }
+    }
   } catch (error) {
-    console.error('Error in creating reply:', error);
+    // console.error('Error in creating reply:', error);
     res.status(500).json({ success: false, message: 'An error occurred while processing your request' });
   }
 }
@@ -74,9 +59,7 @@ function updateSchema(req, res, next) {
     isKey: Joi.bool().default(false),
   }).prefs({ abortEarly: false });
   validateRequest(req, next, schema);
-};
-
-
+}
 
 /**
  * Gets all replies for a ticket.
@@ -85,13 +68,13 @@ function updateSchema(req, res, next) {
  * @param {Function} next - The next middleware function.
  */
 async function getAllByTicketId(req, res, next) {
-  console.log(req);
+  // console.log(req);
   try {
     const replies = await replyService.getAllRepliesTicket(req.query.ticketId);
-    console.log('replies:', replies);
+    // console.log('replies:', replies);
     res.json(replies);
   } catch (error) {
-    console.log('error:', error);
+    // console.log('error:', error);
     next(error);
   }
 }
@@ -104,7 +87,7 @@ async function getAllByTicketId(req, res, next) {
  */
 function getById(req, res, next) {
   replyService.getReplyById(req.params.id)
-    .then(reply => reply ? res.json(reply) : res.sendStatus(404))
+    .then((reply) => (reply ? res.json(reply) : res.sendStatus(404)))
     .catch(next);
 }
 
@@ -116,7 +99,7 @@ function getById(req, res, next) {
  */
 function updateById(req, res, next) {
   replyService.updateReply(req)
-    .then(() => res.send({ message: "Successfully updated reply" }))
+    .then(() => res.send({ message: 'Successfully updated reply' }))
     .catch(next);
 }
 
@@ -128,8 +111,16 @@ function updateById(req, res, next) {
  */
 function deleteById(req, res, next) {
   replyService.deleteReply(req.id)
-    .then(() => res.json({ message: "Successfully deleted reply" }))
+    .then(() => res.json({ message: 'Successfully deleted reply' }))
     .catch(next);
 }
+
+// routes
+
+router.post('/:ticketId', authorize(), createSchema, createReply);
+router.get('/', authorize(), getAllByTicketId);
+router.get('/:id', authorize(), getById);
+router.put('/:id', authorize(), updateSchema, updateById);
+router.delete('/:id', authorize(), deleteById);
 
 module.exports = router;

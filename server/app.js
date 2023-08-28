@@ -2,20 +2,20 @@ require('rootpath')();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const errorHandler = require('_middleware/error-handler');
-//import routes
+const errorHandler = require('./_middleware/error-handler');
+// import routes
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 const replyController = require('./controllers/reply.controller');
-//init app
+// init app
 const app = express();
-//middleware
+// middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:4200',
-  credentials: true
+  credentials: true,
 }));
 
 // set routes

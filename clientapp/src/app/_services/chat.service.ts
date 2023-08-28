@@ -1,27 +1,22 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { io } from 'socket.io-client';
+import { Socket } from 'ngx-socket-io';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  public message$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  socket = io('http://localhost:3800', {
-    path: '/chat/',
-    withCredentials:true
-  });
-  constructor() { }
-  public sendMessage(message: any) {
-    console.log('sendMessage: ', message)
-    this.socket.emit('message', message);
+  constructor(private socket: Socket) {
+    
   }
 
-  public getNewMessage = () => {
-    this.socket.on('message', (message) =>{
-      this.message$.next(message);
-    });
+  sendMessage(msg:string) {
+    this.socket.emit('message', msg);
+  }
+  getMessage(){
+    return this.socket.fromEvent('message').pipe(map((data) => data['message']));
+  }
 
-    return this.message$.asObservable();
-  };
+
+
 }
