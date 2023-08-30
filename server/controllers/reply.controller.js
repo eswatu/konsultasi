@@ -99,7 +99,10 @@ function getById(req, res, next) {
  */
 function updateById(req, res, next) {
   replyService.updateReply(req)
-    .then(() => res.send({ message: 'Successfully updated reply' }))
+    .then((result) => {
+      res.status = result.success ? 200 : 403;
+      res.send({ message: result.message });
+    })
     .catch(next);
 }
 

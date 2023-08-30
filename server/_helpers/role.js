@@ -1,10 +1,10 @@
 module.exports = {
-    Admin: 'Admin',
-    Worker: 'Worker',
-    Client: 'Client'
-}
+  Admin: 'Admin',
+  Worker: 'Worker',
+  Client: 'Client',
+};
 
 module.exports = {
-    Respons: 'Respons',
-    Key: 'Key'
-}
+  Respons: 'Respons',
+  Key: 'Key',
+};

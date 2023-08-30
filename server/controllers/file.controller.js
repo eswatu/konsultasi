@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const File = require('../models/File');
+const File = require('../model/file.model');
 
 module.exports = {
   uploadFile: async (req, res) => {

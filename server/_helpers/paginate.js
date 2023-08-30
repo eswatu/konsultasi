@@ -17,10 +17,10 @@ async function paginateTicket(collection, query, _auth) {
     filterQuery = '', // Default filter query is empty string
     isSolved = '', // Default isSolved is empty string
   } = query;
-  const { role, id }  = _auth;
-  
-  const page = parseInt(pageIndex); // Convert page index to integer
-  const take = parseInt(pageSize); // Convert page size to integer
+  const { role, id } = _auth;
+
+  const page = parseInt(pageIndex, 10); // Convert page index to integer
+  const take = parseInt(pageSize, 10); // Convert page size to integer
   const skip = page * take; // Calculate number of documents to skip
 
   const sort = {};
@@ -33,21 +33,20 @@ async function paginateTicket(collection, query, _auth) {
   } else {
     filter.isSolved = { $in: [true, false] }; // Set filter for isSolved with values true and false
   }
-  if (role ===  'Client') {
+  if (role === 'Client') {
     filter['creator.id'] = { $eq: id }; // Set filter for creator id if role is Client
   }
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     // If filterColumn and filterQuery are not 'null'
-    if (filterQuery !== "" && filterColumn !== "") {
+    if (filterQuery !== '' && filterColumn !== '') {
       // If filterQuery and filterColumn are not empty
-      if (!isNaN(filterQuery)) {
-        filter[filterColumn] = parseInt(filterQuery); // Set filter for numeric values
+      if (!Number.isNaN(filterQuery)) {
+        filter[filterColumn] = parseInt(filterQuery, 10); // Set filter for numeric values
       } else if (filterQuery === 'true' || filterQuery === 'false') {
         filter[filterColumn] = filterQuery === 'true'; // Set filter for boolean values
       } else {
         const regex = new RegExp(filterQuery, 'i');
         filter[filterColumn] = { $regex: regex }; // Set filter for text search
-        // filter[filterColumn] = { $text: { $search: filterQuery } } ; // Set filter for text search
       }
     }
   }
@@ -91,11 +90,10 @@ async function paginateUser(collection, query) {
     sortOrder = '', // Default sort order is empty string
     filterColumn = '', // Default filter column is empty string
     filterQuery = '', // Default filter query is empty string
-    isSolved = '', // Default isSolved is empty string
   } = query;
-  
-  const page = parseInt(pageIndex); // Convert page index to integer
-  const take = parseInt(pageSize); // Convert page size to integer
+
+  const page = parseInt(pageIndex, 10); // Convert page index to integer
+  const take = parseInt(pageSize, 10); // Convert page size to integer
   const skip = page * take; // Calculate number of documents to skip
 
   const sort = {};
@@ -105,16 +103,15 @@ async function paginateUser(collection, query) {
 
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     // If filterColumn and filterQuery are not 'null'
-    if (filterQuery !== "" && filterColumn !== "") {
+    if (filterQuery !== '' && filterColumn !== '') {
       // If filterQuery and filterColumn are not empty
-      if (!isNaN(filterQuery)) {
-        filter[filterColumn] = parseInt(filterQuery); // Set filter for numeric values
+      if (!Number.isNaN(filterQuery)) {
+        filter[filterColumn] = parseInt(filterQuery, 10); // Set filter for numeric values
       } else if (filterQuery === 'true' || filterQuery === 'false') {
         filter[filterColumn] = filterQuery === 'true'; // Set filter for boolean values
       } else {
         const regex = new RegExp(filterQuery, 'i');
         filter[filterColumn] = { $regex: regex }; // Set filter for text search
-        // filter[filterColumn] = { $text: { $search: filterQuery } } ; // Set filter for text search
       }
     }
   }
@@ -150,5 +147,3 @@ async function paginateUser(collection, query) {
 }
 
 module.exports = { paginateTicket, paginateUser };
-
-
