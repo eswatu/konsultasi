@@ -1,10 +1,8 @@
 import { Component,  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { User } from '@app/_models';
 import { AuthenticationService } from '@app/_services/';
 // import { MustMatch } from '@env/services/mustmatch';
-import Swal from 'sweetalert2';
 import { UserPwFormComponent } from '../user-pw-form/user-pw-form.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 @Component({

@@ -4,20 +4,18 @@ import { ChatComponent } from './chat/chat.component';
 import { ConsultMaterialModule } from './consult-material.module';
 import { FormsModule } from '@angular/forms';
 import { ConsultRoutingModule } from './consult-routing.module';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-
-const config: SocketIoConfig = {url: 'http://localhost:4000', options: {}};
+import { MainFrameComponent } from './main-frame/main-frame.component';
 
 @NgModule({
   declarations: [
-    ChatComponent
+    ChatComponent,
+    MainFrameComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ConsultMaterialModule,
     ConsultRoutingModule,
-    SocketIoModule.forRoot(config)
   ]
 })
 export class ConsultModule { }

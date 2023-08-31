@@ -1,8 +1,9 @@
-<div *ngFor="let message of messageList">
-    <li>
-        {{message}}
-    </li>
+<div class="container">
+  <div class="textlist"></div>
+  <div class="inputMessage">
+    <form>
+      <textarea id="message" name="message" rows="3" cols="50"></textarea>
+      <button mat-raised-button color="warn" type="submit">Submit</button>
+    </form>
+  </div>
 </div>
- 
-  <input [(ngModel)]="newMessage" (keyup)="$event.keyCode == 13 && sendMessage()" />
-  <button (click)="sendMessage()">Send Message</button>

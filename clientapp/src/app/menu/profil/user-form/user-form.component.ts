@@ -1,11 +1,9 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, Form, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '@app/_models';
 import { UserService } from '@app/_services';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'user-form',

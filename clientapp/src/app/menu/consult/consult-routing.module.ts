@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { ChatComponent } from './chat/chat.component';
 import { RouterModule, Routes } from '@angular/router';
+import { MainFrameComponent } from './main-frame/main-frame.component';
 
 const routes: Routes = [
-  {path: '', component: ChatComponent}
+  {path: '', component: MainFrameComponent}
 ];
 
 @NgModule({

@@ -1,24 +1,20 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const config = require('../config.json');
 const db = require('../_helpers/db');
 const { paginateUser } = require('../_helpers/paginate');
+const config = require('../config.json');
+const Roles = require('../_helpers/role');
+
+// helper functions
 
 async function getUser(id) {
   if (!db.isValidId(id)) throw new Error('User not found');
   const user = await db.User.findById(id);
   if (!user) throw new Error('User not found');
   return user;
-}
-async function getRefreshTokens(userId) {
-  // check that user exists
-  await getUser(userId);
-
-  // return refresh tokens for user
-  const refreshTokens = await db.RefreshToken.find({ user: userId });
-  return refreshTokens;
 }
 
 async function getRefreshToken(token) {
@@ -27,6 +23,10 @@ async function getRefreshToken(token) {
   return refreshToken;
 }
 
+function generateJwtToken(user) {
+  // create a jwt token containing the user id that expires in 15 minutes
+  return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '15m' });
+}
 function randomTokenString() {
   return crypto.randomBytes(40).toString('hex');
 }
@@ -43,16 +43,34 @@ function generateRefreshToken(user, ipAddress) {
 
 function basicDetails(user) {
   const {
-    id, name, username, role, company, contact, isActive,
+    id, name, username, role,
   } = user;
   return {
-    id, name, username, role, company, contact, isActive,
+    id, name, username, role,
   };
 }
-function generateJwtToken(user) {
-  // create a jwt token containing the user id that expires in 15 minutes
-  return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '15m' });
+async function authenticate({ username, password, ipAddress }) {
+  const user = await db.User.findOne({ username }).select('+passwordHash');
+
+  if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+    throw new Error('Username or password is incorrect');
+  }
+
+  // authentication successful so generate jwt and refresh tokens
+  const jwtToken = generateJwtToken(user);
+  const refreshToken = generateRefreshToken(user, ipAddress);
+
+  // save refresh token
+  await refreshToken.save();
+
+  // return basic details and tokens
+  return {
+    ...basicDetails(user),
+    jwtToken,
+    refreshToken: refreshToken.token,
+  };
 }
+
 async function refreshToken({ token, ipAddress }) {
   const refreshToken = await getRefreshToken(token);
   const { user } = refreshToken;
@@ -76,101 +94,34 @@ async function refreshToken({ token, ipAddress }) {
   };
 }
 
-async function authenticate({ username, password, ipAddress }) {
-  const user = await db.User.findOne({ username }).select('+passwordHash');
-
-  if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-    throw new Error('Username or password is incorrect');
-  }
-  // authentication successful so generate jwt and refresh tokens
-  const jwtToken = generateJwtToken(user);
-  const rfToken = generateRefreshToken(user, ipAddress);
-  // save refresh token
-  await refreshToken.save();
-
-  // return basic details and tokens
-  return {
-    ...basicDetails(user),
-    jwtToken,
-    refreshToken: rfToken.token,
-  };
-}
-
 async function revokeToken({ token, ipAddress }) {
-  const refToken = await getRefreshToken(token);
+  const refreshToken = await getRefreshToken(token);
 
   // revoke token and save
-  refToken.revoked = Date.now();
-  refToken.revokedByIp = ipAddress;
+  refreshToken.revoked = Date.now();
+  refreshToken.revokedByIp = ipAddress;
   await refreshToken.save();
 }
-async function createUser(body) {
-  const existingUser = await db.User.findOne({ username: body.username });
-  if (existingUser) {
-    return { success: false, message: 'User already exists' };
+async function createUser(au, req) {
+  if (au.role !== Roles.Admin) {
+    return;
   }
-  const pwhash = await bcrypt.hash(body.password, 10);
-  const user = new db.User({
-    name: body.name,
-    username: body.username,
-    passwordHash: pwhash,
-    role: body.role,
-    company: body.company,
-    contact: body.contact,
-    isActive: body.isActive,
-  });
-  //   console.log('Creating new user:', {
-  //     name: user.name, username: user.username,
-  // role: user.role, company: user.company, contact: user.contact, isActive: user.isActive,
-  //   });
-  await user.save();
-  return { success: true, message: 'Berhasil membuat User baru' };
-}
-
-async function updateUser(req) {
   try {
-    // console.log(req.body);
-    const { id } = req.params;
-    const {
-      username, name, company, role, contact, isActive,
-    } = req.body;
-
-    await db.User.updateOne({ _id: id }, {
-      $set: {
-        username,
-        name,
-        company,
-        role,
-        contact,
-        isActive,
-      },
+    const pwhash = bcrypt.hashSync(req.password, 10);
+    const user = new db.User({
+      name: req.name,
+      username: req.username,
+      passwordHash: pwhash,
+      role: req.role,
+      company: req.company,
+      contact: req.contact,
+      isActive: req.isActive,
     });
-
-    // console.log('User updated successfully');
-    return { success: true, message: 'berhasil update Data User' };
+    await user.save();
+    return { success: true, message: 'Berhasil membuat User baru' };
   } catch (error) {
-    // console.error('Failed to update user:', error);
-    return { success: false, message: 'internal error' };
-  }
-}
-async function updatePassword(req) {
-  try {
-    const { id, oldpassword, newpassword } = req.body;
-    const user = await db.User.findOne({ _id: id }).select('+passwordHash');
-
-    if (!user || !(await bcrypt.compare(oldpassword, user.passwordHash))) {
-      throw new Error('Username or password is incorrect');
-    } else {
-      const pwhash = await bcrypt.hash(newpassword, 10);
-      await db.User.updateOne({ _id: id }, {
-        $set: {
-          passwordHash: pwhash,
-        },
-      });
-      return { success: true, message: 'berhasil update Data User' };
-    }
-  } catch (error) {
-    return { success: false, message: 'internal error' };
+    console.log(error);
+    return { success: false, message: 'Gagal membuat user baru' };
   }
 }
 async function getAllUser(req) {
@@ -179,13 +130,18 @@ async function getAllUser(req) {
 }
 
 async function getById(id) {
-//   console.log('Fetching user by ID...');
   const user = await getUser(id);
-  //   console.log('User fetched:', user);
   return basicDetails(user);
 }
 
-// helper functions
+async function getRefreshTokens(userId) {
+  // check that user exists
+  await getUser(userId);
+
+  // return refresh tokens for user
+  const refreshTokens = await db.RefreshToken.find({ user: userId });
+  return refreshTokens;
+}
 
 module.exports = {
   authenticate,
@@ -195,6 +151,4 @@ module.exports = {
   getAllUser,
   getById,
   getRefreshTokens,
-  updateUser,
-  updatePassword,
 };

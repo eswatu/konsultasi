@@ -1,23 +1,37 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 // import express app
-// const express = require('express');
-// import socket.io
-// const app = express();
-const { createServer } = require('http');
-const { Server } = require('socket.io');
-const initializeSocket = require('./_helpers/io');
-const app = require('./app');
+require('rootpath')();
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const ioapp = require('./socketio');
+const errorHandler = require('./_middleware/error-handler');
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:4200',
-    credentials: true,
-  },
-});
-// create function for socket.io
+// import routes
+const userController = require('./controllers/user.controller');
+const ticketController = require('./controllers/ticket.controller');
+const replyController = require('./controllers/reply.controller');
 
-initializeSocket(io);
+// init app
+const app = express();
+
+// middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true,
+}));
+
+// set routes
+app.use('/users', userController);
+app.use('/tickets', ticketController);
+app.use('/replies', replyController);
+
+// global error handler
+app.use(errorHandler);
 
 // create test user in db on startup if required
 if (process.env.NODE_ENV === 'development') {
@@ -39,7 +53,9 @@ const env = process.env.NODE_ENV || 'development';
 const { port } = config[env];
 
 // server app
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`server is running in ${env}`);
   console.log(`Server listening on port ${port}`);
 });
+
+const io = ioapp(server);

@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ticket } from '@app/_models/ticket';
 import { TicketService } from '@app/_services/ticket.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'ticket-form',
@@ -20,6 +20,7 @@ export class TicketFormComponent {
   constructor(private tcService: TicketService,
     private dialogRef: MatDialogRef<TicketFormComponent>,
     public fb: FormBuilder,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) data) {
       if (data) {
         this.idtc = data.id;
@@ -113,19 +114,19 @@ export class TicketFormComponent {
         }
       }, error => {
         console.error(error);
-        Swal.fire(error.message);
+        this.snackBar.open(error.error.message,'',{duration:500});
       });
 
     } else {
       this.tcService.post<Ticket>(this.ticket).subscribe(
         result => {
         if (result) {
-          Swal.fire('result');
+          this.snackBar.open('result','',{duration:500});
           this.closeDialog();
         }
       }, error => {
         console.error(error);
-        Swal.fire(error.error.message);
+        this.snackBar.open(error.error.message,'',{duration:500});
       });
     }
   }

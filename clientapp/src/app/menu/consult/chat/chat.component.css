@@ -1,0 +1,9 @@
+.container {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-rows: 9fr 1fr;
+}
+.inputMessage {
+  place-content: stretch;
+}

@@ -25,7 +25,8 @@
     ],
     "paths": {
       "@app/*": ["src/app/*"],
-      "@environments/*": ["src/environments/*"]
+      "@environments/*": ["src/environments/*"],
+      "rxjs": ["node_modules/rxjs"]
     }
   },
   "angularCompilerOptions": {
