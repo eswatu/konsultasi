@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { User } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +9,11 @@ import { Observable } from 'rxjs';
 export class ChatService {
   private socket: Socket;
   constructor() {
-    this.socket = io('http://localhost:4000');
   }
-
+  firstInit(auth:User) {
+    this.socket = io('http://localhost:4000',
+    {auth:{ token: auth.jwtToken }});
+  }
   public sendMessage(message:string) {
     this.socket.emit('message', message);
   }
