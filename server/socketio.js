@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 const socketIO = require('socket.io');
-const authorize = require('./_middleware/authorize');
+// const jwt = require('jsonwebtoken');
 // const ticketService = require('./services/ticket.services');
 
 function ioApp(server) {
@@ -13,24 +14,48 @@ function ioApp(server) {
     },
   });
   // io.use(async (socket, next) => {
+  //   // fetch token from handshake auth sent by FE
+  //   const token = socket.handshake.auth.token;
   //   try {
-  //     const { token } = socket.handshake.query;
-  //     const payload = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-  //     socket.user_id = payload.user_id;
+  //     // verify jwt token and get user data
+  //     const user = await jwt.verify(token, JWT_SECRET);
+  //     console.log('user', user);
+  //     // save the user data into socket object, to be used further
+  //     socket.user = user;
   //     next();
-  //   } catch (err) {
-  //     next(err);
+  //   } catch (e) {
+  //     // if token is invalid, close connection
+  //     console.log('error', e.message);
+  //     return next(new Error(e.message));
   //   }
   // });
   io.on('connection', (socket) => {
-    io.use(authorize);
-    console.log(`A user connected with ID${socket.id}`);
-    console.log(socket.handshake.auth);
-
-    // socket.on('create-room', (room) => {
-    //   const result = ticketService.createTicket(room)
-    // });
-    socket.on('disconnect', () => console.log('Client disconnected'));
+    // init join main room kabeh
+    socket.join('mainRoom');
+    // jaga2 kalo dc
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
+    // join room
+    socket.on('join', (roomName) => {
+      socket.join(roomName);
+    });
+    // leave room
+    socket.on('leave', (roomName) => {
+      socket.leave(roomName);
+    });
+    // kirim ke room
+    socket.on('sendMessage', ({ message, roomName }) => {
+      if (roomName === '-') {
+        io.to('mainRoom').emit('sendMessage', message);
+      } else {
+        console.log(`message: ${message} in ${roomName}`);
+        // send socket to all in room except sender
+        io.to(roomName).emit('sendMessage', message);
+      }
+    });
+    // log2
+    console.log(`A user connected with token ${socket.handshake.auth.username}`);
   });
 }
 

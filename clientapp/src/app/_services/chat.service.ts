@@ -1,25 +1,31 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { User } from '@app/_models';
+import { ChatReply } from '@app/_models/reply';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private socket: Socket;
-  constructor() {
+  setupConnection(jtoken: string, uname: string) {
+    this.socket = io(`http://localhost:4000`,
+     {auth:{ token: jtoken, username: uname }}
+    );
   }
-  firstInit(auth:User) {
-    this.socket = io('http://localhost:4000',
-    {auth:{ token: auth.jwtToken }});
+  disconnect(){
+    if(this.socket) {
+      this.socket.disconnect();
+    }
   }
-  public sendMessage(message:string) {
-    this.socket.emit('message', message);
+  sendMessage({message, roomName}): void{
+    if(this.socket) {
+      this.socket.emit('sendMessage', {message, roomName});
+    }
   }
-  public getMessage(): Observable<string>{
-    return new Observable<string>(observer => {
-      this.socket.on('message', (message: string) => {
+  getMessage(): Observable<ChatReply>{
+    return new Observable<ChatReply>(observer => {
+      this.socket.on('sendMessage', (message: ChatReply) => {
         observer.next(message);
       }); 
     });

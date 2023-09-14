@@ -1,9 +1,24 @@
 <div class="container">
-  <div class="textlist"></div>
+  <div class="textlist">
+    <table>
+      <thead>
+        <head>some message</head>
+      </thead>
+      <tbody>
+        <tr *ngFor="let repli of replies">
+          <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
+          <td> : </td>
+          <td>{{repli.message}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="inputMessage">
     <form>
-      <textarea id="message" name="message" rows="3" cols="50"></textarea>
-      <button mat-raised-button color="warn" type="submit">Submit</button>
+      <textarea id="message" name="message" rows="3" cols="50"
+      [formControl]="message" placeholder="type a text"></textarea>
+      <button mat-raised-button color="warn" type="button" (click)="sendMessage()" >Submit</button>
     </form>
+    <p>{{message.value}}</p>
   </div>
 </div>

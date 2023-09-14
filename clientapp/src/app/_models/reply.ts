@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, UserChat } from "./user";
 
 export class Reply {
     id?: string;
@@ -8,4 +8,11 @@ export class Reply {
     isKey: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export class ChatReply {
+    id?: string;
+    user: UserChat;
+    message: string;
+    timeStamp: Date;
 }

@@ -6,9 +6,12 @@ module.exports = (server) => {
   io.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('message', (message) => {
-      console.log(message);
-      io.emit('message', `${socket.id.substr(0, 2)}: ${message}`);
+    socket.on('message', (message, room) => {
+      if (room === '') {
+        socket.emit('message', message);
+      } else {
+        socket.to(room).broadcast.emit('received-message', `${socket.id.substr(0, 2)}: ${message}`);
+      }
     });
 
     socket.on('disconnect', () => {
@@ -21,10 +24,4 @@ module.exports = (server) => {
     console.log(err.message); // the error message, for example "Session ID unknown"
     console.log(err.context); // some additional error context
   });
-// 0	"Transport unknown"
-// 1	"Session ID unknown"
-// 2	"Bad handshake method"
-// 3	"Bad request"
-// 4	"Forbidden"
-// 5	"Unsupported protocol version"
 };

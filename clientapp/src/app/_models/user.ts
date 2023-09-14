@@ -9,3 +9,10 @@ export class User {
     isActive?: boolean;
     jwtToken?: string;
 }
+
+export class UserChat {
+    id?: string;
+    name?: string;
+    company?: string;
+    role?: string;
+}
