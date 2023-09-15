@@ -1,15 +1,8 @@
-<div class="main-container">
-    <div class="left-block">
-        <button mat-raised-button color="primary" (click)="openForm()">Create New</button>
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" vertical>
-            <mat-button-toggle value="satu"></mat-button-toggle>
-            <mat-button-toggle value="dua"></mat-button-toggle>
-            <mat-button-toggle value="tiga"></mat-button-toggle>
-        </mat-button-toggle-group>
-    </div>
-    <div class="right-block">
-        <ng-container>
-            <chat-component></chat-component>
-        </ng-container>
-    </div>
-</div>
+<button mat-raised-button color="primary" (click)="openForm()">Create New</button>
+<mat-tab-group>
+    <ng-container *ngFor="let tab of chatTabs">
+        <mat-tab label="{{tab.name}}" >
+            <chat-component [roomName]="tab.value"></chat-component>
+        </mat-tab>
+    </ng-container>
+</mat-tab-group>

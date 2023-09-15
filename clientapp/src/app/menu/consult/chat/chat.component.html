@@ -17,7 +17,7 @@
     <form>
       <textarea id="message" name="message" rows="3" cols="50"
       [formControl]="message" placeholder="type a text"></textarea>
-      <button mat-raised-button color="warn" type="button" (click)="sendMessage()" >Submit</button>
+      <button mat-raised-button color="warn" type="button" (click)="sendMessage()" (keyup.enter)="sendMessage()">Submit</button>
     </form>
     <p>{{message.value}}</p>
   </div>

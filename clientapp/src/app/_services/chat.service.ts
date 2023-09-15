@@ -30,4 +30,10 @@ export class ChatService {
       }); 
     });
   }
+  join(roomName:string) {
+    this.socket.emit('join', roomName);
+  }
+  leave(roomName:string) {
+    this.socket.emit('leave', roomName);
+  }
 }

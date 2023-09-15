@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from '@app/_models';
 import { ChatReply, Reply } from '@app/_models/reply';
@@ -11,6 +11,7 @@ import { ChatService } from '@app/_services/chat.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent {
+  @Input() roomName: string;
   replies: ChatReply[] = [];
   user: User;
   message = new FormControl('');
@@ -21,6 +22,7 @@ export class ChatComponent {
   }
   ngOnInit(){
     this.cservice.setupConnection(this.user.jwtToken, this.user.username);
+    this.cservice.join(this.roomName);
     this.cservice.getMessage().subscribe((msg:ChatReply) => {
       this.replies.push(msg);
       console.log(msg);

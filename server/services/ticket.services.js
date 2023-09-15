@@ -116,7 +116,7 @@ async function createTicket(au, req) {
       },
     });
     await ticket.save();
-    return { success: true, message: 'berhasil membuat tiket baru!' };
+    return ticket;
   } catch (error) {
     return { success: false, message: 'error dalam pembuatan tiket' };
   }

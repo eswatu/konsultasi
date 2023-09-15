@@ -6,7 +6,7 @@ import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
-import { TicketFormComponent } from '../ticket-form/ticket-form.component';
+import { TicketFormComponent } from '../../consult/ticket-form/ticket-form.component';
 import { User } from '@app/_models';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';

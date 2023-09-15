@@ -35,7 +35,7 @@ function ioApp(server) {
 
   io.on('connection', (socket) => {
     // init join main room kabeh
-    socket.join('mainRoom');
+    // socket.join('mainRoom');
     // jaga2 kalo dc
     socket.on('disconnect', () => {
       console.log('Client disconnected');

@@ -110,7 +110,7 @@ export class TicketFormComponent {
       this.ticket.id = this.idtc;
       this.tcService.put<Ticket>(this.ticket).subscribe(result => {
         if (result) {
-          this.closeDialog();
+          this.closeDialog(result);
         }
       }, error => {
         console.error(error);
@@ -120,18 +120,21 @@ export class TicketFormComponent {
     } else {
       this.tcService.post<Ticket>(this.ticket).subscribe(
         result => {
-        if (result) {
-          this.snackBar.open('result','',{duration:500});
-          this.closeDialog();
-        }
-      }, error => {
-        console.error(error);
-        this.snackBar.open(error.error.message,'',{duration:500});
-      });
+              if (result) {
+                this.snackBar.open('berhasil','',{duration:500});
+                this.closeDialog(result);
+              }
+              }
+
+        );
     }
   }
 
-  closeDialog(){
-    this.dialogRef.close();
+  closeDialog(res){
+    if (res) {
+      this.dialogRef.close(res);
+    } else {
+      this.dialogRef.close();
+    }
   }
 }
