@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 const socketIO = require('socket.io');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = require('./config.json').secret;
+const userService = require('./services/user.services');
 // const ticketService = require('./services/ticket.services');
-
 function ioApp(server) {
   const io = socketIO(server, {
     cors: { origin: 'http://localhost:4200', credentials: true },
@@ -13,22 +14,25 @@ function ioApp(server) {
       skipMiddlewares: false,
     },
   });
-  // io.use(async (socket, next) => {
-  //   // fetch token from handshake auth sent by FE
-  //   const token = socket.handshake.auth.token;
-  //   try {
-  //     // verify jwt token and get user data
-  //     const user = await jwt.verify(token, JWT_SECRET);
-  //     console.log('user', user);
-  //     // save the user data into socket object, to be used further
-  //     socket.user = user;
-  //     next();
-  //   } catch (e) {
-  //     // if token is invalid, close connection
-  //     console.log('error', e.message);
-  //     return next(new Error(e.message));
-  //   }
-  // });
+  io.use(async (socket, next) => {
+    // fetch token from handshake auth sent by FE
+    const { token } = socket.handshake.auth;
+    try {
+      // verify jwt token and get user data
+      const userRaw = await jwt.verify(token, JWT_SECRET);
+      const user = await userService.getById(userRaw.id);
+      console.log('user', user);
+      // save the user data into socket object, to be used further
+      // eslint-disable-next-line no-param-reassign
+      socket.user = user;
+      return next();
+    } catch (e) {
+      // if token is invalid, close connection
+      console.log('error', e.message);
+      return next(new Error(e.message));
+    }
+  });
+  
   io.on('connection', (socket) => {
     // init join main room kabeh
     socket.join('mainRoom');
