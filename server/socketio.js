@@ -32,7 +32,7 @@ function ioApp(server) {
       return next(new Error(e.message));
     }
   });
-  
+
   io.on('connection', (socket) => {
     // init join main room kabeh
     socket.join('mainRoom');
