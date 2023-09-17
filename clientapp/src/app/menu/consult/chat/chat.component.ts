@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from '@app/_models';
-import { ChatReply, Reply } from '@app/_models/reply';
+import { ChatReply } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
-import { AuthenticationService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
 
 @Component({

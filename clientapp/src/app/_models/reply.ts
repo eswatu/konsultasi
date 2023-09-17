@@ -1,14 +1,4 @@
-import { User, UserChat } from "./user";
-
-export class Reply {
-    id?: string;
-    ticketId?: string;
-    creator?: User;
-    message?: string;
-    isKey: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
+import { UserChat } from "./user";
 
 export class ChatReply {
     id?: string;

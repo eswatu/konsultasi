@@ -11,7 +11,6 @@ const errorHandler = require('./_middleware/error-handler');
 // import routes
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
-const replyController = require('./controllers/reply.controller');
 
 // init app
 const app = express();
@@ -28,7 +27,6 @@ app.use(cors({
 // set routes
 app.use('/users', userController);
 app.use('/tickets', ticketController);
-app.use('/replies', replyController);
 
 // global error handler
 app.use(errorHandler);

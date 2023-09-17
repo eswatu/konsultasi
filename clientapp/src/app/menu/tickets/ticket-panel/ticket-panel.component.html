@@ -10,16 +10,31 @@
         </div>
         <div id="item-b">
           <button mat-stroked-button (click)="toggleTable()">
-            {{ showTable ? 'Hide Table' : 'Show Table' }}
+            {{ showTable ? 'Sembunyikan' : 'Lihat Percakapan' }}
           </button>
         </div>
         <!-- Add the table inside ng-container to conditionally render it -->
         <div id="item-c" >
           <ng-container *ngIf="showTable">
-            <!-- lazy loading -->
-            <reply-table [ticketId]="ticket.id" [isSolved]="ticket.isSolved"></reply-table>
-            <!-- <ng-container *ngComponentOutlet="replyTableComponent; injector:createInjector();"></ng-container> -->
               <!-- Your table content goes here -->
+              <table>
+                <thead>
+                    <tr>
+                      <th> waktu</th>
+                      <th>Person</th>
+                      <th> </th>
+                      <th> message </th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of messages">
+                    <td>{{item.time | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td>{{item.user.name}}</td>
+                    <td> : </td>
+                    <td>{{item.message}}</td>
+                  </tr>
+                </tbody>
+              </table>
           </ng-container>
         </div>
       </div>
