@@ -1,8 +1,10 @@
 <button mat-raised-button color="primary" (click)="openForm()">Create New</button>
-<mat-tab-group>
-    <ng-container *ngFor="let tab of chatTabs">
-        <mat-tab label="{{tab.name}}" >
-            <chat-component [roomName]="tab.value"></chat-component>
-        </mat-tab>
-    </ng-container>
-</mat-tab-group>
+<div *ngIf="chatTabs">
+    <mat-tab-group>
+        <ng-container *ngFor="let tab of chatTabs">
+            <mat-tab label="{{tab.name}} {{tab.problem}}" >
+                <chat-component [user]="user" [ticketdata]="tab.ticket"></chat-component>
+            </mat-tab>
+        </ng-container>
+    </mat-tab-group>
+</div>

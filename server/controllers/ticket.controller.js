@@ -74,7 +74,13 @@ async function createTicket(req, res, next) {
     }
     const response = await ticketService.createTicket(req.auth, req.body);
     if (response.success) {
-      return res.status(201).json({ success: true, message: response.message });
+      return res.status(201).json(
+        {
+          success: true,
+          message: response.message,
+          result: response.result,
+        },
+      );
     }
     return res.status(500).json({ success: false, message: response.message });
   } catch (error) {

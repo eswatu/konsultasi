@@ -65,14 +65,14 @@ return this.http.get<ApiResult>(this.url, {params});
     let myurl = this.url + item.id;
     return this.http.put<Ticket>(myurl, item);
   }
-  post<T>(item: Ticket): Observable<HttpResponse<T>> {
-    return this.http.post<T>(this.url, item, {observe: 'response'});
+  post<Ticket>(item: Ticket): Observable<any> {
+    return this.http.post<Ticket>(this.url, item);
   }
 
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
       super(http, baseUrl);
-      this.url = `${environment.apiUrl}/tickets`;
+      this.url = `${environment.apiUrl}/tickets/`;
      }
 
 }

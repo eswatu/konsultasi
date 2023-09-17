@@ -34,7 +34,7 @@ async function paginateTicket(collection, query, _auth) {
     filter.isSolved = { $in: [true, false] }; // Set filter for isSolved with values true and false
   }
   if (role === 'Client') {
-    filter['creator.id'] = { $eq: id }; // Set filter for creator id if role is Client
+    filter['creator.id'] = { $in: [id, 'server'] }; // Set filter for creator id if role is Client
   }
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     // If filterColumn and filterQuery are not 'null'

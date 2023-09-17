@@ -10,12 +10,7 @@ const creatorSchema = mongoose.Schema({
 });
 
 const schema = mongoose.Schema({
-  ticket: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ticket',
-    required: true,
-  },
-  creator: creatorSchema,
+  user: creatorSchema,
   message: { type: String, required: true },
   isKey: { type: Boolean, required: true, default: false },
 }, {

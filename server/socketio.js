@@ -3,7 +3,8 @@ const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = require('./config.json').secret;
 const userService = require('./services/user.services');
-// const ticketService = require('./services/ticket.services');
+const tService = require('./services/ticket.services');
+
 function ioApp(server) {
   const io = socketIO(server, {
     cors: { origin: 'http://localhost:4200', credentials: true },
@@ -14,14 +15,15 @@ function ioApp(server) {
       skipMiddlewares: false,
     },
   });
-  io.use(async (socket, next) => {
+  // register middleware untuk token
+  const authCheck = async (socket, next) => {
     // fetch token from handshake auth sent by FE
     const { token } = socket.handshake.auth;
     try {
       // verify jwt token and get user data
-      const userRaw = await jwt.verify(token, JWT_SECRET);
+      const userRaw = jwt.verify(token, JWT_SECRET);
       const user = await userService.getById(userRaw.id);
-      console.log('user', user);
+      // console.log('user adalah', user);
       // save the user data into socket object, to be used further
       // eslint-disable-next-line no-param-reassign
       socket.user = user;
@@ -31,35 +33,56 @@ function ioApp(server) {
       console.log('error', e.message);
       return next(new Error(e.message));
     }
-  });
-
-  io.on('connection', (socket) => {
-    // init join main room kabeh
-    // socket.join('mainRoom');
-    // jaga2 kalo dc
+  };
+  const globalFunction = (socket, next) => {
+    // diskonek
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
-    });
-    // join room
-    socket.on('join', (roomName) => {
-      socket.join(roomName);
+      console.log(`${socket.user.name} is disconnected`);
     });
     // leave room
     socket.on('leave', (roomName) => {
       socket.leave(roomName);
+      console.log(`${socket.user.name} leaves room id: ${roomName}`);
     });
     // kirim ke room
-    socket.on('sendMessage', ({ message, roomName }) => {
-      if (roomName === '-') {
-        io.to('mainRoom').emit('sendMessage', message);
-      } else {
-        console.log(`message: ${message} in ${roomName}`);
-        // send socket to all in room except sender
-        io.to(roomName).emit('sendMessage', message);
-      }
+    socket.on('sendMessage', async (msg) => {
+      const rmsg = await tService.addMessage(
+        socket.user.id,
+        msg,
+      );
+      // console.log('isi msg adalah ', msg);
+      console.log('isi rmsg adalah ', rmsg);
+      io.of('/Admin').to(rmsg.roomId).emit('sendMessage', rmsg);
+      io.of('/Client').to(rmsg.roomId).emit('sendMessage', rmsg);
+      console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
-    // log2
-    console.log(`A user connected with token ${socket.handshake.auth.username}`);
+    next();
+  };
+  // register semua namespace untuk menggunakan global middleware
+  io.use(authCheck);
+  io.of('/Admin').use(authCheck).use(globalFunction);
+  io.of('/Client').use(authCheck).use(globalFunction);
+
+  // ini untuk user Client namespace
+  const clientNameSpace = io.of('/Client');
+  clientNameSpace.on('connection', (socket) => {
+    // join room
+    socket.on('join', (roomName) => {
+      socket.join(roomName);
+      io.of('/Admin').emit('createdRoom', roomName);
+      console.log(`client ${socket.user.name} join room id ${roomName}`);
+    });
+  });
+
+  // ini untuk user Admin namespace
+  const adminNameSpace = io.of('/Admin');
+  adminNameSpace.on('connection', (socket) => {
+    // join room
+    socket.on('join', (roomName) => {
+      socket.join(roomName);
+      io.of('/Client').emit('joinRoom', roomName);
+      console.log(`admin ${socket.user.name} join room id ${roomName}`);
+    });
   });
 }
 

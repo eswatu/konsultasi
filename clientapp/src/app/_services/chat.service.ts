@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { ChatReply } from '@app/_models/reply';
+import { User } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private socket: Socket;
-  setupConnection(jtoken: string, uname: string) {
-    this.socket = io(`http://localhost:4000`,
-     {auth:{ token: jtoken, username: uname }}
+  setupConnection(jtoken: string, auth: User) {
+    const ns = new URL(auth.role, 'http://localhost:4000').toString();
+    console.log(`connecting to: ${ns} using credential ${JSON.stringify(auth.username)}`);
+    this.socket = io(ns,
+     {auth:{ token: jtoken, username: auth.username}}
     );
   }
   disconnect(){
@@ -18,15 +21,27 @@ export class ChatService {
       this.socket.disconnect();
     }
   }
-  sendMessage({message, roomName}): void{
+  sendMessage(message): void{
     if(this.socket) {
-      this.socket.emit('sendMessage', {message, roomName});
+      this.socket.emit('sendMessage', message);
     }
   }
   getMessage(): Observable<ChatReply>{
     return new Observable<ChatReply>(observer => {
       this.socket.on('sendMessage', (message: ChatReply) => {
         observer.next(message);
+      }); 
+    });
+  }
+  createRoom(roomId: string){
+    if(this.socket) {
+      this.socket.emit('createdRoom', roomId);
+    }
+  }
+  getRoom(): Observable<string>{
+    return new Observable((observer) => {
+      this.socket.on('createdRoom', (roomId) => {
+        observer.next(roomId);
       }); 
     });
   }

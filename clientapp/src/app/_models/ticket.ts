@@ -1,3 +1,4 @@
+import { ChatReply } from "./reply";
 import { User } from "./user";
 
 export class Ticket {
@@ -6,6 +7,7 @@ export class Ticket {
     nopen?: number;
     pendate?: Date;
     name?: string;
+    messages: ChatReply[];
     problem?: string;
     isSolved?: boolean;
     creator?: User;

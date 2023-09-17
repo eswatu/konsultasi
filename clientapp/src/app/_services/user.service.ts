@@ -54,8 +54,8 @@ put<T>(item: any): Observable<HttpResponse<T>> {
     return this.http.put<T>(myurl, item, {observe: 'response'});
 }
 
-    post<T>(item: User): Observable<HttpResponse<T>> {
-        return this.http.post<T>(this.url, item, {observe: 'response'});
+    post<User>(item: User): Observable<any> {
+        return this.http.post<User>(this.url, item);
     }
     pwput<T>(item: any): Observable<HttpResponse<T>> {
         const myurl = this.constructUrl(item.id + '/password');

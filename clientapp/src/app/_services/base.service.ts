@@ -17,7 +17,7 @@ export abstract class BaseService {
     
     abstract get<T>(id: string): Observable<T>;
     abstract put<T>(item: T): Observable<HttpResponse<T>>;
-    abstract post<T>(item: T): Observable<HttpResponse<T>>;
+    abstract post<T>(item: T): Observable<T>;
     
 }
 

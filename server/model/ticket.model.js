@@ -5,7 +5,13 @@ const mongoose = require('mongoose');
 const creatorSchema = mongoose.Schema({
   id: String,
   name: String,
+  username: String,
   company: String,
+});
+const messageSchema = mongoose.Schema({
+  user: creatorSchema,
+  message: { type: String, required: true },
+  time: { type: Date, required: true },
 });
 
 const schema = mongoose.Schema({
@@ -14,6 +20,7 @@ const schema = mongoose.Schema({
   pendate: { type: Date, required: false },
   name: { type: String, required: true },
   problem: { type: String, required: true },
+  messages: [messageSchema],
   isSolved: { type: Boolean, required: true, default: false },
   creator: creatorSchema,
 }, {
@@ -32,4 +39,7 @@ schema.index({
   aju: 'text', nopen: Number, name: 'text', problem: 'text',
 });
 
-module.exports = mongoose.model('Ticket', schema);
+const Message = mongoose.model('Message', messageSchema);
+const Model = mongoose.model('Ticket', schema);
+
+module.exports = { Model, Message };

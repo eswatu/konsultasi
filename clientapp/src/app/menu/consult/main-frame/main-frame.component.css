@@ -1,0 +1,11 @@
+.vertical-tab-group {
+    display: flex;
+  }
+  
+  .mat-tab-labels {
+    flex-direction: column; /* Make the tab labels stack vertically */
+  }
+  
+  .mat-tab-header {
+    flex: 0 0 auto; /* Prevent the header from stretching vertically */
+  }

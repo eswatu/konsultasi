@@ -13,6 +13,7 @@ export class Reply {
 export class ChatReply {
     id?: string;
     user: UserChat;
+    roomId: string;
     message: string;
-    timeStamp: Date;
+    time: Date;
 }

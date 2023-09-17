@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ticket } from '@app/_models/ticket';
+import { ChatService } from '@app/_services/chat.service';
 import { TicketService } from '@app/_services/ticket.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class TicketFormComponent {
   isFieldNopenVisible = true;
 
   constructor(private tcService: TicketService,
+    private cService: ChatService,
     private dialogRef: MatDialogRef<TicketFormComponent>,
     public fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -114,14 +116,14 @@ export class TicketFormComponent {
         }
       }, error => {
         console.error(error);
-        this.snackBar.open(error.error.message,'',{duration:500});
+        this.snackBar.open(error.error.message,'',{duration:2500});
       });
 
     } else {
       this.tcService.post<Ticket>(this.ticket).subscribe(
         result => {
               if (result) {
-                this.snackBar.open('berhasil','',{duration:500});
+                this.snackBar.open('berhasil','',{duration:2500});
                 this.closeDialog(result);
               }
               }

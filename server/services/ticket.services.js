@@ -7,7 +7,7 @@
  */
 const db = require('../_helpers/db');
 const { paginateTicket } = require('../_helpers/paginate');
-
+const { Message } = require('../model/ticket.model');
 /**
  * Extracts the basic details of a ticket.
  *
@@ -108,6 +108,7 @@ async function createTicket(au, req) {
       pendate: req.pendate,
       name: req.name,
       problem: req.problem,
+      messages: [],
       creator: {
         id: us.id,
         name: us.name,
@@ -116,12 +117,39 @@ async function createTicket(au, req) {
       },
     });
     await ticket.save();
-    return ticket;
+    return { success: true, message: 'sukses buat tiket', result: ticket };
   } catch (error) {
     return { success: false, message: 'error dalam pembuatan tiket' };
   }
 }
-
+async function createMessage(au, msg) {
+  const us = await db.User.findById(au);
+  const m = new Message({
+    user: {
+      id: us.id,
+      name: us.name,
+      username: us.username,
+      company: us.company,
+    },
+    message: msg.message,
+    time: new Date(),
+  });
+  return m;
+}
+// add message to ticket using ticketId
+async function addMessage(au, msg) {
+  const m = await createMessage(au, msg);
+  const ticket = await db.Ticket.findById(msg.roomId);
+  ticket.messages.push(m);
+  // console.log('Saving ticket:', ticketId);
+  await ticket.save();
+  // console.log('Message added to ticket:', ticketId);
+  const n = {
+    user: m.user, message: m.message, time: m.time, roomId: msg.roomId,
+  };
+  // console.log('isi n adalah ', n);
+  return n;
+}
 /**
  * Deletes a ticket by its ID.
  *
@@ -140,4 +168,5 @@ module.exports = {
   createTicket,
   updateTicket,
   deleteTicket,
+  addMessage,
 };
