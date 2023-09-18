@@ -1,9 +1,19 @@
 .container {
   display: grid;
-  width: 100%;
+  width: 90%;
   height: 70%;
-  grid-template-rows: 8fr 1fr;
+  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-areas: "spaces textlist spaces";
 }
 .inputMessage {
   place-content: stretch;
+}
+#message {
+  width: 600px;
+}
+#send-button {
+  height: 50px;
+}
+#close-button {
+  width: max-content;
 }

@@ -4,6 +4,7 @@ import { User } from '@app/_models';
 import { ChatReply } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
 import { ChatService } from '@app/_services/chat.service';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'chat-component',
@@ -15,6 +16,11 @@ export class ChatComponent {
   @Input() user: User;
   replies: ChatReply[];
   message = new FormControl('');
+  isMainRoom:boolean = false;
+  counterStart: boolean = false;
+  countdownNumber: number = 60;
+  private timer: Subscription; 
+
   constructor(private cservice:ChatService) {
 
   }
@@ -23,6 +29,7 @@ export class ChatComponent {
     if (this.ticketdata.messages.length > 0) {
       if (this.ticketdata.name === 'mainRoom') {
         this.replies = this.ticketdata.messages.slice(-5);
+        this.isMainRoom = true;
       } else {
         this.replies = this.ticketdata.messages;
       }
@@ -37,12 +44,32 @@ export class ChatComponent {
     });
     // console.log(`isi reply dari ${this.ticketdata.id} adalah`,this.replies);
   }
+
   ngOnDestroy(){
     this.cservice.disconnect();
+    this.stopCountDown();
   }
   sendMessage(){
     const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
     this.cservice.sendMessage(cr);
+    this.message.reset();
+  }
+  startCountDown(){
+    this.counterStart = true;
+    this.timer = interval(1000).subscribe(n => {
+      this.countdownNumber--;
+      if(this.countdownNumber === 0){
+        this.counterStart = false;
+        this.stopCountDown();
+      }
+    });
+  }
+  stopCountDown(){
+    this.counterStart = false;
+    this.countdownNumber = 60;
+    this.timer.unsubscribe();
+  }
+  resetInput() {
     this.message.reset();
   }
   

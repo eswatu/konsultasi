@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="spaces"></div>
   <div class="textlist">
     <table>
       <thead>
@@ -6,23 +7,37 @@
       </thead>
       <tbody>
         <div *ngIf="replies.length > 0">
-            <tr *ngFor="let repli of replies">
+            <tr *ngFor="let repli of replies" [style.background-color]="repli.user.username === user.username ? 'lightblue' : ''">
               <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
-              <td> : </td>
-              <td>{{repli.message}}</td>
+              <td>: {{repli.message}}</td>
               <td> waktu </td>
               <td>{{repli.time | date:'hh:mm:ss'}}</td>
             </tr>
         </div>
       </tbody>
     </table>
+    <div class="counter-button" *ngIf="!isMainRoom">
+      <button mat-raised-button *ngIf="!counterStart" color="accent"
+      (click)="startCountDown()" type="button" id="close-button">
+      'Trigger Start'
+      </button>
+      <button mat-raised-button color="warn" type="button" *ngIf="counterStart" (click)="stopCountDown()">
+        {{counterStart ? countdownNumber : '0'}}
+      </button>
+    </div>
+      <div class="inputMessage">
+      <mat-form-field>
+        <mat-label>Masukkan pesan anda</mat-label>
+            <textarea id="message" name="message" matInput type="text"
+            [formControl]="message" placeholder="type a text" ></textarea>
+            <button *ngIf="message.value" matSuffix mat-icon-button aria-label="Clear" (click)="resetInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+      </mat-form-field>
+      <button *ngIf="message.value" mat-raised-button color="accent" type="button" id="send-button" (click)="sendMessage()">
+          <mat-icon>send</mat-icon>
+      </button>
+    </div>
   </div>
-  <div class="inputMessage">
-    <form>
-      <textarea id="message" name="message" rows="3" cols="50"
-      [formControl]="message" placeholder="type a text"></textarea>
-      <button mat-raised-button color="warn" type="button" (click)="sendMessage()">Submit</button>
-    </form>
-    <p>{{message.value}}</p>
-  </div>
+  <div class="spaces"></div>
 </div>
