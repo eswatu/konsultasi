@@ -56,6 +56,18 @@ function ioApp(server) {
       io.of('/Client').to(rmsg.roomId).emit('sendMessage', rmsg);
       console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
+    // trigger countdown start/stop
+    socket.on('triggerCountDown', async (countdownData) => {
+      io.of('/Admin').to(countdownData.roomName).emit('triggerCountDown', (countdownData));
+      io.of('/Client').to(countdownData.roomName).emit('triggerCountDown', (countdownData));
+      console.log(`client ${socket.user.name} trigger countdown on ${countdownData.roomName} to start as ${countdownData.start}`);
+    });
+    // approve answer
+    socket.on('approveAnswer', async (roomName) => {
+      io.of('/Admin').to(roomName).emit('approveAnswer', (roomName));
+      io.of('/Client').to(roomName).emit('approveAnswer', (roomName));
+      console.log(`Client ${socket.user.name} approve answer on ${roomName}.`);
+    });
     next();
   };
   // register semua namespace untuk menggunakan global middleware

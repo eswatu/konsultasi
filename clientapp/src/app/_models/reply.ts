@@ -7,3 +7,14 @@ export class ChatReply {
     message: string;
     time: Date;
 }
+
+// Define the types for the emitted values
+export interface CountdownData {
+    roomName: string;
+    start: boolean;
+  }
+
+  export interface ApprovalData {
+    roomName: string;
+    result: boolean;
+  }

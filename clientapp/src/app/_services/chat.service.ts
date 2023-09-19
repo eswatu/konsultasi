@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { ChatReply } from '@app/_models/reply';
+import { ChatReply, CountdownData } from '@app/_models/reply';
 import { User } from '@app/_models';
 
 @Injectable({
@@ -51,4 +51,27 @@ export class ChatService {
   leave(roomName:string) {
     this.socket.emit('leave', roomName);
   }
+  triggerCountDown(countDownData:CountdownData){
+    this.socket.emit('triggerCountDown', countDownData);
+  }
+  getCountDown(): Observable<CountdownData>{
+    return new Observable((observer) => {
+      this.socket.on('triggerCountDown', (cd) => {
+        observer.next(cd);
+      });
+    })
+  }
+  approveAnswer(roomName:string){
+    this.socket.emit('approveAnswer', roomName);
+  }
+  getAnswer(): Observable<string>{
+    return new Observable((observer) => {
+      this.socket.on('approveAnswer', (roomName) => {
+        observer.next(roomName);
+      });
+    })
+  }
+
+  
 }
+
