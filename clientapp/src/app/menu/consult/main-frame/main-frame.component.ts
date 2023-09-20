@@ -12,7 +12,7 @@ import { TicketFormComponent } from '@app/menu/consult/ticket-form/ticket-form.c
   styleUrls: ['./main-frame.component.css']
 })
 export class MainFrameComponent {
-  chatTabs : TabChat[];
+  chatTabs : TabChat[] = []
   user: User;
   constructor(private chatService: ChatService,
     private tService: TicketService,
@@ -39,15 +39,22 @@ export class MainFrameComponent {
           }
         });
        console.log('tab ada sejumlah: ',this.chatTabs.length);
-    });
-      this.chatService.getRoom().subscribe((roomId) => {
-      console.log(roomId);
-      if (roomId){
-        this.tService.get<Ticket>(roomId).subscribe(result => {
-          this.chatTabs.push({id: result.id, name: result.problem, value: result.name, hasUpdate: true, ticket: result});      
+      });
+      // subs for new room
+        this.chatService.getRoom().subscribe((roomId) => {
+        // console.log(`new room id ${roomId}`);
+        if (!this.chatTabs.some(obj => obj.id === roomId)){
+            this.tService.get<Ticket>(roomId).subscribe(result => {
+                this.chatTabs.push({id: result.id, name: result.problem, value: result.name, hasUpdate: true, ticket: result});      
+              });
+            };
         });
-      }
-    })
+      // subs for answer
+      this.chatService.getAnswer().subscribe((roomName) => {
+        if (this.chatTabs.some(obj => obj.id === roomName)) {
+          this.chatTabs.filter(obj => obj.id !== roomName);
+        }
+      })
   }
 
   openForm(): void {

@@ -78,6 +78,10 @@ function ioApp(server) {
   // ini untuk user Client namespace
   const clientNameSpace = io.of('/Client');
   clientNameSpace.on('connection', (socket) => {
+    socket.on('createdRoom', (roomName) => {
+      io.of('/Admin').emit('createdRoom', roomName);
+      console.log(`client ${socket.user.name} created room id ${roomName}`);
+    });
     // join room
     socket.on('join', (roomName) => {
       socket.join(roomName);

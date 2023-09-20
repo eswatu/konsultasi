@@ -6,7 +6,7 @@
         <head>some message</head>
       </thead>
       <tbody>
-        <div *ngIf="replies.length > 0">
+        <div *ngIf="replies">
             <tr *ngFor="let repli of replies" [style.background-color]="repli.user.username === user.username ? 'lightblue' : ''">
               <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
               <td>: {{repli.message}}</td>

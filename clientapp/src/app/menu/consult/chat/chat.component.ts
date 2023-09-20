@@ -28,14 +28,10 @@ export class ChatComponent {
   }
   ngOnInit(){
     this.replies = [];
-    if (this.ticketdata.messages.length > 0) {
-      if (this.ticketdata.name === 'mainRoom') {
-        this.replies = this.ticketdata.messages.slice(-5);
-        this.isMainRoom = true;
-      } else {
-        this.replies = this.ticketdata.messages;
-      }
+    if (this.ticketdata.name === 'mainRoom') {
+      this.isMainRoom = true;
     }
+    this.replies = this.ticketdata.messages;
     this.cservice.join(this.ticketdata.id);
     // waiting for new message
     this.cservice.getMessage().subscribe((msg:ChatReply) => {
