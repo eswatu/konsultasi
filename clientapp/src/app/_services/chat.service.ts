@@ -45,11 +45,11 @@ export class ChatService {
       }); 
     });
   }
-  join(roomName:string) {
-    this.socket.emit('join', roomName);
+  join(roomId:string) {
+    this.socket.emit('join', roomId);
   }
-  leave(roomName:string) {
-    this.socket.emit('leave', roomName);
+  leave(roomId:string) {
+    this.socket.emit('leave', roomId);
   }
   triggerCountDown(countDownData:CountdownData){
     this.socket.emit('triggerCountDown', countDownData);
@@ -66,8 +66,8 @@ export class ChatService {
   }
   getAnswer(): Observable<string>{
     return new Observable((observer) => {
-      this.socket.on('approveAnswer', (roomName) => {
-        observer.next(roomName);
+      this.socket.on('approveAnswer', (roomId) => {
+        observer.next(roomId);
       });
     })
   }

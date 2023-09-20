@@ -51,22 +51,22 @@ function ioApp(server) {
         msg,
       );
       // console.log('isi msg adalah ', msg);
-      console.log('isi rmsg adalah ', rmsg);
+      // console.log('isi rmsg adalah ', rmsg);
       io.of('/Admin').to(rmsg.roomId).emit('sendMessage', rmsg);
       io.of('/Client').to(rmsg.roomId).emit('sendMessage', rmsg);
-      console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
+      // console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
     // trigger countdown start/stop
     socket.on('triggerCountDown', async (countdownData) => {
-      io.of('/Admin').to(countdownData.roomName).emit('triggerCountDown', (countdownData));
-      io.of('/Client').to(countdownData.roomName).emit('triggerCountDown', (countdownData));
-      console.log(`client ${socket.user.name} trigger countdown on ${countdownData.roomName} to start as ${countdownData.start}`);
+      io.of('/Admin').to(countdownData.roomId).emit('triggerCountDown', (countdownData));
+      io.of('/Client').to(countdownData.roomId).emit('triggerCountDown', (countdownData));
+      console.log(`client ${socket.user.name} trigger countdown on ${countdownData.roomId} to start as ${countdownData.trigger}`);
     });
     // approve answer
     socket.on('approveAnswer', async (roomName) => {
       io.of('/Admin').to(roomName).emit('approveAnswer', (roomName));
       io.of('/Client').to(roomName).emit('approveAnswer', (roomName));
-      console.log(`Client ${socket.user.name} approve answer on ${roomName}.`);
+      console.log(`${socket.user.name} approve answer on ${roomName}.`);
     });
     next();
   };

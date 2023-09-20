@@ -14,11 +14,13 @@ import { Subscription, interval } from 'rxjs';
 export class ChatComponent {
   @Input() ticketdata: Ticket;
   @Input() user: User;
-  @ViewChild('triggerbutton') myButton: ElementRef;
+  @ViewChild('triggerbutton') myTriggerButton: ElementRef;
+  @ViewChild('stoptriggerbutton') myStopTriggerButton: ElementRef;
 
   replies: ChatReply[];
   message = new FormControl('');
   isMainRoom:boolean = false;
+  isClosed: boolean;
   counterStart: boolean = false;
   countdownNumber: number = 10;
   private timer: Subscription; 
@@ -32,6 +34,7 @@ export class ChatComponent {
       this.isMainRoom = true;
     }
     this.replies = this.ticketdata.messages;
+    this.isClosed = this.ticketdata.isSolved;
     this.cservice.join(this.ticketdata.id);
     // waiting for new message
     this.cservice.getMessage().subscribe((msg:ChatReply) => {
@@ -44,18 +47,18 @@ export class ChatComponent {
     // waiting for trigger countdown
     this.cservice.getCountDown().subscribe((countDownData:CountdownData) => {
       console.log(countDownData);
-      if (countDownData.roomName === this.ticketdata.id) {
-        if (countDownData.start) {
+      if (countDownData.roomId === this.ticketdata.id) {
+        if (countDownData.trigger && !this.counterStart) {
           this.startCountDown();
-        } else {
+        } else if (!countDownData.trigger && this.counterStart){
           this.stopCountDown();
         }
       };
     });
     // waiting for approved answer
-    this.cservice.getAnswer().subscribe((roomName) => {
-      if (roomName === this.ticketdata.id) {
-        this.approveAnswer();
+    this.cservice.getAnswer().subscribe((roomId:string) => {
+      if (roomId === this.ticketdata.id) {
+        console.log('answer approved, no more worries');
       };
     })
   }
@@ -72,14 +75,18 @@ export class ChatComponent {
 
   startCountDown(){
     if (!this.counterStart) {
-      this.counterStart = true;
-      this.cservice.triggerCountDown(<CountdownData>{roomName:this.ticketdata.id, start:true});
+      // emit ke server kalau mulai trigger (room)
+      this.cservice.triggerCountDown(<CountdownData>{ roomId:this.ticketdata.id, trigger:true});
+      // kirim pesan ke pub : memulai trigger
       this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:this.ticketdata.id});
+      // mulai counter
+      this.counterStart = true;
       this.timer = interval(1000).subscribe(n => {
         this.countdownNumber--;
-        if(this.countdownNumber === 0){
-          this.counterStart = false;
+        if(this.countdownNumber == 0){
+          // selesai, stop counter
           this.stopCountDown();
+          // approve answer
           this.approveAnswer();
         }
       });
@@ -87,16 +94,23 @@ export class ChatComponent {
   }
   stopCountDown(){
     if (this.counterStart) {
-      this.cservice.triggerCountDown(<CountdownData>{roomName:this.ticketdata.id, start:false});
+      this.timer.unsubscribe();
+      // kirim pesan ke server untuk menghentikan trigger (room)
+      this.cservice.triggerCountDown(<CountdownData>{roomId:this.ticketdata.id, trigger:false});
+      // notif ke pub kalau trigger dihentikan
       this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} menghentikan trigger close case`, roomId:this.ticketdata.id});
       this.counterStart = false;
       this.countdownNumber = 60;
-      this.timer.unsubscribe();
     }
   }
   approveAnswer() {
-    this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Saya menerima jawaban petugas`, roomId:this.ticketdata.id});
-    this.stopCountDown();
+    // cek jika masih ada counter
+    if (this.counterStart) {
+      this.stopCountDown();
+    }
+    // kirim pesan ke pub
+    this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
+    // approve ke server
     this.cservice.approveAnswer(this.ticketdata.id);
   }
   resetInput() {

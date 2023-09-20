@@ -10,11 +10,6 @@ export class ChatReply {
 
 // Define the types for the emitted values
 export interface CountdownData {
-    roomName: string;
-    start: boolean;
-  }
-
-  export interface ApprovalData {
-    roomName: string;
-    result: boolean;
+    roomId: string;
+    trigger: boolean;
   }

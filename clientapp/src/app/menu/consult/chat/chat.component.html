@@ -17,23 +17,19 @@
       </tbody>
     </table>
     <div class="counter-button" *ngIf="!isMainRoom">
-      <div class="before-counter">
         <!-- kalau untuk selain user, bisa trigger mulai close -->
         <button mat-raised-button *ngIf="!counterStart && user.role !== 'Client'" color="accent"
-          (click)="startCountDown()" type="button" id="triggerbutton">
+          (click)="startCountDown()" type="button" >
           Trigger Start
         </button>
-      </div>
-      <div class="during-counter">
-        <button mat-raised-button color="warn" type="button" *ngIf="counterStart" (click)="stopCountDown()">
+        <!-- stop counter untuk user dan admin, jika counter sudah berjalan-->
+        <button mat-raised-button color="warn" type="button" *ngIf="counterStart" (click)="stopCountDown()" >
           {{counterStart ? countdownNumber : 'null'}}
         </button>
-      </div>
-      <div class="close-counter">
-        <button mat-raised-button color="primary" type="button" *ngIf="countdownNumber == 0 || user.role === 'Client'" (click)="approveAnswer()">
+        <!-- setelah counter 0, otomatis close, user bisa close instan -->
+        <button mat-raised-button color="primary" type="button" *ngIf="user.role === 'Client'" (click)="approveAnswer()">
           Tutup Tiket
         </button>
-      </div>
     </div>
       <div class="inputMessage">
       <mat-form-field>
