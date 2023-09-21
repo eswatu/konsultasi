@@ -49,9 +49,9 @@ export class ChatComponent {
       console.log(countDownData);
       if (countDownData.roomId === this.ticketdata.id) {
         if (countDownData.trigger && !this.counterStart) {
-          this.startCountDown();
+          this.startCountDown(true);
         } else if (!countDownData.trigger && this.counterStart){
-          this.stopCountDown();
+          this.stopCountDown(true);
         }
       };
     });
@@ -73,12 +73,14 @@ export class ChatComponent {
     this.message.reset();
   }
 
-  startCountDown(){
+  startCountDown(fromserver:boolean = false){
     if (!this.counterStart) {
-      // emit ke server kalau mulai trigger (room)
-      this.cservice.triggerCountDown(<CountdownData>{ roomId:this.ticketdata.id, trigger:true});
-      // kirim pesan ke pub : memulai trigger
-      this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:this.ticketdata.id});
+      if (!fromserver) {
+        // emit ke server kalau mulai trigger (room)
+        this.cservice.triggerCountDown(<CountdownData>{ roomId:this.ticketdata.id, trigger:true});
+        // kirim pesan ke pub : memulai trigger
+        this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:this.ticketdata.id});
+      }
       // mulai counter
       this.counterStart = true;
       this.timer = interval(1000).subscribe(n => {
@@ -92,13 +94,15 @@ export class ChatComponent {
       });
     }
   }
-  stopCountDown(){
+  stopCountDown(fromserver:boolean = false){
     if (this.counterStart) {
       this.timer.unsubscribe();
-      // kirim pesan ke server untuk menghentikan trigger (room)
-      this.cservice.triggerCountDown(<CountdownData>{roomId:this.ticketdata.id, trigger:false});
-      // notif ke pub kalau trigger dihentikan
-      this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} menghentikan trigger close case`, roomId:this.ticketdata.id});
+      if (!fromserver) {
+        // kirim pesan ke server untuk menghentikan trigger (room)
+        this.cservice.triggerCountDown(<CountdownData>{roomId:this.ticketdata.id, trigger:false});
+        // notif ke pub kalau trigger dihentikan
+        this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} menghentikan trigger close case`, roomId:this.ticketdata.id});
+      }
       this.counterStart = false;
       this.countdownNumber = 60;
     }
