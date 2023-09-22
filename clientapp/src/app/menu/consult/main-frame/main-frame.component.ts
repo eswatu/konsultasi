@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { User } from '@app/_models';
+import { NotificationData } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService, TicketService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
@@ -12,8 +14,10 @@ import { TicketFormComponent } from '@app/menu/consult/ticket-form/ticket-form.c
   styleUrls: ['./main-frame.component.css']
 })
 export class MainFrameComponent {
-  chatTabs : TabChat[] = []
+  chatTabs : TabChat[] = [];
   user: User;
+  selectedTabIndex = 0;
+  
   constructor(private chatService: ChatService,
     private tService: TicketService,
     private authService: AuthenticationService,
@@ -23,6 +27,7 @@ export class MainFrameComponent {
       });
     }
     ngOnInit() {
+      this.chatTabs = [];
       // set koneksi ke server
       this.chatService.setupConnection(this.user.jwtToken, this.user);
       // get unsolved ticket
@@ -70,6 +75,15 @@ export class MainFrameComponent {
       this.chatTabs.push({id: room.id, name: room.problem, value: room.name, hasUpdate: true});
       this.chatService.createRoom(room.id);
     });   
+  }
+  getNotify(childEvent: NotificationData) {
+    if (childEvent.senderId !== this.user.id){
+      const tab = this.chatTabs.find(obj => obj.id === childEvent.roomId);
+      tab.hasUpdate = true;
+    }
+  }
+  tabChanged(event: MatTabChangeEvent) {
+    const tab = this.chatTabs[event.index].hasUpdate = false;
   }
 }
 

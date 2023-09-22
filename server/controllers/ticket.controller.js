@@ -150,6 +150,18 @@ async function updateById(req, res, next) {
     return next(error);
   }
 }
+// function controller untuk clos ticket
+async function closeTicket(req, res, next) {
+  try {
+    const result = await ticketService.closeTicket(req);
+    if (result.success) {
+      return res.status(201).json({ success: true, message: result.message });
+    }
+    return res.status(500).json({ success: false, message: result.message });
+  } catch (error) {
+    return next(error);
+  }
+}
 
 /**
  * Route handler for deleting a ticket by ID.
@@ -172,7 +184,7 @@ async function deleteById(req, res, next) {
 router.post('/', authorize(), createSchema, createTicket);
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
-router.put('/:id', /* authorize(), */ updateSchema, updateById);
-router.delete('/:id', /* authorize(), */ deleteById);
-
+router.put('/:id', authorize(), updateSchema, updateById);
+router.delete('/:id', authorize(), deleteById);
+router.put('/close/:id', authorize(), closeTicket);
 module.exports = router;

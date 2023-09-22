@@ -150,6 +150,16 @@ async function addMessage(au, msg) {
   // console.log('isi n adalah ', n);
   return n;
 }
+async function closeTicket(id) {
+  const result = await db.Ticket.updateOne(
+    { _id: id },
+    { $set: { isSolved: true, updatedAt: new Date() } },
+  );
+  if (result.nModified === 0) {
+    return { success: false, message: 'gagal, tiket tidak tertutup' };
+  }
+  return { success: true, message: 'sukses tutup tiket', result };
+}
 /**
  * Deletes a ticket by its ID.
  *
@@ -169,4 +179,5 @@ module.exports = {
   updateTicket,
   deleteTicket,
   addMessage,
+  closeTicket,
 };

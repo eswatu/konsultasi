@@ -13,3 +13,8 @@ export interface CountdownData {
     roomId: string;
     trigger: boolean;
   }
+export interface NotificationData {
+    kind: string;
+    senderId:string;
+    roomId: string;
+}

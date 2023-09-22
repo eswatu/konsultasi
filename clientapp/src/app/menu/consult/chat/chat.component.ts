@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from '@app/_models';
-import { ChatReply, CountdownData } from '@app/_models/reply';
+import { ChatReply, CountdownData, NotificationData } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
 import { ChatService } from '@app/_services/chat.service';
 import { Subscription, interval } from 'rxjs';
@@ -11,11 +11,13 @@ import { Subscription, interval } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent {
+export class ChatComponent implements OnDestroy {
   @Input() ticketdata: Ticket;
   @Input() user: User;
   @ViewChild('triggerbutton') myTriggerButton: ElementRef;
   @ViewChild('stoptriggerbutton') myStopTriggerButton: ElementRef;
+  // untuk notify ke parent
+  @Output() dataemitter: EventEmitter<NotificationData> = new EventEmitter<NotificationData>();
 
   replies: ChatReply[];
   message = new FormControl('');
@@ -40,8 +42,9 @@ export class ChatComponent {
     this.cservice.getMessage().subscribe((msg:ChatReply) => {
       // console.log('saya dapat '+ msg);
       if (msg.roomId === this.ticketdata.id) {
-        this.replies.push(msg);
-        // console.log(msg);
+        this.replies = [...this.replies,msg];
+        this.notifyParent('new message')
+        //  console.log(msg);
       }
     });
     // waiting for trigger countdown
@@ -62,6 +65,15 @@ export class ChatComponent {
       };
     })
   }
+  // ngOnChanges(changes:SimpleChanges):void{
+  //   if (changes.replies) {
+  //     const prevValue = changes.replies.previousValue;
+  //     const nextValue = changes.replies.currentValue;
+  //     if (prevValue.length !== nextValue.length) {
+  //       console.log('new replies added');
+  //     }
+  //   }
+  // }
 
   ngOnDestroy(){
     this.cservice.disconnect();
@@ -116,6 +128,11 @@ export class ChatComponent {
     this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
     // approve ke server
     this.cservice.approveAnswer(this.ticketdata.id);
+  }
+  notifyParent(tipe:string) {
+    console.log('child tries to communicat...');
+    const mdt = <NotificationData>{kind:tipe, roomId: this.ticketdata.id, senderId: this.user.id};
+    this.dataemitter.emit(mdt);
   }
   resetInput() {
     this.message.reset();

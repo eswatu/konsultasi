@@ -1,9 +1,9 @@
 <button mat-raised-button color="primary" (click)="openForm()" style="height: 5%;">Create New</button>
 <div *ngIf="chatTabs">
-    <mat-tab-group>
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="tabChanged($event)">
         <ng-container *ngFor="let tab of chatTabs">
-            <mat-tab label="{{tab.name}} {{tab.problem}}" >
-                <chat-component [user]="user" [ticketdata]="tab.ticket"></chat-component>
+            <mat-tab label="{{tab.name}} {{tab.problem}} {{tab.hasUpdate ? 'hei notis saya' : ''}}" >
+                <chat-component [user]="user" [ticketdata]="tab.ticket" (dataemitter)="getNotify($event)"></chat-component>
             </mat-tab>
         </ng-container>
     </mat-tab-group>

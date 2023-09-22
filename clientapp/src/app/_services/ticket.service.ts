@@ -68,7 +68,10 @@ return this.http.get<ApiResult>(this.url, {params});
   post<Ticket>(item: Ticket): Observable<any> {
     return this.http.post<Ticket>(this.url, item);
   }
-
+  close<Ticket>(item: any): Observable<Ticket> {
+    let myurl = this.url + 'close/' + item.id;
+    return this.http.put<Ticket>(myurl, item);
+  }
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
       super(http, baseUrl);
