@@ -1,21 +1,22 @@
 <div class="container">
-  <div class="spaces"></div>
+  <!-- INI KONTEN INTI -->
   <div class="textlist">
-    <table>
-      <thead>
-        <head>some message</head>
-      </thead>
-      <tbody>
-        <div *ngIf="replies">
-            <tr *ngFor="let repli of replies" [style.background-color]="repli.user.username === user.username ? 'lightblue' : ''">
-              <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
-              <td>: {{repli.message}}</td>
-              <td> waktu </td>
-              <td>{{repli.time | date:'hh:mm:ss'}}</td>
-            </tr>
-        </div>
-      </tbody>
-    </table>
+    <!-- tabel pesan -->
+    <div class="messagetable mat-elevation-z8">
+      <table style="width: 100%;">
+        <thead style="background-color: rgb(48, 133, 195);position: sticky;top:0;">
+          <th align="center" colspan="2" style="color: rgb(250, 242, 211);" >Pesan</th>
+        </thead>
+        <tbody >
+          <tr *ngFor="let repli of ticketdata.messages" matTooltip="{{repli.time | date:'dd/MM/yyyy hh:mm:ss'}}"
+          matTooltipPosition="right" matTooltipHideDelay="1000" class="row-message" matRipple >
+            <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
+            <td>: {{repli.message}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- tombol action -->
     <div class="counter-button" *ngIf="!isMainRoom">
         <!-- kalau untuk selain user, bisa trigger mulai close -->
         <button mat-raised-button *ngIf="!counterStart && user.role !== 'Client'" color="accent"
@@ -31,19 +32,24 @@
           Tutup Tiket
         </button>
     </div>
+    <!-- input message -->
       <div class="inputMessage">
-      <mat-form-field>
-        <mat-label>Masukkan pesan anda</mat-label>
-            <textarea id="message" name="message" matInput type="text"
-            [formControl]="message" placeholder="type a text" ></textarea>
-            <button *ngIf="message.value" matSuffix mat-icon-button aria-label="Clear" (click)="resetInput()">
-              <mat-icon>close</mat-icon>
-            </button>
-      </mat-form-field>
-      <button *ngIf="message.value" mat-raised-button color="accent" type="button" id="send-button" (click)="sendMessage()">
-          <mat-icon>send</mat-icon>
-      </button>
+        <div class="form-field">
+          <mat-form-field class="input-form">
+            <mat-label>Masukkan pesan anda</mat-label>
+                <textarea id="message" name="message" matInput type="text"
+                [formControl]="message" placeholder="type a text" cdkTextareaAutosize
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                <button *ngIf="message.value" matSuffix mat-icon-button aria-label="Clear" (click)="resetInput()">
+                  <mat-icon>close</mat-icon>
+                </button>
+          </mat-form-field>
+        </div>
+        <div class="send-button">
+          <button *ngIf="message.value" mat-raised-button color="accent" type="button" id="send-button" (click)="sendMessage()">
+              <mat-icon>send</mat-icon>
+          </button>
+        </div>
     </div>
   </div>
-  <div class="spaces"></div>
 </div>

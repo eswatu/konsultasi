@@ -1,11 +1,25 @@
-.vertical-tab-group {
-    display: flex;
-  }
-  
-  .mat-tab-labels {
-    flex-direction: column; /* Make the tab labels stack vertically */
-  }
-  
-  .mat-tab-header {
-    flex: 0 0 auto; /* Prevent the header from stretching vertically */
-  }
+.sidenav {
+  width: 300px;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px 10px;
+  row-gap: 10px;
+}
+
+.nav-button {
+  width: 280px;
+}
+.mat-drawer-container  {
+  height: 100vh;
+}
+
+.mat-drawer-content,
+.mat-drawer,
+.mat-sidenav-container {
+  height: 100vh;
+}
+
+.mat-sidenav-content {
+  height: 100vh;
+}

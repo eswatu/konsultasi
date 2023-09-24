@@ -150,10 +150,10 @@ async function addMessage(au, msg) {
   // console.log('isi n adalah ', n);
   return n;
 }
-async function closeTicket(id) {
+async function closeTicket(id, usr) {
   const result = await db.Ticket.updateOne(
     { _id: id },
-    { $set: { isSolved: true, updatedAt: new Date() } },
+    { $set: { isSolved: true, updatedAt: new Date(), solver: usr } },
   );
   if (result.nModified === 0) {
     return { success: false, message: 'gagal, tiket tidak tertutup' };

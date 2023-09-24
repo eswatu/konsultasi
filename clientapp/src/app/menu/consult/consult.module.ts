@@ -22,7 +22,7 @@ export const MY_FORMATS = {
 @NgModule({
   declarations: [
     ChatComponent,
-    MainFrameComponent
+    MainFrameComponent,
   ],
   imports: [
     CommonModule,

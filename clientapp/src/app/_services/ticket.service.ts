@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Ticket } from '@app/_models/ticket';
+import { User } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
@@ -68,9 +69,9 @@ return this.http.get<ApiResult>(this.url, {params});
   post<Ticket>(item: Ticket): Observable<any> {
     return this.http.post<Ticket>(this.url, item);
   }
-  close<Ticket>(item: any): Observable<Ticket> {
+  close<Ticket>(item: any, usr: User): Observable<Ticket> {
     let myurl = this.url + 'close/' + item.id;
-    return this.http.put<Ticket>(myurl, item);
+    return this.http.put<Ticket>(myurl, usr);
   }
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {

@@ -1,19 +1,52 @@
 .container {
   display: grid;
   width: 90%;
-  height: 70%;
-  grid-template-columns: 1fr 8fr 1fr;
-  grid-template-areas: "spaces textlist spaces";
-}
-.inputMessage {
-  place-content: stretch;
-}
-#message {
-  width: 600px;
-}
-#send-button {
-  height: 50px;
+  padding: 10px 10px;
 }
 #close-button {
   width: max-content;
+}
+.textlist {
+  display: grid;
+  grid-template-rows: 8fr 1fr 2fr;
+  grid-template-areas: "messagetable "
+                       "counter-button"
+                       "inputMessage";
+  row-gap: 3px;
+  width: 100%;
+}
+.messagetable {
+  grid-area: messagetable;
+  width: 100%;
+  max-height: 700px;
+  overflow-y: auto; 
+}
+.row-message {
+  background-color: rgb(250, 242, 211);
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+}
+.row-message:hover {
+  background-color: rgb(244, 232, 105);
+}
+.counter-button {
+  grid-area: counter-button;
+  width: max-content;
+}
+.inputMessage {
+  grid-area: inputMessage;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-template-areas: "form-field send-button";
+}
+.form-field {
+  grid-area: form-field;
+  width: 100%;
+}
+.input-form {
+  width:100%;
+}
+.send-button {
+  grid-area: send-button;
+  position: sticky;
 }

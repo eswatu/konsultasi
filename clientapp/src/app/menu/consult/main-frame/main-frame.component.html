@@ -1,10 +1,21 @@
 <button mat-raised-button color="primary" (click)="openForm()" style="height: 5%;">Create New</button>
 <div *ngIf="chatTabs">
-    <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="tabChanged($event)">
-        <ng-container *ngFor="let tab of chatTabs">
-            <mat-tab label="{{tab.name}} {{tab.problem}} {{tab.hasUpdate ? 'hei notis saya' : ''}}" >
-                <chat-component [user]="user" [ticketdata]="tab.ticket" (dataemitter)="getNotify($event)"></chat-component>
-            </mat-tab>
-        </ng-container>
-    </mat-tab-group>
+    <mat-drawer-container >
+        <mat-drawer mode="side" opened class="sidenav" autosize style="display: flex; min-width: fit-content;">
+            <mat-button-toggle-group vertical [value]="selectedId" [formControl]="groupToggle" (change)="onSelectionChange($event)">
+                <ng-container *ngFor="let tab of chatTabs">
+                    <mat-button-toggle class="nav-button" value="{{tab.id}}"
+                    [style.background-color]="tab.updateCount > 0 ? 'rgb(92, 210, 230)': 'rgb(255, 255, 255)'"
+                    [style.background-color]="tab.triggerCountdown ? 'red': ''">
+                            {{tab.name}} {{ tab.updateCount > 0 ? '[' + tab.updateCount + ']' : '' }} 
+                    </mat-button-toggle>
+                </ng-container> 
+            </mat-button-toggle-group>
+        </mat-drawer>
+        <mat-content-drawer>
+            <div *ngIf="currentTicket">
+                <chat-component [ticketdata]="currentTicket" [isMainRoom]="currentTicket.name === 'mainRoom'" ></chat-component>
+            </div>
+        </mat-content-drawer>
+      </mat-drawer-container>
 </div>

@@ -57,16 +57,19 @@ function ioApp(server) {
       // console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
     // trigger countdown start/stop
-    socket.on('triggerCountDown', async (countdownData) => {
+    socket.on('triggerCountDown', (countdownData) => {
       io.of('/Admin').to(countdownData.roomId).emit('triggerCountDown', (countdownData));
       io.of('/Client').to(countdownData.roomId).emit('triggerCountDown', (countdownData));
       console.log(`client ${socket.user.name} trigger countdown on ${countdownData.roomId} to start as ${countdownData.trigger}`);
     });
     // approve answer
-    socket.on('approveAnswer', async (roomName) => {
-      io.of('/Admin').to(roomName).emit('approveAnswer', (roomName));
-      io.of('/Client').to(roomName).emit('approveAnswer', (roomName));
-      console.log(`${socket.user.name} approve answer on ${roomName}.`);
+    socket.on('approveAnswer', async (solveData) => {
+      const result = await tService.closeTicket(solveData.roomId, solveData.user);
+      if (result.success) {
+        io.of('/Admin').to(solveData.roomId).emit('approveAnswer', (solveData));
+        io.of('/Client').to(solveData.roomId).emit('approveAnswer', (solveData));
+        console.log(`${socket.user.name} approve answer on ${solveData.roomId}.`);
+      }
     });
     next();
   };

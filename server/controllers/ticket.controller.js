@@ -153,7 +153,7 @@ async function updateById(req, res, next) {
 // function controller untuk clos ticket
 async function closeTicket(req, res, next) {
   try {
-    const result = await ticketService.closeTicket(req);
+    const result = await ticketService.closeTicket(req, req.body);
     if (result.success) {
       return res.status(201).json({ success: true, message: result.message });
     }

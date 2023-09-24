@@ -1,4 +1,4 @@
-import { UserChat } from "./user";
+import { User, UserChat } from "./user";
 
 export class ChatReply {
     id?: string;
@@ -13,8 +13,18 @@ export interface CountdownData {
     roomId: string;
     trigger: boolean;
   }
+
 export interface NotificationData {
-    kind: string;
-    senderId:string;
+    kind: NotificationType;
+    sender: User;
     roomId: string;
+}
+export interface SolveData {
+    solver: User;
+    roomId: string;
+}
+export enum NotificationType {
+    newmessage = 'newmessage',
+    newcountdown = 'newcountdown',
+    newanswer = 'newanswer',
 }

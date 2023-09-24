@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { ChatReply, CountdownData } from '@app/_models/reply';
+import { ChatReply, CountdownData, SolveData } from '@app/_models/reply';
 import { User } from '@app/_models';
 
 @Injectable({
@@ -61,13 +61,13 @@ export class ChatService {
       });
     })
   }
-  approveAnswer(roomName:string){
-    this.socket.emit('approveAnswer', roomName);
+  approveAnswer(solveData:SolveData){
+    this.socket.emit('approveAnswer', solveData);
   }
-  getAnswer(): Observable<string>{
+  getAnswer(): Observable<SolveData>{
     return new Observable((observer) => {
-      this.socket.on('approveAnswer', (roomId) => {
-        observer.next(roomId);
+      this.socket.on('approveAnswer', (solveData) => {
+        observer.next(solveData);
       });
     })
   }

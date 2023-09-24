@@ -21,6 +21,7 @@ const schema = mongoose.Schema({
   name: { type: String, required: true },
   problem: { type: String, required: true },
   messages: [messageSchema],
+  solver: creatorSchema,
   isSolved: { type: Boolean, required: true, default: false },
   creator: creatorSchema,
 }, {

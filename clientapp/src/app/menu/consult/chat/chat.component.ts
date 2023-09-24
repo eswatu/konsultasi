@@ -1,8 +1,9 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from '@app/_models';
-import { ChatReply, CountdownData, NotificationData } from '@app/_models/reply';
+import { ChatReply, CountdownData, NotificationData, NotificationType, SolveData } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
+import { AuthenticationService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
 import { Subscription, interval } from 'rxjs';
 
@@ -12,41 +13,26 @@ import { Subscription, interval } from 'rxjs';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnDestroy {
-  @Input() ticketdata: Ticket;
-  @Input() user: User;
+  @Input({required: true}) ticketdata!: Ticket;
+  @Input({required:true}) isMainRoom:boolean;
+  user: User;
+
   @ViewChild('triggerbutton') myTriggerButton: ElementRef;
   @ViewChild('stoptriggerbutton') myStopTriggerButton: ElementRef;
   // untuk notify ke parent
   @Output() dataemitter: EventEmitter<NotificationData> = new EventEmitter<NotificationData>();
 
-  replies: ChatReply[];
   message = new FormControl('');
-  isMainRoom:boolean = false;
-  isClosed: boolean;
   counterStart: boolean = false;
-  countdownNumber: number = 10;
+  countdownNumber: number = 60;
   private timer: Subscription; 
 
-  constructor(private cservice:ChatService) {
-
+  constructor(private cservice:ChatService, private auService:AuthenticationService) {
+    this.auService.user.subscribe(x => {
+      this.user = x;
+    });
   }
   ngOnInit(){
-    this.replies = [];
-    if (this.ticketdata.name === 'mainRoom') {
-      this.isMainRoom = true;
-    }
-    this.replies = this.ticketdata.messages;
-    this.isClosed = this.ticketdata.isSolved;
-    this.cservice.join(this.ticketdata.id);
-    // waiting for new message
-    this.cservice.getMessage().subscribe((msg:ChatReply) => {
-      // console.log('saya dapat '+ msg);
-      if (msg.roomId === this.ticketdata.id) {
-        this.replies = [...this.replies,msg];
-        this.notifyParent('new message')
-        //  console.log(msg);
-      }
-    });
     // waiting for trigger countdown
     this.cservice.getCountDown().subscribe((countDownData:CountdownData) => {
       console.log(countDownData);
@@ -58,25 +44,9 @@ export class ChatComponent implements OnDestroy {
         }
       };
     });
-    // waiting for approved answer
-    this.cservice.getAnswer().subscribe((roomId:string) => {
-      if (roomId === this.ticketdata.id) {
-        console.log('answer approved, no more worries');
-      };
-    })
   }
-  // ngOnChanges(changes:SimpleChanges):void{
-  //   if (changes.replies) {
-  //     const prevValue = changes.replies.previousValue;
-  //     const nextValue = changes.replies.currentValue;
-  //     if (prevValue.length !== nextValue.length) {
-  //       console.log('new replies added');
-  //     }
-  //   }
-  // }
 
   ngOnDestroy(){
-    this.cservice.disconnect();
     this.stopCountDown();
   }
   sendMessage(){
@@ -92,6 +62,7 @@ export class ChatComponent implements OnDestroy {
         this.cservice.triggerCountDown(<CountdownData>{ roomId:this.ticketdata.id, trigger:true});
         // kirim pesan ke pub : memulai trigger
         this.cservice.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:this.ticketdata.id});
+        // console.log(this.user.name, 'start countdown ');
       }
       // mulai counter
       this.counterStart = true;
@@ -108,6 +79,7 @@ export class ChatComponent implements OnDestroy {
   }
   stopCountDown(fromserver:boolean = false){
     if (this.counterStart) {
+      console.log(this.user.name, ' stop countdown');
       this.timer.unsubscribe();
       if (!fromserver) {
         // kirim pesan ke server untuk menghentikan trigger (room)
@@ -124,15 +96,22 @@ export class ChatComponent implements OnDestroy {
     if (this.counterStart) {
       this.stopCountDown();
     }
+    // this.notifyParent(NotificationType.newanswer);
     // kirim pesan ke pub
-    this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
+    // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
     // approve ke server
-    this.cservice.approveAnswer(this.ticketdata.id);
+     this.cservice.approveAnswer(<SolveData>{solver: this.whosolve(), roomId: this.ticketdata.id});
   }
-  notifyParent(tipe:string) {
+  notifyParent(tipe:NotificationType) {
     console.log('child tries to communicat...');
-    const mdt = <NotificationData>{kind:tipe, roomId: this.ticketdata.id, senderId: this.user.id};
+    const solver = this.whosolve();
+    const mdt = <NotificationData>{kind:tipe, roomId: this.ticketdata.id, sender: solver};
     this.dataemitter.emit(mdt);
+  }
+  whosolve() {
+    const replies = [...this.ticketdata.messages].reverse().map(obj => obj.user);
+    const solver = replies.find(obj => obj.role !== 'Client');
+    return solver;
   }
   resetInput() {
     this.message.reset();

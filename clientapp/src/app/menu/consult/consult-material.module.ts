@@ -7,7 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule} from '@angular/material/tooltip';
+
 
 const modules = [
   MatIconModule,
@@ -18,7 +20,8 @@ const modules = [
   MatDialogModule,
   MatSnackBarModule,
   MatDatepickerModule,
-  MatTabsModule
+  MatSidenavModule,
+  MatTooltipModule
 ];
 
 @NgModule({
