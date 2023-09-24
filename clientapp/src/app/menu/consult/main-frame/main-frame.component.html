@@ -1,4 +1,4 @@
-<button mat-raised-button color="primary" (click)="openForm()" style="height: 5%;">Create New</button>
+<button mat-raised-button color="primary" (click)="openForm()" style="height: 5%;" *ngIf="user.role === 'Client'">Create New</button>
 <div *ngIf="chatTabs">
     <mat-drawer-container >
         <mat-drawer mode="side" opened class="sidenav" autosize style="display: flex; min-width: fit-content;">
@@ -13,8 +13,10 @@
             </mat-button-toggle-group>
         </mat-drawer>
         <mat-content-drawer>
-            <div *ngIf="currentTicket">
-                <chat-component [ticketdata]="currentTicket" [isMainRoom]="currentTicket.name === 'mainRoom'" ></chat-component>
+            <div *ngIf="currentTab">
+                <chat-component [ticketdata]="currentTab.ticket" [isMainRoom]="currentTab.ticket.name === 'mainRoom'"
+                    [counterStart]="currentTab.triggerCountdown" [countdownNumber]="currentTab.countDown"
+                    (startTrigger)="childStart($event)" (stopTrigger)="childStop($event)"></chat-component>
             </div>
         </mat-content-drawer>
       </mat-drawer-container>
