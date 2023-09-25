@@ -15,7 +15,6 @@
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
-              "sweetalert2",
               "moment"
             ],
             "outputPath": "dist/clientapp",
@@ -64,6 +63,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "move-safe:build",
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "clientapp:build:production"

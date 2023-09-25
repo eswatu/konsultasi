@@ -17,7 +17,6 @@ export class ChatComponent {
   @Input({required: true}) ticketdata!: Ticket;
   @Input({required:true}) isMainRoom:boolean;
   @Input ({required:true}) counterStart: boolean;
-  @Input ({required:true}) countdownNumber: number;
   // Output kepada parent
   @Output() startTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   @Output() stopTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
@@ -50,9 +49,7 @@ export class ChatComponent {
   }
   approveAnswer() {
     // cek jika masih ada counter
-    if (this.counterStart) {
       this.stopCountDown();
-    }
     // this.notifyParent(NotificationType.newanswer);
     // kirim pesan ke pub
     // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});

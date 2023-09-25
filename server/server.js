@@ -14,15 +14,20 @@ const ticketController = require('./controllers/ticket.controller');
 
 // init app
 const app = express();
+app.use(cors({
+  origin: ['http://localhost:4200', 'http://10.52.40.62',
+    'http://10.52.44.61:4200'],
+  credentials: true,
+}));
 
 // middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true,
-}));
+// {
+//   origin: 'http://localhost:4200',
+//   credentials: true,
+// }));
 
 // set routes
 app.use('/users', userController);

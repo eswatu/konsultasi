@@ -61,10 +61,7 @@ export class MainFrameComponent {
       // subs for new room
         this.chatService.getRoom().subscribe((roomId) => {
               // console.log(`new room id ${roomId}`);
-              if (this.chatTabs.some(obj => obj.id === roomId)){
-                console.log('has same room');
-                return
-              } else {
+              if (!this.chatTabs.some(obj => obj.id === roomId)){
                 console.log('no same room');
                 this.tService.get<Ticket>(roomId).subscribe(result => {
                   this.chatTabs.push(<TabChat>{id: result.id, name: result.problem, value: result.name,
@@ -84,15 +81,15 @@ export class MainFrameComponent {
     });
         // waiting for trigger countdown
         this.chatService.getCountDown().subscribe((countDownData:CountdownData) => {
-          if (this.chatTabs.some(obj => obj.id === countDownData.roomId) && countDownData.roomId !== this.currentTab.id) {
-            const room  = this.chatTabs.find(obj => obj.id === countDownData.roomId);
-              room.updateCount++;
-              room.triggerCountdown = true;
-              if (countDownData.trigger && !room.triggerCountdown) {
-                this.startCountDown(true, countDownData.roomId);
-              } else if (!countDownData.trigger && room.triggerCountdown) {
-                this.stopCountDown(true, countDownData.roomId);
-              }
+          if (this.chatTabs.some(obj => obj.id === countDownData.roomId)) {
+              const room  = this.chatTabs.find(obj => obj.id === countDownData.roomId);
+                // room.updateCount++;
+                // room.triggerCountdown = true;
+                if (countDownData.trigger && !room.triggerCountdown) {
+                  this.startCountDown(true, countDownData.roomId);
+                } else if (!countDownData.trigger && room.triggerCountdown) {
+                  this.stopCountDown(true, countDownData.roomId);
+                }
           };
         });
       // subs for answer
@@ -124,7 +121,7 @@ export class MainFrameComponent {
     dialogRef.afterClosed().subscribe(result => {
       const room = result.result;
       this.chatTabs.push(<TabChat>{id: room.id, name: room.problem, value: room.name,
-                          updateCount: 0, triggerCountdown: false, countDown: this.defaultCountdown, timer: Subscription.EMPTY});
+                          updateCount: 0, triggerCountdown: false, countDown: this.defaultCountdown, timer:null });
       this.chatService.createRoom(room.id);
     });   
   }
@@ -172,7 +169,7 @@ childStop(event: {fromserver:boolean, room: string}) {
 }
 stopCountDown(fromserver:boolean = false, room: string){
     const chatRoom = this.chatTabs.find(obj => obj.id === room);
-    console.log(this.user.name, ' stop countdown');
+    console.log(this.user.name, ' stop countdown karena ', fromserver, ' dan room ', room);
     chatRoom.timer.unsubscribe();
     if (!fromserver) {
       // kirim pesan ke server untuk menghentikan trigger (room)

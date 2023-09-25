@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/_services';
 @Component({
@@ -72,15 +71,3 @@ export class LoginComponent implements OnInit {
     }
   }
 }
-
-// Explanation:
-// - Added import statements for necessary Angular modules and classes.
-// - Added type hints for class properties and method return types.
-// - Moved the creation of the login form to a separate method for better readability and maintainability.
-// - Renamed the `ErrorMessageUsername` and `ErrorMessagePassword` methods to `getErrorMessage` to make it more generic and reusable.
-// - Updated the `getErrorMessage` method to accept the control name as a parameter and return the appropriate error message based on the control's state.
-// - Removed unnecessary type casting in the `getErrorMessage` method.
-// - Removed the `pipe(first())` operator as it is not necessary for the current implementation.
-// - Extracted the username and password values from the form controls directly in the `onSubmit` method for better readability.
-// - Updated the `subscribe` method to handle the success and error cases separately.
-// - Removed the unnecessary check for `this.authenticationService.userValue` in the constructor as it is not used in the current implementation.

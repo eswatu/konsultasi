@@ -23,10 +23,7 @@
           (click)="startCountDown()" type="button" >
           Trigger Start
         </button>
-        <!-- stop counter untuk user dan admin, jika counter sudah berjalan-->
-        <button mat-raised-button color="warn" type="button" *ngIf="counterStart" (click)="stopCountDown()" >
-          {{counterStart ? countdownNumber : 'null'}}
-        </button>
+
         <!-- setelah counter 0, otomatis close, user bisa close instan -->
         <button mat-raised-button color="primary" type="button" *ngIf="user.role === 'Client'" (click)="approveAnswer()">
           Tutup Tiket

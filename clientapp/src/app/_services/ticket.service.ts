@@ -3,7 +3,6 @@ import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { Ticket } from '@app/_models/ticket';
 import { User } from '@app/_models';
 
 @Injectable({
