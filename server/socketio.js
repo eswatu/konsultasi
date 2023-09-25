@@ -7,7 +7,10 @@ const tService = require('./services/ticket.services');
 
 function ioApp(server) {
   const io = socketIO(server, {
-    cors: { origin: 'http://localhost:4200', credentials: true },
+    cors: {
+      origin: ['http://localhost:4200'],
+      credentials: true,
+    },
     connectionStateRecovery: {
       // the backup duration of the sessions and the packets
       maxDisconnectionDuration: 2 * 60 * 1000,

@@ -20,7 +20,6 @@ export class JwtInterceptor implements HttpInterceptor {
                 withCredentials: true
             });
         }
-
         return next.handle(request);
     }
 }

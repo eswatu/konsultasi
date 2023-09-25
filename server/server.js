@@ -15,19 +15,20 @@ const ticketController = require('./controllers/ticket.controller');
 // init app
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://10.52.40.62',
-    'http://10.52.44.61:4200'],
+  origin: ['http://localhost:4200', 'https://fonts.googleapis.com', 'http://192.168.50.253:4200'],
   credentials: true,
+  optionsSuccessStatus: 204,
 }));
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://192.168.50.253:4200'); // update to match the domain you will make the request from
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 // middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-// {
-//   origin: 'http://localhost:4200',
-//   credentials: true,
-// }));
 
 // set routes
 app.use('/users', userController);

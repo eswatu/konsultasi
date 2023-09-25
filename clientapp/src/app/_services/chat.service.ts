@@ -13,7 +13,9 @@ export class ChatService {
     const ns = new URL(auth.role, 'http://localhost:4000').toString();
     console.log(`connecting to: ${ns} using credential ${JSON.stringify(auth.username)}`);
     this.socket = io(ns,
-     {auth:{ token: jtoken, username: auth.username}}
+     {
+      withCredentials:true,
+      auth:{ token: jtoken, username: auth.username}},
     );
   }
   disconnect(){
