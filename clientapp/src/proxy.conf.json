@@ -1,6 +1,6 @@
 {
     "/": {
-        "target": "http://localhost:4000",
+        "target": "https://server-wc7iy6myma-as.a.run.app",
         "secure": false,
         "logLevel": "debug"
     }

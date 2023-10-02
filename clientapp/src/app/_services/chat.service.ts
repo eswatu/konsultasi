@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { ChatReply, CountdownData, SolveData } from '@app/_models/reply';
 import { User } from '@app/_models';
+import { environment }from '@environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { User } from '@app/_models';
 export class ChatService {
   private socket: Socket;
   setupConnection(jtoken: string, auth: User) {
-    const ns = new URL(auth.role, 'http://localhost:4000').toString();
+    const ns = new URL(auth.role, environment.apiUrl).toString();
     console.log(`connecting to: ${ns} using credential ${JSON.stringify(auth.username)}`);
     this.socket = io(ns,
      {

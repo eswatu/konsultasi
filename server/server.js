@@ -15,7 +15,7 @@ const ticketController = require('./controllers/ticket.controller');
 // init app
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:4200', 'https://fonts.googleapis.com', 'http://192.168.50.253:4200'],
+  origin: ['http://localhost:4200', 'https://fonts.googleapis.com', 'https://servicedesk-400808.et.r.appspot.com'],
   credentials: true,
   optionsSuccessStatus: 204,
 }));
