@@ -23,3 +23,9 @@
 .mat-sidenav-content {
   height: 100vh;
 }
+.button-label {
+  flex: 3;
+}
+.button-trigger {
+  flex: 1;
+}

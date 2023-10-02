@@ -4,13 +4,14 @@
         <mat-drawer mode="side" opened class="sidenav" autosize style="display: flex; min-width: fit-content;">
             <mat-button-toggle-group vertical [value]="selectedId" [formControl]="groupToggle" (change)="onSelectionChange($event)">
                 <ng-container *ngFor="let tab of chatTabs">
-                    <div>
+                    <div style="display: flex;">
                         <mat-button-toggle class="nav-button" value="{{tab.id}}" style="display: flex;"
                         [style.background-color]="tab.updateCount > 0 ? 'rgb(92, 210, 230)': 'rgb(255, 255, 255)'"
-                        [style.background-color]="tab.triggerCountdown ? 'red': ''">
+                        class="button-label">
                                 {{tab.name}} - {{tab.company}} {{ tab.updateCount > 0 ? '[' + tab.updateCount + ']' : '' }} 
                         </mat-button-toggle>
-                        <button mat-raised-button color="warn" type="button" *ngIf="tab.triggerCountdown" (click)="stopCountDown(false, tab.id)" >
+                        <button mat-raised-button color="warn" type="button" *ngIf="tab.triggerCountdown"
+                        [style.background-color]="tab.triggerCountdown ? 'red': ''" (click)="stopCountDown(false, tab.id)" class="button-trigger">
                             {{tab.triggerCountdown ? tab.countDown : 'null'}}
                         </button>
                     </div>
