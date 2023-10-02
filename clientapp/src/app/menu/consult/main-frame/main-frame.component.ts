@@ -42,7 +42,7 @@ export class MainFrameComponent {
         this.chatTabs = [];
         // this.chatTabs.push(<TabChat>{id:'mainRoom', name: 'Lobi Utama', value: 'mainRoom', hasUpdate: false});
         result['data'].forEach(item => {
-          const t = <TabChat>{ id: item.id, name: item.problem,
+          const t = <TabChat>{ id: item.id, name: item.problem, company: item.creator.company,
                                 value: item.name, updateCount: 0, ticket: item, triggerCountdown:false,
                               timer: null, countDown: this.defaultCountdown };
           if (this.chatTabs.some(obj => obj.id === item.id) === false) {
@@ -64,8 +64,8 @@ export class MainFrameComponent {
               if (!this.chatTabs.some(obj => obj.id === roomId)){
                 console.log('no same room');
                 this.tService.get<Ticket>(roomId).subscribe(result => {
-                  this.chatTabs.push(<TabChat>{id: result.id, name: result.problem, value: result.name,
-                                      updateCount: 0, ticket: result, triggerCountdown:false,
+                  this.chatTabs.push(<TabChat>{id: result.id, name: result.problem,company: result.creator.company,
+                                      value: result.name, updateCount: 0, ticket: result, triggerCountdown:false,
                                       countDown: this.defaultCountdown, timer: null});      
                 });
               }
@@ -199,6 +199,7 @@ approveAnswer(room: string) {
 export class TabChat {
   id: string;
   name: string;
+  company: string;
   value: string;
   updateCount: number;
   triggerCountdown: boolean;

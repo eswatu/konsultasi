@@ -23,8 +23,6 @@
 }
 .row-message {
   background-color: rgb(250, 242, 211);
-  display: grid;
-  grid-template-columns: 1fr 9fr;
 }
 .row-message:hover {
   background-color: rgb(244, 232, 105);
@@ -49,4 +47,10 @@
 .send-button {
   grid-area: send-button;
   position: sticky;
+}
+td:first-child {
+  white-space: nowrap;
+}
+td:last-child {
+  white-space: nowrap;
 }

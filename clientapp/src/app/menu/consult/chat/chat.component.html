@@ -10,9 +10,10 @@
         <tbody >
           <ng-container *ngIf="ticketdata.messages">
             <tr *ngFor="let repli of ticketdata.messages" matTooltip="{{repli.time | date:'dd/MM/yyyy hh:mm:ss'}}"
-            matTooltipPosition="right" matTooltipHideDelay="1000" class="row-message" matRipple >
+            matTooltipPosition="right" matTooltipHideDelay="100" class="row-message" matRipple >
               <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
-              <td>: {{repli.message}}</td>
+              <td>:</td>
+              <td>{{repli.message}}</td>
             </tr>
           </ng-container>
         </tbody>
