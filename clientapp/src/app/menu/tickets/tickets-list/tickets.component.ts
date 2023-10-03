@@ -9,7 +9,7 @@ import { TicketService } from '@app/_services/ticket.service';
 import { TicketFormComponent } from '../../consult/ticket-form/ticket-form.component';
 import { User } from '@app/_models';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'tickets-component',
   templateUrl: './tickets.component.html',
@@ -28,6 +28,14 @@ export class TicketsComponent implements OnInit {
   filterQuery: string = null;
   filterColumn = new FormControl();
   filterQ = new FormControl();
+
+  dateFilter = new FormGroup({
+    startDate: new FormControl(''),
+    endDate: new FormControl('')
+  });
+
+  sdate: string = null;
+  edate: string = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -68,6 +76,11 @@ export class TicketsComponent implements OnInit {
       this.filterQuery = q;
       this.defaultFilterColumn = this.filterColumn.value;
     }
+    if (this.dateFilter.value) {
+      // console.log(typeof(this.dateFilter.value['startDate']));
+      this.sdate = this.formatDate(this.dateFilter.value['startDate']);
+      this.edate = this.formatDate(this.dateFilter.value['endDate']);
+    }
     this.getData(pageEvent);
   }
 
@@ -76,6 +89,8 @@ async getData(event: PageEvent) {
   const sortOrder = this.sort ? (this.sort.direction as 'asc' | 'desc') : this.defaultSortOrder;
   const filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
   const filterQuery = this.filterQuery ? this.filterQuery : null;
+  const filterSDate = (this.sdate) ?? '';
+  const filterEDate = (this.edate) ?? '';
   const solved = this.isSolved;
   try {
     this.tService.getsData<ApiResult<Ticket>>(
@@ -84,6 +99,8 @@ async getData(event: PageEvent) {
       sortColumn,
       sortOrder,
       solved,
+      filterSDate,
+      filterEDate,
       filterColumn,
       filterQuery
     ).subscribe(result => {
@@ -123,4 +140,19 @@ async getData(event: PageEvent) {
     }
     this.filterTextChanged.next(filterText);
    }
+      //helper 
+  formatDate(md: any) {
+    const inputDate = new Date(md);
+  
+    // Check if the inputDate is a valid Date object
+    if (isNaN(inputDate.getTime())) {
+      return "null";
+    }
+    
+    const day = String(inputDate.getDate()).padStart(2, '0');
+    const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+    const year = inputDate.getFullYear();
+    
+    return `${day}-${month}-${year}`;
+  }
 }

@@ -37,7 +37,7 @@ export class MainFrameComponent {
       // set koneksi ke server
       this.chatService.setupConnection(this.user.jwtToken, this.user);
       // get unsolved ticket
-      this.tService.getsData(0, 50, 'createdAt','asc', false, '','').subscribe((result) => {
+      this.tService.getsData(0, 50, 'createdAt','asc', false,null, null, '','').subscribe((result) => {
         // membuat default room
         this.chatTabs = [];
         // this.chatTabs.push(<TabChat>{id:'mainRoom', name: 'Lobi Utama', value: 'mainRoom', hasUpdate: false});

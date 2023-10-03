@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { ChatReply, CountdownData, SolveData } from '@app/_models/reply';
 import { User } from '@app/_models';
-import { environment }from '@environments/environment.prod';
+import { environment }from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'

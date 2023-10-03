@@ -16,6 +16,8 @@ export class TicketService extends BaseService{
     sortColumn: string, 
     sortOrder: 'asc' | 'desc' | '', 
     isSolved: boolean,
+    filterSDate:string,
+    filterEDate:string,
     filterColumn: string, 
     filterQuery?: string
   ): Observable<ApiResult> {
@@ -30,8 +32,10 @@ export class TicketService extends BaseService{
       // Set the sortOrder parameter with the provided value
       .set('sortOrder', sortOrder)
       // Set the isSolved parameter with the provided value
-      .set('isSolved', isSolved);
-    
+      .set('isSolved', isSolved)
+      .set('filterSDate', filterSDate)
+      .set('filterEDate', filterEDate);
+      
     // Check if filterQuery is provided
     if (filterQuery) {
       // Set the filterColumn parameter with the provided value

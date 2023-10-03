@@ -2,9 +2,23 @@
 <div *ngIf="tickets" class="container">
   <!-- button -->
   <div class="item-button" style="display: grid; grid-template-columns: 15% 45% 40%;">
+        <div style="width: 100%;">
+          <mat-form-field appearance="fill" [formGroup]="dateFilter" style="width: 280px;">
+            <mat-label>Filter Tanggal (Awal s.d Akhir)</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Tanggal Mulai" formControlName="startDate" readonly>
+              <input matEndDate placeholder="Tanggal Selesai" formControlName="endDate" readonly (dateChange)="loadData(null)">
+            </mat-date-range-input>
+            <mat-hint>Klik untuk mengisi range</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker ></mat-date-range-picker>
+          </mat-form-field>
+            <!-- <p>myForm value: {{ dateFilter.value | json }}</p>
+            <p>myForm status: {{ dateFilter.status | json }}</p> -->
+
+        </div>
         <div>
         </div>
-        <div></div>
         <!-- search -->
         <div style="display: grid; grid-template-columns: 40% 60%; justify-self: end;">
           <mat-form-field >

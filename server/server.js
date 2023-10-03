@@ -3,6 +3,8 @@
 // import express app
 require('rootpath')();
 const express = require('express');
+// const httpsserver = require('https');
+// const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const ioapp = require('./socketio');
@@ -12,20 +14,25 @@ const errorHandler = require('./_middleware/error-handler');
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 
+// certificate SSL
+// const options = {
+//   key: fs.readFileSync('./cert/key.pem'),
+//   cert: fs.readFileSync('./cert/cert.pem'),
+// };
 // init app
 const app = express();
 app.enable('trust proxy');
 // eslint-disable-next-line consistent-return
-app.use((request, response, next) => {
-  if (process.env.NODE_ENV !== 'development' && !request.secure) {
-    return response.redirect(`https://${request.headers.host}${request.url}`);
-  }
+// app.use((request, response, next) => {
+//   if (process.env.NODE_ENV !== 'development' && !request.secure) {
+//     return response.redirect(`https://${request.headers.host}${request.url}`);
+//   }
 
-  next();
-});
+//   next();
+// });
 
 app.use(cors({
-  origin: ['https://localhost:4200', 'https://servicedesk-400808.et.r.appspot.com'],
+  origin: ['http://localhost:4200', 'https://servicedesk-400808.et.r.appspot.com'],
   credentials: true,
   optionsSuccessStatus: 204,
 }));
@@ -61,7 +68,7 @@ const config = {
 const env = process.env.NODE_ENV || 'development';
 const { port } = config[env];
 
-// server app
+// server app, tambahi option ya
 const server = app.listen(port, () => {
   console.log(`server is running in ${env}`);
   console.log(`Server listening on port ${port}`);

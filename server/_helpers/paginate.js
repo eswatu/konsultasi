@@ -16,6 +16,8 @@ async function paginateTicket(collection, query, _auth) {
     filterColumn = '', // Default filter column is empty string
     filterQuery = '', // Default filter query is empty string
     isSolved = '', // Default isSolved is empty string
+    filterSDate = 'null', // Default null
+    filterEDate = 'null', // Default null
   } = query;
   const { role, id } = _auth;
 
@@ -35,6 +37,14 @@ async function paginateTicket(collection, query, _auth) {
   }
   if (role === 'Client') {
     filter['creator.id'] = { $in: [id, 'server'] }; // Set filter for creator id if role is Client
+  }
+  if (filterSDate !== 'null' && filterEDate !== 'null') {
+    const start = filterSDate.split('-');
+    const end = filterEDate.split('-');
+    filter.createdAt = {
+      $gte: Date(start[2], start[1], start[0]),
+      $lte: Date(end[2], end[1], end[0]),
+    };
   }
   if (filterColumn !== 'null' && filterQuery !== 'null') {
     // If filterColumn and filterQuery are not 'null'
