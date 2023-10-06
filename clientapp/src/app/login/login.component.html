@@ -1,29 +1,31 @@
 <div class="container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="item">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="item" style="width: 250px;">
     <div class="form-group">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        formControlName="username"
-        [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
-      />
-      <div *ngIf="submitted && f.username.errors">
-        <div *ngIf="f.username.errors.required">Username is required</div>
-      </div>
+      <mat-form-field appearance="fill" style="width: 250px;">
+        <mat-label for="username">Username</mat-label>
+        <input
+          type="text" matInput
+          formControlName="username"
+          [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+        <mat-error *ngIf="submitted && f.username.errors">
+          <div *ngIf="f.username.errors.required">Username is required</div>
+        </mat-error>
+      </mat-form-field>
     </div>
     <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        formControlName="password"
-        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-      />
-      <div *ngIf="submitted && f.password.errors">
-        <div *ngIf="f.password.errors.required">Password is required</div>
-      </div>
+      <mat-form-field appearance="fill" style="width: 250px;">
+        <mat-label for="password">Password</mat-label>
+        <input matInput
+          type="password"
+          formControlName="password"
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <mat-error *ngIf="submitted && f.password.errors">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </mat-error>
+      </mat-form-field>
     </div>
-    <button [disabled]="loading" color="primary" mat-flat-button>
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    <button [disabled]="loading" color="primary" mat-flat-button style="width: 250px;">
+      <span *ngIf="loading"></span>
       Login
     </button>
     <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>

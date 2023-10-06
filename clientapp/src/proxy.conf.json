@@ -1,11 +1,11 @@
 {
     "/api": {
-        "target": "https://0.0.0.0:4000",
+        "target": "https://localhost:4000",
         "secure": false,
         "pathRewrite": {
             "^/api": ""
         },
-        "changeOrigin": false,
+        "changeOrigin": true,
         "logLevel": "debug"
     }
 }

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:proxy": "ng serve --proxy-config src/proxy.conf.json --host=0.0.0.0",
+    "start:proxy": "ng serve --proxy-config src/proxy.conf.json --host=10.52.44.61",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng serve --open --host=0.0.0.0"

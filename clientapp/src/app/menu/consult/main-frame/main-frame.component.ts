@@ -64,7 +64,7 @@ export class MainFrameComponent {
               if (!this.chatTabs.some(obj => obj.id === roomId)){
                 console.log('no same room');
                 this.tService.get<Ticket>(roomId).subscribe(result => {
-                  this.chatTabs.push(<TabChat>{id: result.id, name: result.problem,company: result.creator.company,
+                  this.chatTabs.push(<TabChat>{id: result.id, name: result.problem, company: result.name,
                                       value: result.name, updateCount: 0, ticket: result, triggerCountdown:false,
                                       countDown: this.defaultCountdown, timer: null});      
                 });

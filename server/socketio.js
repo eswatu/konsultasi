@@ -8,7 +8,9 @@ const tService = require('./services/ticket.services');
 function ioApp(server) {
   const io = socketIO(server, {
     cors: {
-      origin: ['http://localhost:4200', 'https://servicedesk-400808.et.r.appspot.com'],
+      origin: ['http://localhost:4200',
+        'https://servicedesk-400808.et.r.appspot.com',
+        'http://10.52.44.61:4200'],
       methods: ['GET', 'POST'],
       allowedHeaders: ['*'],
       credentials: true,

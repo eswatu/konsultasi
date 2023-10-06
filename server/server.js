@@ -32,9 +32,11 @@ app.enable('trust proxy');
 // });
 
 app.use(cors({
-  origin: ['http://localhost:4200', 'https://servicedesk-400808.et.r.appspot.com'],
+  origin: ['http://localhost:4200',
+    'https://servicedesk-400808.et.r.appspot.com',
+    'http://10.52.44.61:4200',
+    '*'],
   credentials: true,
-  optionsSuccessStatus: 204,
 }));
 
 // middleware
