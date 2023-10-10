@@ -182,6 +182,7 @@ approveAnswer(room: string) {
   if (chatRoom.triggerCountdown) {
     this.stopCountDown(false, chatRoom.id);
   }
+  this.currentTab = this.chatTabs[0];
   // this.notifyParent(NotificationType.newanswer);
   // kirim pesan ke pub
   // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});

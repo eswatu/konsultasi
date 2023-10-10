@@ -18,6 +18,7 @@ export class ChatComponent {
   @Input({required:true}) isMainRoom:boolean;
   @Input ({required:true}) counterStart: boolean;
   // Output kepada parent
+  // @Output() messageToParent = new EventEmitter<ChatReply>();
   @Output() startTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   @Output() stopTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   user: User;

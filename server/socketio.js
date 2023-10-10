@@ -59,8 +59,7 @@ function ioApp(server) {
       );
       // console.log('isi msg adalah ', msg);
       // console.log('isi rmsg adalah ', rmsg);
-      io.of('/Admin').to(rmsg.roomId).emit('sendMessage', rmsg);
-      io.of('/Client').to(rmsg.roomId).emit('sendMessage', rmsg);
+      io.to(rmsg.roomId).emit('sendMessage', rmsg);
       // console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
     // trigger countdown start/stop
