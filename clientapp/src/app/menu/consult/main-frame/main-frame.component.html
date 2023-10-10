@@ -23,7 +23,7 @@
         <mat-content-drawer>
             <div *ngIf="currentTab">
                 <chat-component [ticketdata]="currentTab.ticket" [isMainRoom]="currentTab.name === 'mainRoom'"
-                    (startTrigger)="childStart($event)"></chat-component>
+                    (startTrigger)="childStart($event)" ()="childSendMessage($event)"></chat-component>
             </div>
         </mat-content-drawer>
       </mat-drawer-container>

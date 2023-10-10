@@ -21,6 +21,7 @@ export class ChatComponent {
   // @Output() messageToParent = new EventEmitter<ChatReply>();
   @Output() startTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   @Output() stopTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
+  @Output() emitMessage = new EventEmitter<ChatReply>();
   user: User;
   // untuk notify ke parent
   message = new FormControl('');
@@ -36,7 +37,8 @@ export class ChatComponent {
 
   sendMessage(){
     const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
-    this.cservice.sendMessage(cr);
+    this.emitMessage.emit(cr);
+    // this.cservice.sendMessage(cr);
     console.log('i send ', JSON.stringify(cr))
     this.message.reset();
   }
@@ -51,7 +53,12 @@ export class ChatComponent {
   }
   approveAnswer() {
     // cek jika masih ada counter
-      this.stopCountDown();
+this.stopCountDown();
+    // this.notifyParent(NotificationType.newanswer);
+    // kirim pesan ke pub
+    // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
+    // approve ke server
+this.stopCountDown();
     // this.notifyParent(NotificationType.newanswer);
     // kirim pesan ke pub
     // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});

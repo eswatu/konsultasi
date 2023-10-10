@@ -161,6 +161,10 @@ childStop(event: {fromserver:boolean, room: string}) {
   const {fromserver, room} = event;
   this.stopCountDown(fromserver, room);
 }
+childSendMessage(event:any) {
+  const { chatreply } = event;
+  this.chatService.sendMessage(chatreply);
+}
 stopCountDown(fromserver:boolean = false, room: string){
     const chatRoom = this.chatTabs.find(obj => obj.id === room)
     console.log(this.user.name, ' stop countdown karena ', fromserver, ' dan room ', room);
