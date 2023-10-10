@@ -8,7 +8,7 @@
           <th align="center" colspan="2" style="color: rgb(250, 242, 211);" >Pesan</th>
         </thead>
         <tbody >
-          <ng-container *ngIf="ticketdata.messages">
+          <ng-container *ngIf="ticketdata.messages.length">
             <tr *ngFor="let repli of ticketdata.messages" matTooltip="{{repli.time | date:'dd/MM/yyyy hh:mm:ss'}}"
             matTooltipPosition="right" matTooltipHideDelay="100" class="row-message" matRipple >
               <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>

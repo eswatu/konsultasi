@@ -36,6 +36,7 @@ export class ChatComponent {
   sendMessage(){
     const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
     this.cservice.sendMessage(cr);
+    console.log('i send ', JSON.stringify(cr))
     this.message.reset();
   }
 

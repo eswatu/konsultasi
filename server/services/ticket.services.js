@@ -16,10 +16,10 @@ const { Message } = require('../model/ticket.model');
  */
 function basicDetails(ticket) {
   const {
-    id, aju, nopen, pendate, name, problem, isSolved,
+    id, aju, nopen, pendate, name, problem, isSolved, messages,
   } = ticket;
   return {
-    id, aju, nopen, pendate, name, problem, isSolved,
+    id, aju, nopen, pendate, name, problem, isSolved, messages,
   };
 }
 /**
