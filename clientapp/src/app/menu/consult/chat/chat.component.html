@@ -5,7 +5,9 @@
     <div class="messagetable mat-elevation-z8">
       <table style="width: 100%;">
         <thead style="background-color: rgb(48, 133, 195);position: sticky;top:0;">
-          <th align="center" colspan="3" style="color: rgb(250, 242, 211);" >Pesan</th>
+          <tr>
+            <th class="tableheader" style="color: rgb(250, 242, 211);" colspan="3" >Pesan</th>
+          </tr>
         </thead>
         <tbody >
           <ng-container *ngIf="ticketdata.messages.length">

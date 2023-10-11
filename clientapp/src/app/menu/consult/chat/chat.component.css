@@ -1,24 +1,26 @@
 .container {
-  display: grid;
   width: 90%;
   padding: 10px 10px;
+  height: 100vh;
+  overflow: hidden;
 }
 #close-button {
   width: max-content;
 }
 .textlist {
   display: grid;
-  grid-template-rows: 8fr 1fr 2fr;
+  grid-template-rows: 6fr 1fr 2fr;
   grid-template-areas: "messagetable "
                        "counter-button"
                        "inputMessage";
   row-gap: 3px;
   width: 100%;
+  max-height: 1000px;
 }
 .messagetable {
   grid-area: messagetable;
   width: 100%;
-  max-height: 700px;
+  max-width: 1100px;
   overflow-y: auto; 
 }
 .row-message {
@@ -39,7 +41,9 @@
 
 }
 .mygroup {
+  position: -webkit-sticky;
   position: sticky;
+  background-color: aliceblue;
   bottom: 0;
 }
 .form-field {
@@ -53,9 +57,16 @@
   grid-area: send-button;
   position: sticky;
 }
+.tableheader {
+  text-align: center;
+}
 td:first-child {
   white-space: nowrap;
+  width: auto;
+  display: table-cell;
 }
 td:last-child {
-  white-space: nowrap;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

@@ -21,7 +21,7 @@ export class MainFrameComponent {
   groupToggle = new FormControl('');
   selectedId: string;
   currentTab: TabChat;
-  private defaultCountdown = 5;
+  private defaultCountdown = 60;
   private mainRoomName = 'server';
   @ViewChild(ChatComponent) childComponents: QueryList<ChatComponent>;
 
