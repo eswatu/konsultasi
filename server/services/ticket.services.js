@@ -123,6 +123,7 @@ async function createTicket(au, req) {
   }
 }
 async function createMessage(au, msg) {
+  // console.log(msg);
   const us = await db.User.findById(au);
   const m = new Message({
     user: {

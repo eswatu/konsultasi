@@ -22,6 +22,7 @@ export class MainFrameComponent {
   selectedId: string;
   currentTab: TabChat;
   private defaultCountdown = 5;
+  private mainRoomName = 'server';
   @ViewChild(ChatComponent) childComponents: QueryList<ChatComponent>;
 
   constructor(private chatService: ChatService,
@@ -33,7 +34,6 @@ export class MainFrameComponent {
       });
     }
     ngOnInit() {
-      this.chatTabs = [];
       // set koneksi ke server
       this.chatService.setupConnection(this.user.jwtToken, this.user);
       // get unsolved ticket
@@ -42,17 +42,18 @@ export class MainFrameComponent {
         this.chatTabs = [];
         // this.chatTabs.push(<TabChat>{id:'mainRoom', name: 'Lobi Utama', value: 'mainRoom', hasUpdate: false});
         result['data'].forEach(item => {
+          this.addRoom(item);
           const t = <TabChat>{ id: item.id, name: item.problem, company: item.creator.company,
                                 value: item.name, updateCount: 0, ticket: item, triggerCountdown:false,
                               timer: null, countDown: this.defaultCountdown };
-          if (this.chatTabs.some(obj => obj.id === item.id) === false) {
-            if (item.name === 'mainRoom') {
+          if (!this.chatTabs.some(obj => obj.id === item.id)) {
+            if (item.name === this.mainRoomName) {
               this.chatTabs.unshift(t);
             } else {
               this.chatTabs.push(t);
             }
           }
-          this.chatService.join(item.id);
+          // this.chatService.join(item.id);
         });
         this.currentTab = this.chatTabs[0];
       //  console.log('tab ada sejumlah: ',this.chatTabs.length);
@@ -60,19 +61,21 @@ export class MainFrameComponent {
       // subs for new room
       this.chatService.getRoom().subscribe((roomId) => {
               // console.log(`new room id ${roomId}`);
-              if (!this.chatTabs.some(obj => obj.id === roomId)){
+              if (!this.chatTabs.find(obj => obj.id === roomId)){
                 // console.log('no same room');
                 this.tService.get<Ticket>(roomId).subscribe(result => {
                   // console.log(result);
                   this.addRoom(result);    
                 });
               }
+              console.log('dari sub room',this.chatTabs);
       });
       // waiting for new message
-      this.chatService.getMessage().subscribe((msg:ChatReply) => {
-        // console.log('saya dapat '+ msg);
-        const roomticket = this.chatTabs.find(item => item.id === msg.roomId);
-        roomticket.ticket.messages.push(msg);
+      this.chatService.getMessage().subscribe((rmsg) => {
+        // console.log('saya dapat '+ JSON.stringify(rmsg));
+        const roomticket = this.chatTabs.find(item => item.id === rmsg.roomId);
+        roomticket.ticket.messages.push(rmsg);
+        // console.log(roomticket);
         // beri notif kalau sedang tidak diklik
         if (roomticket.ticket.id !== this.currentTab.id) {
           roomticket.updateCount++;
@@ -93,12 +96,13 @@ export class MainFrameComponent {
       });
       // waiting for approved answer
       this.chatService.getAnswer().subscribe((solveData: SolveData) => {
-        console.log('mainframe got answer for room ', solveData.roomId);
+        // console.log('mainframe got answer for room ', solveData.roomId);
         this.chatService.leave(solveData.roomId);
           if (this.chatTabs.some(obj => obj.id === solveData.roomId)) {
             const room = this.chatTabs.find(obj => obj.id === solveData.roomId);
-            const mainRoom = this.chatTabs.find(obj => obj.name === 'mainRoom');
-            if (room.ticket.creator.id === this.currentTab.id) {
+            // console.log('room isinya ', JSON.stringify(room));
+            const mainRoom = this.chatTabs.find(obj => obj.name === this.mainRoomName);
+            if (solveData.roomId === this.currentTab.id) {
               this.currentTab = this.chatTabs[0];
             }
             this.chatTabs = this.chatTabs.filter(obj => obj.id !== solveData.roomId);
@@ -128,7 +132,7 @@ export class MainFrameComponent {
       this.currentTab.updateCount = 0;
       // console.log(this.currentTicket);
     } else {
-      this.currentTab = this.chatTabs.find(obj => obj.name === 'mainRoom');
+      this.currentTab = this.chatTabs.find(obj => obj.name === this.mainRoomName);
     }
   }
 
@@ -149,7 +153,7 @@ export class MainFrameComponent {
         // selesai, stop counter
         this.stopCountDown(false, room);
         // approve answer
-        this.approveAnswer(chatRoom.id);
+        this.approveAnswer(room);
       }
     });
 }
@@ -162,12 +166,13 @@ childStop(event: {fromserver:boolean, room: string}) {
   this.stopCountDown(fromserver, room);
 }
 childSendMessage(event:any) {
-  const { chatreply } = event;
-  this.chatService.sendMessage(chatreply);
+  // const { chatreply } = event;
+  // console.log('i send message ', event);
+  this.chatService.sendMessage(event);
 }
 stopCountDown(fromserver:boolean = false, room: string){
     const chatRoom = this.chatTabs.find(obj => obj.id === room)
-    console.log(this.user.name, ' stop countdown karena ', fromserver, ' dan room ', room);
+    // console.log(this.user.name, ' stop countdown karena ', fromserver, ' dan room ', room);
     if (!fromserver) {
       // kirim pesan ke server untuk menghentikan trigger (room)
       this.chatService.triggerCountDown(<CountdownData>{roomId:room, trigger:false});
@@ -176,11 +181,10 @@ stopCountDown(fromserver:boolean = false, room: string){
     }
     chatRoom.timer.unsubscribe();
     chatRoom.triggerCountdown = false;
-    chatRoom.countDown = 60;
+    chatRoom.countDown = this.defaultCountdown;
 }
 
 approveAnswer(room: string) {
-  const child = this.childComponents.find(obj => obj.ticketdata.id === room);
   const chatRoom = this.chatTabs.find(obj => obj.id === room);
   // cek jika masih ada counter
   if (chatRoom.triggerCountdown) {
@@ -191,13 +195,20 @@ approveAnswer(room: string) {
   // kirim pesan ke pub
   // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
   // approve ke server
-   this.chatService.approveAnswer(<SolveData>{solver: child.whosolve(), roomId: room});
+   this.chatService.approveAnswer(<SolveData>{solver: this.whosolve(room), roomId: room});
 }
 // helper
 addRoom(room:Ticket) {
   this.chatTabs.push(<TabChat>{id: room.id, name: room.problem, company: room.name,
     value: room.name, updateCount: 0, ticket: room, triggerCountdown:false,
     countDown: this.defaultCountdown, timer: null});
+    this.chatService.join(room.id);
+}
+whosolve(ticketId:string) {
+  const ticket = this.chatTabs.find(obj => obj.id === ticketId).ticket;
+  const replies = ticket.messages.reverse().map(obj => obj.user);
+  const solver = replies.find(obj => obj.role !== 'Client');
+  return solver;
 }
 }
 

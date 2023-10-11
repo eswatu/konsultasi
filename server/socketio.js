@@ -30,7 +30,6 @@ function ioApp(server) {
       // verify jwt token and get user data
       const userRaw = jwt.verify(token, JWT_SECRET);
       const user = await userService.getById(userRaw.id);
-      // console.log('user adalah', user);
       // save the user data into socket object, to be used further
       // eslint-disable-next-line no-param-reassign
       socket.user = user;
@@ -52,15 +51,17 @@ function ioApp(server) {
       console.log(`${socket.user.name} leaves room id: ${roomName}`);
     });
     // kirim ke room
-    socket.on('sendMessage', async (msg) => {
+    socket.on('sendMessage', async (message) => {
+      // console.log('dari serverio', msg);
       const rmsg = await tService.addMessage(
         socket.user.id,
-        msg,
+        message,
       );
       // console.log('isi msg adalah ', msg);
       // console.log('isi rmsg adalah ', rmsg);
-      io.to(rmsg.roomId).emit('sendMessage', rmsg);
-      // console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
+      io.of('/Client').to(rmsg.roomId).emit('sendMessage', (rmsg));
+      io.of('/Admin').to(rmsg.roomId).emit('sendMessage', (rmsg));
+      console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
     });
     // trigger countdown start/stop
     socket.on('triggerCountDown', (countdownData) => {
@@ -87,15 +88,11 @@ function ioApp(server) {
   // ini untuk user Client namespace
   const clientNameSpace = io.of('/Client');
   clientNameSpace.on('connection', (socket) => {
-    socket.on('createdRoom', (roomName) => {
-      io.of('/Admin').emit('createdRoom', roomName);
-      console.log(`client ${socket.user.name} created room id ${roomName}`);
-    });
     // join room
     socket.on('join', (roomName) => {
       socket.join(roomName);
       io.of('/Admin').emit('createdRoom', roomName);
-      console.log(`client ${socket.user.name} join room id ${roomName}`);
+      console.log(`client ${socket.user.name} create room id ${roomName}`);
     });
   });
 
@@ -105,7 +102,6 @@ function ioApp(server) {
     // join room
     socket.on('join', (roomName) => {
       socket.join(roomName);
-      io.of('/Client').emit('joinRoom', roomName);
       console.log(`admin ${socket.user.name} join room id ${roomName}`);
     });
   });

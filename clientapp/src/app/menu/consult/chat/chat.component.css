@@ -36,6 +36,11 @@
   display: grid;
   grid-template-columns: 4fr 1fr;
   grid-template-areas: "form-field send-button";
+
+}
+.mygroup {
+  position: sticky;
+  bottom: 0;
 }
 .form-field {
   grid-area: form-field;

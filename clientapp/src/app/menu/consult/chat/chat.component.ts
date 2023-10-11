@@ -39,7 +39,7 @@ export class ChatComponent {
     const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
     this.emitMessage.emit(cr);
     // this.cservice.sendMessage(cr);
-    console.log('i send ', JSON.stringify(cr))
+    // console.log('i send ', JSON.stringify(cr))
     this.message.reset();
   }
 
@@ -53,15 +53,9 @@ export class ChatComponent {
   }
   approveAnswer() {
     // cek jika masih ada counter
-this.stopCountDown();
-    // this.notifyParent(NotificationType.newanswer);
-    // kirim pesan ke pub
-    // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
+  this.stopCountDown();
     // approve ke server
-this.stopCountDown();
-    // this.notifyParent(NotificationType.newanswer);
-    // kirim pesan ke pub
-    // this.cservice.sendMessage(<ChatReply>{user:this.user, message:`Jawaban diterima`, roomId:this.ticketdata.id});
+  this.stopCountDown();
     // approve ke server
      this.cservice.approveAnswer(<SolveData>{solver: this.whosolve(), roomId: this.ticketdata.id});
   }

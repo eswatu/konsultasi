@@ -29,9 +29,10 @@ export class ChatService {
       this.socket.emit('sendMessage', message);
     }
   }
-  getMessage(): Observable<ChatReply>{
-    return new Observable<ChatReply>(observer => {
-      this.socket.on('sendMessage', (message: ChatReply) => {
+  getMessage(): Observable<any>{
+    return new Observable<any>((observer) => {
+      this.socket.on('sendMessage', (message) => {
+        // console.log('dari service dapat',message);
         observer.next(message);
       }); 
     });
