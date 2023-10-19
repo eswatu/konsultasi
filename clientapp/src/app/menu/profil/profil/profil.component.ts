@@ -5,17 +5,21 @@ import { AuthenticationService } from '@app/_services/';
 // import { MustMatch } from '@env/services/mustmatch';
 import { UserPwFormComponent } from '../user-pw-form/user-pw-form.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FileuploadService } from '@app/_services/fileupload.service';
 @Component({
   selector: 'profil',
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.css']
 })
 export class ProfilComponent {
+  //untuk file
+  filesToUpload;
+  //biasa
   userInfo: User;
   form : FormGroup;
   isDisabled: boolean;
   
-  constructor(private authService: AuthenticationService,
+  constructor(private authService: AuthenticationService, private fileService: FileuploadService,
     private fb: FormBuilder, public dialog: MatDialog) {
       this.authService.user.subscribe(x => {
         this.userInfo = x;

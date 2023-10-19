@@ -1,0 +1,20 @@
+.maincontainer {
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    grid-template-areas: "left content right";
+}
+.left {
+    grid-area: left;
+    white-space: nowrap;
+    width: auto;
+    display: table-cell;
+}
+.content {
+    grid-area: content;
+}
+.right {
+    grid-area: right;
+    white-space: nowrap;
+    width: auto;
+    display: table-cell;
+}

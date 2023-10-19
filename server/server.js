@@ -13,6 +13,8 @@ const errorHandler = require('./_middleware/error-handler');
 // import routes
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
+const fileController = require('./controllers/file.controller');
+// const fileUploadController = require('./controllers/file.controller');
 
 // certificate SSL
 // const options = {
@@ -22,14 +24,6 @@ const ticketController = require('./controllers/ticket.controller');
 // init app
 const app = express();
 app.enable('trust proxy');
-// eslint-disable-next-line consistent-return
-// app.use((request, response, next) => {
-//   if (process.env.NODE_ENV !== 'development' && !request.secure) {
-//     return response.redirect(`https://${request.headers.host}${request.url}`);
-//   }
-
-//   next();
-// });
 
 app.use(cors({
   origin: ['http://localhost:4200',
@@ -47,7 +41,7 @@ app.use(cookieParser());
 // set routes
 app.use('/users', userController);
 app.use('/tickets', ticketController);
-
+app.use('/uploadfiles', fileController);
 // global error handler
 app.use(errorHandler);
 

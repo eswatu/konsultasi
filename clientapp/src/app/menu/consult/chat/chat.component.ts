@@ -5,6 +5,7 @@ import { ChatReply,SolveData } from '@app/_models/reply';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
+import { FileuploadService } from '@app/_services/fileupload.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,10 +24,12 @@ export class ChatComponent {
   @Output() stopTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   @Output() emitMessage = new EventEmitter<ChatReply>();
   user: User;
+  filesToUpload;
   // untuk notify ke parent
   message = new FormControl('');
   
-  constructor(private cservice:ChatService, private auService:AuthenticationService) {
+  constructor(private cservice:ChatService, private auService:AuthenticationService,
+    private fileService:FileuploadService) {
     this.auService.user.subscribe(x => {
       this.user = x;
     });
@@ -67,6 +70,22 @@ export class ChatComponent {
   }
   resetInput() {
     this.message.reset();
+  }
+  handleFileUpload(files: FileList): void {
+    // Process the selected files here
+    console.log(files);
+    this.filesToUpload = files;
+  }
+  startUpload() {
+    // You can also send the files to an API endpoint for further processing
+    this.fileService.uploadFiles(this.filesToUpload, this.ticketdata.id).subscribe(
+      progress => {
+        console.log('progress ', progress);
+      }, error => {
+        console.error('upload error: ', error);
+      }
+    );
+    this.filesToUpload = null;
   }
   
 }

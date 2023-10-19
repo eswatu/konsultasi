@@ -1,3 +1,4 @@
 /server/node_modules/*
+/server/resources/*
 /clientapp/node_modules/*
 /clientapp/.vscode/*

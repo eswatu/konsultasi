@@ -8,6 +8,7 @@ import { MainFrameComponent } from './main-frame/main-frame.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ChatService } from '@app/_services/chat.service';
+import { ChatbubbleComponent } from './chatbubble/chatbubble.component';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'MM/DD/YYYY'
@@ -23,6 +24,7 @@ export const MY_FORMATS = {
   declarations: [
     ChatComponent,
     MainFrameComponent,
+    ChatbubbleComponent,
   ],
   imports: [
     CommonModule,

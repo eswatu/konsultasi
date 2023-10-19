@@ -1,0 +1,11 @@
+<div class="maincontainer">
+    <div *ngIf="!isOwner" class="left">
+        <p>{{chatReply.user.name}}</p>
+    </div>
+    <div class="content">
+        <p>:{{chatReply.message}}</p>
+    </div>
+    <div *ngIf="isOwner" class="right">
+        <p>Saya</p>
+    </div>
+</div>
