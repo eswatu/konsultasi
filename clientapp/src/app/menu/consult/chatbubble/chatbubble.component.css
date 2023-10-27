@@ -2,6 +2,8 @@
     display: grid;
     grid-template-columns: 1fr 8fr 1fr;
     grid-template-areas: "left content right";
+    height: auto;
+    align-items: center;
 }
 .left {
     grid-area: left;

@@ -4,6 +4,7 @@ export class ChatReply {
     id?: string;
     user: UserChat;
     roomId: string;
+    type: string;
     message: string;
     time: Date;
 }

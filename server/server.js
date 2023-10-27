@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
+const startup = require('./_helpers/create-test-user');
 
 // import routes
 const userController = require('./controllers/user.controller');
@@ -45,12 +46,6 @@ app.use('/uploadfiles', fileController);
 // global error handler
 app.use(errorHandler);
 
-// create test user in db on startup if required
-// if (process.env.NODE_ENV === 'development') {
-// const createTestUser = require('_helpers/create-test-user');
-// createTestUser();
-// }
-
 // config.js
 const config = {
   production: {
@@ -68,6 +63,11 @@ const { port } = config[env];
 const server = app.listen(port, () => {
   console.log(`server is running in ${env}`);
   console.log(`Server listening on port ${port}`);
+  // create test user in db on startup if required
+  if (env === 'development') {
+    startup.createTestUser();
+    startup.createMainRoom();
+  }
 });
 
 const io = ioapp(server);

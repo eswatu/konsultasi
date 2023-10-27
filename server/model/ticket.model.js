@@ -1,26 +1,29 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
+const messageSchema = require('./message.model').schema;
 
-const creatorSchema = mongoose.Schema({
+const { Schema } = mongoose;
+
+const creatorSchema = new Schema({
   id: String,
   name: String,
   username: String,
   company: String,
 });
-const messageSchema = mongoose.Schema({
-  user: creatorSchema,
-  message: { type: String, required: true },
-  time: { type: Date, required: true },
-});
+// const messageSchema = new Schema({
+//   user: creatorSchema,
+//   message: { type: String, required: true },
+//   time: { type: Date, required: true },
+// });
 
-const schema = mongoose.Schema({
+const schema = new Schema({
   aju: { type: String, required: false },
   nopen: { type: Number, required: false },
   pendate: { type: Date, required: false },
   name: { type: String, required: true },
   problem: { type: String, required: true },
-  messages: [messageSchema],
+  messages: [{ type: messageSchema }],
   solver: creatorSchema,
   isSolved: { type: Boolean, required: true, default: false },
   creator: creatorSchema,
@@ -40,7 +43,4 @@ schema.index({
   aju: 'text', nopen: Number, name: 'text', problem: 'text',
 });
 
-const Message = mongoose.model('Message', messageSchema);
-const Model = mongoose.model('Ticket', schema);
-
-module.exports = { Model, Message };
+module.exports = mongoose.model('Ticket', schema);

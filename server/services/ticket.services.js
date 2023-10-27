@@ -7,7 +7,7 @@
  */
 const db = require('../_helpers/db');
 const { paginateTicket } = require('../_helpers/paginate');
-const { Message } = require('../model/ticket.model');
+const Message = require('../model/message.model');
 /**
  * Extracts the basic details of a ticket.
  *

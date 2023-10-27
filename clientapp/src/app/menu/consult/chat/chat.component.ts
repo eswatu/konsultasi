@@ -39,7 +39,9 @@ export class ChatComponent {
   }
 
   sendMessage(){
-    const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
+    const cr = <ChatReply>{user:this.user,
+      message:this.message.value, roomId:this.ticketdata.id,
+      type:'text'};
     this.emitMessage.emit(cr);
     // this.cservice.sendMessage(cr);
     // console.log('i send ', JSON.stringify(cr))

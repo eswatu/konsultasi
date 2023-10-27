@@ -75,7 +75,7 @@ export class MainFrameComponent {
         // console.log('saya dapat '+ JSON.stringify(rmsg));
         const roomticket = this.chatTabs.find(item => item.id === rmsg.roomId);
         roomticket.ticket.messages.push(rmsg);
-        // console.log(roomticket);
+        // console.log(rmsg);
         // beri notif kalau sedang tidak diklik
         if (roomticket.ticket.id !== this.currentTab.id) {
           roomticket.updateCount++;

@@ -16,4 +16,24 @@ async function createTestUser() {
   }
 }
 
-module.exports = createTestUser;
+// create mainRoom if not exist
+async function createMainRoom() {
+  const filter = { name: 'mainRoom' };
+  const update = {
+    $set: {
+      name: 'mainRoom',
+      problem: 'mainRoom',
+      isSolved: false,
+      creator: {
+        id: 'server',
+        name: 'server',
+        company: 'server',
+        role: Role.Admin,
+      },
+    },
+  };
+  const upsert = { upsert: true };
+  await db.Ticket.updateOne(filter, update, upsert);
+}
+
+module.exports = { createTestUser, createMainRoom };

@@ -1,11 +1,13 @@
 <div class="maincontainer">
     <div *ngIf="!isOwner" class="left">
-        <p>{{chatReply.user.name}}</p>
+        <p>{{chatReply.user.name}} :</p>
     </div>
-    <div class="content">
-        <p>:{{chatReply.message}}</p>
+    <div class="content" [ngStyle]="{'text-align': isOwner ? 'right' : 'left'}">
+        <ng-container *ngIf="chatReply.type === 'text'">
+            <p>{{chatReply.message}}</p>
+        </ng-container>
     </div>
     <div *ngIf="isOwner" class="right">
-        <p>Saya</p>
+        <p>: Saya</p>
     </div>
 </div>

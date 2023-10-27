@@ -3,20 +3,19 @@
 /* eslint-disable no-undef */
 const mongoose = require('mongoose');
 
-const creatorSchema = mongoose.Schema({
+const { Schema } = mongoose;
+
+const creatorSchema = new Schema({
   id: mongoose.Schema.Types.ObjectId,
   name: String,
   company: String,
 });
 
-const schema = mongoose.Schema({
+const schema = new Schema({
   user: creatorSchema,
   message: { type: String, required: true },
-  isKey: { type: Boolean, required: true, default: false },
-}, {
-  timestamps: {
-    createdAt: 'responseTime',
-  },
+  type: { type: String, required: true, default: 'text' },
+  time: { type: Date, required: true },
 });
 
 schema.set('toJSON', {

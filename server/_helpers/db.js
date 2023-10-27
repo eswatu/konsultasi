@@ -13,7 +13,7 @@ function isValidId(id) {
 
 module.exports = {
   User: user,
+  Ticket: ticket,
   RefreshToken: refreshtoken,
-  Ticket: ticket.Model,
   isValidId,
 };

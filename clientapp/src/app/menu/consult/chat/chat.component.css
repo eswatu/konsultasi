@@ -25,6 +25,7 @@
 }
 .row-message {
   background-color: rgb(250, 242, 211);
+  height: min-content;
 }
 .row-message:hover {
   background-color: rgb(244, 232, 105);

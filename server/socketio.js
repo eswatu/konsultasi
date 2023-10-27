@@ -52,13 +52,13 @@ function ioApp(server) {
     });
     // kirim ke room
     socket.on('sendMessage', async (message) => {
-      // console.log('dari serverio', msg);
       const rmsg = await tService.addMessage(
         socket.user.id,
         message,
       );
+      rmsg.type = message.type;
       // console.log('isi msg adalah ', msg);
-      // console.log('isi rmsg adalah ', rmsg);
+      console.log('isi rmsg adalah ', rmsg);
       io.of('/Client').to(rmsg.roomId).emit('sendMessage', (rmsg));
       io.of('/Admin').to(rmsg.roomId).emit('sendMessage', (rmsg));
       console.log(`client ${socket.user.name} says ${rmsg.message} in ${rmsg.roomId}`);
