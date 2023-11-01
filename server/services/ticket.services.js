@@ -133,6 +133,7 @@ async function createMessage(au, msg) {
       company: us.company,
     },
     message: msg.message,
+    type: msg.type,
     time: new Date(),
   });
   return m;
@@ -146,7 +147,7 @@ async function addMessage(au, msg) {
   await ticket.save();
   // console.log('Message added to ticket:', ticketId);
   const n = {
-    user: m.user, message: m.message, time: m.time, roomId: msg.roomId,
+    id: m.id, user: m.user, message: m.message, time: m.time, roomId: msg.roomId,
   };
   // console.log('isi n adalah ', n);
   return n;
@@ -160,6 +161,10 @@ async function closeTicket(id, usr) {
     return { success: false, message: 'gagal, tiket tidak tertutup' };
   }
   return { success: true, message: 'sukses tutup tiket', result };
+}
+async function getMessage(ticket, mid) {
+  const m = ticket.messages.find((x) => x.id === mid);
+  return m;
 }
 /**
  * Deletes a ticket by its ID.
@@ -181,4 +186,5 @@ module.exports = {
   deleteTicket,
   addMessage,
   closeTicket,
+  getMessage,
 };

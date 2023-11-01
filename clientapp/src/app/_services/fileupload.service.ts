@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpEvent, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -7,35 +7,31 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class FileuploadService {
-  url;
+  uploadurl;
   constructor(private http: HttpClient,
     ) {
-    this.url = `${environment.apiUrl}/uploadfiles`;
+    this.uploadurl = `${environment.apiUrl}/uploadfiles`;
    }
-uploadFiles(files: FileList, id: string): Observable<number> {
-  const endpoint = `${this.url}/${id}`;
+uploadFiles(files: FileList, id: string): Observable<HttpEvent<any>> {
+  const endpoint = `${this.uploadurl}/${id}`;
   const formData: FormData = new FormData();
-
+  // console.log(files);
   Array.from(files).forEach(file => {
     formData.append('files', file, file.name);
   });
 
   const req = new HttpRequest('POST', endpoint, formData, {
     reportProgress: true,
+    responseType: 'text'
   });
 
-  return this.http.request(req).pipe(
-    map(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        const progress = Math.round((event.loaded / event.total) * 100);
-        return progress;
-      } else if (event instanceof HttpResponse) {
-        return 100;
-      }
-
-      // Add this return statement to handle other event types
-      return 0; // You can return 0 or any appropriate value here
-    })
-  );
+  return this.http.request(req);
 }
+downloadFile(ticketid: string, messageid: string): Observable<any> {
+  const url = this.uploadurl;
+  var params = new HttpParams()
+              .set('ticketid', ticketid)
+              .set('messageid', messageid);
+  return this.http.get(url, {params, responseType: 'blob'});
+  }
 }

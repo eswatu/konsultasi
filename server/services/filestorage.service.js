@@ -16,6 +16,13 @@ async function uploadFiles(req, res) {
     return res.send(`Error when trying upload many files: ${error}`);
   }
 }
+// async function downloadFile(req, res) {
+//   try {
+//     console.log(req.params.id);
+//   } catch (error) {
+    
+//   }
+// }
 
 module.exports = {
   uploadFiles,

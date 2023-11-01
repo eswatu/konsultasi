@@ -39,17 +39,17 @@
       <!-- make below element sticky -->
         <div class="inputMessage">
           <div class="file-upload">
-            <button mat-icon-button (click)="fileInput.click()" *ngIf="!filesToUpload">
-              <mat-icon>
-                attach_file
-              </mat-icon>
-            </button>
-            <input type="file" #fileInput style="display: none;" multiple
-            (change)="handleFileUpload($event.target.files)"/>
-            <button mat-raised-button color="primary" *ngIf="filesToUpload" type="button" (click)="startUpload()">
-              <mat-icon>upload_file</mat-icon>
-              Mulai Unggah
-            </button>
+              <button mat-icon-button (click)="fileInput.click()" *ngIf="!filesToUpload">
+                <mat-icon>
+                  attach_file
+                </mat-icon>
+              </button>
+                <input type="file" #fileInput style="display: none;" multiple
+                (change)="handleFileUpload($event.target.files)"/>
+              <button mat-raised-button color="primary" *ngIf="filesToUpload" type="button" (click)="startUpload()">
+                <mat-icon>upload_file</mat-icon>
+                Mulai Unggah
+              </button>
           </div>
           <div class="form-field">
             <mat-form-field class="input-form">
