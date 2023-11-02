@@ -38,9 +38,10 @@ async function uploadFilesToServer(req, res, next) {
   }
 }
 async function downloadMsgFile(req, res, next) {
+  console.log(req);
   try {
-    const ticket = await ticketService.findById(req.ticket.id);
-    const message = await ticketService.getMessage(ticket, req.message.id);
+    const ticket = await ticketService.findById(req.params.ticket.id);
+    const message = await ticketService.getMessage(ticket, req.params.message.id);
     res.send(message.message);
   } catch (error) {
     next(error);
@@ -48,5 +49,5 @@ async function downloadMsgFile(req, res, next) {
 }
 
 router.post('/:id', authorize(), uploadFiles.any(), uploadFilesToServer);
-router.get('/:id', authorize(), downloadMsgFile);
+router.get('/:ticketid/:messageid', authorize(), downloadMsgFile);
 module.exports = router;

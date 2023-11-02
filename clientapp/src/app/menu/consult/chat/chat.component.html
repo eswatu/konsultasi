@@ -16,7 +16,8 @@
               <!-- <td>{{(repli.user.username === user.username) ? 'Me' : repli.user.name}}</td>
               <td>:</td>
               <td>{{repli.message}}</td> -->
-              <chatbubble [chatReply]="repli" [isOwner]="repli.user.id === user.id"></chatbubble>
+                <chatbubble [chatReply]="repli" [isOwner]="repli.user.id === user.id"
+                [isFile]="repli.type === 'file'" [ticketId]="repli.id"></chatbubble>
             </tr>
           </ng-container>
         </tbody>

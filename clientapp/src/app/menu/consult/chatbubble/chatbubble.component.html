@@ -3,16 +3,8 @@
         <p>{{chatReply.user.name}} :</p>
     </div>
     <div class="content" [ngStyle]="{'text-align': isOwner ? 'right' : 'left'}">
-        <ng-container *ngIf="chatReply.type === 'text'">
-            <p>{{chatReply.message}}</p>
-        </ng-container>
-        <ng-container *ngIf="chatReply.type === 'file'">
-            <a href="download" >
-                <mat-icon>
-                    {{chatReply.message}}
-                </mat-icon>
-            </a>
-        </ng-container>
+        <p *ngIf="!isFile">{{chatReply.message}}</p>
+        <img *ngIf="isFile" src="{{image}}" />
     </div>
     <div *ngIf="isOwner" class="right">
         <p>: Saya</p>
