@@ -4,7 +4,8 @@
     </div>
     <div class="content" [ngStyle]="{'text-align': isOwner ? 'right' : 'left'}">
         <p *ngIf="!isFile">{{chatReply.message}}</p>
-        <img *ngIf="isFile" src="{{image}}" />
+        <!-- <img *ngIf="isFile" src="{{image}}" /> -->
+        <p *ngIf="isFile">{{chatReply.id}}</p>
     </div>
     <div *ngIf="isOwner" class="right">
         <p>: Saya</p>

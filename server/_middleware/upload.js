@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
     if (!fs.existsSync(pathFile)) {
       fs.mkdirSync(pathFile);
     }
+    req.filepath = pathFile;
     callback(null, pathFile);
   },
   // eslint-disable-next-line consistent-return
@@ -26,6 +27,7 @@ const storage = multer.diskStorage({
 
     const filename = `${Date.now()}-kts-${file.originalname}`;
     // console.log('dari upload.js ', filename);
+    req.filepath += filename;
     callback(null, filename);
   },
 });

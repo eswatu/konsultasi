@@ -1,19 +1,7 @@
-/**
- * This module provides functions for CRUD operations on a Ticket model using MongoDB.
- * The functions include getting all tickets, getting a ticket by ID, creating a new ticket,
- * updating an existing ticket, and deleting a ticket.
- *
- * @module ticketController
- */
 const db = require('../_helpers/db');
 const { paginateTicket } = require('../_helpers/paginate');
 const Message = require('../model/message.model');
-/**
- * Extracts the basic details of a ticket.
- *
- * @param {Object} ticket - The ticket object.
- * @returns {Object} The basic details of the ticket.
- */
+
 function basicDetails(ticket) {
   const {
     id, aju, nopen, pendate, name, problem, isSolved, messages,
@@ -22,53 +10,25 @@ function basicDetails(ticket) {
     id, aju, nopen, pendate, name, problem, isSolved, messages,
   };
 }
-/**
- * Retrieves a paginated list of tickets.
- *
- * @async
- * @param {Object} req - The request object containing the query parameters.
- * @returns {Promise<Array>} A promise that resolves to a paginated list of tickets.
- */
+
 async function getAllTicket(req) {
   const { query } = req;
   return paginateTicket(db.Ticket, query, req.auth);
 }
 
-/**
- * Retrieves a ticket by its ID.
- *
- * @async
- * @param {string} id - The ID of the ticket.
- * @returns {Promise<Object>} A promise that resolves to the ticket object.
- * @throws {string} If the ticket is not found.
- */
 async function getTicket(id) {
   if (!db.isValidId(id)) throw new Error('Ticket not found');
   const ticket = await db.Ticket.findById(id);
   if (!ticket) throw new Error('Ticket not found');
   return ticket;
 }
-/**
- * Retrieves a ticket by its ID.
- *
- * @async
- * @param {string} id - The ID of the ticket.
- * @returns {Promise<Object>} A promise that resolves to the basic details of the ticket.
- * @throws {string} If the ticket is not found.
- */
+
 async function getTicketById(id) {
   const ticket = await getTicket(id);
   if (!ticket) throw new Error('Ticket not found');
   return basicDetails(ticket);
 }
 
-/**
- * Updates an existing ticket.
- *
- * @async
- * @param {Object} req - The request object containing the ticket ID and updated data.
- * @throws {Error} If the update fails.
- */
 async function updateTicket(req) {
   try {
     const result = await db.Ticket.updateOne(
@@ -92,13 +52,6 @@ async function updateTicket(req) {
   }
 }
 
-/**
- * Creates a new ticket.
- *
- * @async
- * @param {Object} au - The authenticated user object.
- * @param {Object} req - The request object containing the ticket data.
- */
 async function createTicket(au, req) {
   try {
     const us = await db.User.findById(au.id);
