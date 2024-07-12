@@ -7,7 +7,6 @@ import {Request} from 'express'
 
 const bcrypt = require('bcryptjs');
 // const { paginateUser } = require('../_helpers/paginate');
-const Roles = require('../_helpers/role');
 
 dotenv.config();
 // helper functions
@@ -18,7 +17,6 @@ export async function getAllUser(req:Request) {
   return db.User.find();
   // return paginateUser(db.User, query);
 }
-
 export async function getUserById(id:string) {
   if (!isValidId(id)) throw new Error('User not found');
   const user = await db.User.findById(id);
@@ -26,23 +24,22 @@ export async function getUserById(id:string) {
   return user;
 }
 
-export async function createUser(au: User, req:Request) {
-  if (au.role !== Roles.Admin) {
-    return;
-  }
+export async function createUser(user: User) {
+  // if (au.role !== Roles.Admin) {
+  //   return;
+  // }
   try {
-    const uss = req.body.user as User;
-    const pwhash = bcrypt.hashSync(uss.password, 10);
-    const user = new db.User({
-      name: uss.name,
-      username: uss.username,
+    const pwhash = bcrypt.hashSync(user.password, 10);
+    const us = new db.User({
+      name: user.name,
+      username: user.username,
       passwordHash: pwhash,
-      role: uss.role,
-      company: uss.company,
-      contact: uss.contact,
-      isActive: uss.isActive,
+      role: user.role,
+      company: user.company,
+      contact: user.contact,
+      isActive: user.isActive,
     });
-    await user.save();
+    await us.save();
     return { success: true, message: 'Berhasil membuat User baru' };
   } catch (error) {
     console.log(error);
@@ -50,7 +47,7 @@ export async function createUser(au: User, req:Request) {
   }
 }
 
-export async function authenticate({ username, password }: authParams) {
+export async function authenticateUser({ username, password }: authParams) {
   const user = await db.User.findOne({ username }).select('+passwordHash');
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
@@ -70,7 +67,7 @@ function randomTokenString() {
   return crypto.randomBytes(40).toString('hex');
 }
 
-export async function refreshToken(user:User) {
+export async function refreshTokenUser(user:User) {
   const userCurrentToken = user.authentication!.token;
   const serverToken = await db.User.findOne({'authentication.token': user.authentication.token}).then( us => us.authentication.token);
   // generate token baru

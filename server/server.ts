@@ -12,22 +12,9 @@ const ticketController = require('./controllers/ticket.controller');
 
 
 dotenv.config()
-// certificate SSL
-// const options = {
-//   key: fs.readFileSync('./cert/key.pem'),
-//   cert: fs.readFileSync('./cert/cert.pem'),
-// };
+
 // init app
 const app = express();
-app.enable('trust proxy');
-// eslint-disable-next-line consistent-return
-// app.use((request, response, next) => {
-//   if (process.env.NODE_ENV !== 'development' && !request.secure) {
-//     return response.redirect(`https://${request.headers.host}${request.url}`);
-//   }
-
-//   next();
-// });
 
 app.use(cors({
   origin: ['http://localhost:4200',
@@ -49,21 +36,14 @@ app.use('/tickets', ticketController);
 // global error handler
 app.use(errorHandler);
 
-// create test user in db on startup if required
-// if (process.env.NODE_ENV === 'development') {
-// const createTestUser = require('_helpers/create-test-user');
-// createTestUser();
-// }
-
-
 // app.js
-const env = process.env.NODE_ENV || 'development';
 const port  = process.env.PORT;
 
 // server app, tambahi option ya
-const server = app.listen(port, () => {
-  console.log(`server is running in ${env}`);
+// const server =
+app.listen(port, () => {
+  console.log(`server is running in ${process.env.TZ}`);
   console.log(`Server listening on port ${port}`);
 });
 
-const io = ioapp(server);
+// const io = ioapp(server);

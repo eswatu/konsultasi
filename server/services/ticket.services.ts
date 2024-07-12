@@ -3,23 +3,9 @@ import { Request, Response } from "express";
 import { Message, Ticket, User } from "../model/interfaces";
 // const { paginateTicket } = require('../_helpers/paginate');
 
-export async function createTicket(au: User, tk:Ticket) {
+export async function createTicket(tk:Ticket) {
     try {
-      const us = await db.User.findById(au.id);
-      const ticket = new db.Ticket({
-        aju: tk.aju,
-        nopen: tk.nopen,
-        pendate: tk.pendate,
-        name: tk.name,
-        problem: tk.problem,
-        messages: [],
-        creator: {
-          id: us.id,
-          name: us.name,
-          company: us.company,
-          role: us.role,
-        },
-      });
+      const ticket = await new db.Ticket(tk);
       await ticket.save();
       return { success: true, message: 'sukses buat tiket', result: ticket };
     } catch (error) {
@@ -32,7 +18,7 @@ export async function getTicketById(id: string) {
     if (!ticket) throw new Error('Ticket not found');
     return ticket;
 }
-export async function getAllTicket(req:Request) {
+export async function getAllTicket(req) {
     const { query } = req.query;
     return db.Ticket.find();
     // return paginateTicket(db.Ticket, query, req.auth);
@@ -42,11 +28,8 @@ export async function updateTicket(id: string, ticket: Ticket) {
       const result = await db.Ticket.updateOne(
         { _id: ticket.id },
         {
-          aju: ticket.aju,
-          nopen: ticket.nopen,
-          pendate: ticket.pendate,
-          name: ticket.name,
-          problem: ticket.problem,
+          dokumen: ticket.dokumen,
+          problem: ticket.problem
         },
       );
       if (result.modifiedCount === 0) {
@@ -96,16 +79,16 @@ async function createMessage(au, msg) {
   return m;
 }
 // add message to ticket using ticketId
-async function addMessage(au:User, msg:Message) {
-  const m = await createMessage(au, msg);
-  const ticket = await db.Ticket.findById(msg.roomId);
-  ticket.messages.push(m);
-  // console.log('Saving ticket:', ticketId);
-  await ticket.save();
-  // console.log('Message added to ticket:', ticketId);
-  const n = {
-    user: m.user, message: m.message, time: m.time, roomId: msg.roomId,
-  };
-  // console.log('isi n adalah ', n);
-  return n;
-}
+// async function addMessage(au:User, msg:Message) {
+//   const m = await createMessage(au, msg);
+//   const ticket = await db.Ticket.findById(msg.roomId);
+//   ticket.messages.push(m);
+//   // console.log('Saving ticket:', ticketId);
+//   await ticket.save();
+//   // console.log('Message added to ticket:', ticketId);
+//   const n = {
+//     user: m.user, message: m.message, time: m.time, roomId: msg.roomId,
+//   };
+//   // console.log('isi n adalah ', n);
+//   return n;
+// }

@@ -2,12 +2,14 @@ import { ObjectId } from "mongoose";
 
 export interface Ticket {
     id: ObjectId;
-    aju: string;
-    nopen: number;
-    pendate: Date;
-    name: string;
+    dokumen: {
+      aju: string;
+      daftar: number;
+      tanggal: Date;
+      nama: string;
+    }
     problem: string;
-    messages: string;
+    messages: [Message];
     solver: User;
     creator: User;
   }
@@ -34,7 +36,7 @@ export interface authParams {
 export interface Message {
   id: ObjectId;
   user: User;
-  message: string;
-  isKey: boolean;
+  type: string;
+  value: string;
   responseTime: Date;
 }

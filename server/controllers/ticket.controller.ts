@@ -2,19 +2,10 @@ import express, { Router as router}  from "express";
 
 const Joi = require('@hapi/joi');
 import validateRequest from '../_middleware/validate-request';
-import ticketService from '../services/ticket.services';
+import {createTicket, updateTicket} from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import Role  from '../_helpers/role';
 
-/**
- * Middleware function to validate the request body for creating a ticket.
- * The schema defines the expected properties and their validation rules.
- * If the request body is invalid, an error response is sent.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
 function createSchema(req, res, next) {
   const schema = Joi.object({
     aju: Joi.string().allow(null, ''),
@@ -26,15 +17,6 @@ function createSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-/**
- * Middleware function to validate the request body for updating a ticket.
- * The schema defines the expected properties and their validation rules.
- * If the request body is invalid, an error response is sent.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
 function updateSchema(req, res, next) {
   const schema = Joi.object({
     aju: Joi.string().allow(null, ''),
@@ -48,22 +30,12 @@ function updateSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-/**
- * Route handler for creating a ticket.
- * It calls the ticketService module to create the ticket using the authenticated
- * user and the ticket data from the request body.
- * If the ticket is created successfully, a success response is sent.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
-async function createTicket(req, res, next) {
+async function createNewTicket(req, res, next) {
   try {
     if (!req.body) {
       return res.status(400).json({ message: 'Bad Request' });
     }
-    const response = await ticketService.createTicket(req.auth, req.body);
+    const response = await createTicket(req.body);
     if (response.success) {
       return res.status(201).json(
         {

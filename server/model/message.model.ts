@@ -3,8 +3,8 @@ import { userSchema } from "./user.model";
 
 export const messageSchema = new Schema({
   user: userSchema,
-  message: { type: String, required: true },
-  isKey: { type: Boolean, required: true, default: false },
+  value: { type: String, required: true, default:'' },
+  type: {type: String, required: true}
 }, {
   timestamps: {
     createdAt: 'responseTime',

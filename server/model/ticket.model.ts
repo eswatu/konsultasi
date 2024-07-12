@@ -3,10 +3,12 @@ import { userSchema } from "./user.model";
 import { messageSchema } from "./message.model";
 
 const ticketSchema = new Schema({
-  aju: { type: String, required: false },
-  nopen: { type: Number, required: false, index:true },
-  pendate: { type: Date, required: false },
-  name: { type: String, required: true },
+  dokumen: {
+    aju: { type: String, required: false },
+    daftar: { type: Number, required: false, index:true },
+    tanggal: { type: Date, required: false },
+    nama: {type: string, required: true}
+  },
   problem: { type: String, required: true },
   messages: [messageSchema],
   solver: userSchema,

@@ -1,6 +1,10 @@
 const { expressjwt: jwt } = require('express-jwt');
-const { secret } = require('../config.json');
 const db = require('../_helpers/db');
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const secret = process.env.SECRET;
 
 export default async function authorize(roles = []) {
   // roles param can be a single role string (e.g. Role.User or 'User')
