@@ -1,6 +1,4 @@
-/* eslint-disable no-case-declarations */
-// eslint-disable-next-line no-unused-vars
-function errorHandler(err, req, res, _next) {
+export async function errorHandler(err, req, res, _next) {
   switch (true) {
     case typeof err === 'string':
       // custom application error
@@ -17,4 +15,3 @@ function errorHandler(err, req, res, _next) {
       return res.status(500).json({ message: err.message });
   }
 }
-module.exports = errorHandler;

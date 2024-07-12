@@ -1,12 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-// import express app
-require('rootpath')();
-const express = require('express');
-// const httpsserver = require('https');
-// const fs = require('fs');
-const cookieParser = require('cookie-parser');
+import dotenv from "dotenv";
+import express from "express";
+import cookieParser from 'cookie-parser';
 const cors = require('cors');
+
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
 
@@ -14,6 +10,8 @@ const errorHandler = require('./_middleware/error-handler');
 const userController = require('./controllers/user.controller');
 const ticketController = require('./controllers/ticket.controller');
 
+
+dotenv.config()
 // certificate SSL
 // const options = {
 //   key: fs.readFileSync('./cert/key.pem'),
@@ -57,18 +55,10 @@ app.use(errorHandler);
 // createTestUser();
 // }
 
-// config.js
-const config = {
-  production: {
-    port: process.env.PORT || 80,
-  },
-  development: {
-    port: 4000,
-  },
-};
+
 // app.js
 const env = process.env.NODE_ENV || 'development';
-const { port } = config[env];
+const port  = process.env.PORT;
 
 // server app, tambahi option ya
 const server = app.listen(port, () => {

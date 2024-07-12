@@ -1,19 +1,10 @@
-/**
- * This code snippet provides a router for handling HTTP requests related to ticket management.
- * It defines routes for creating, retrieving, updating,
- * and deleting tickets, and includes middleware for authorization and request validation.
- *
- * @module ticketRouter
- */
+import express, { Router as router}  from "express";
 
-const express = require('express');
-
-const router = express.Router();
 const Joi = require('@hapi/joi');
-const validateRequest = require('../_middleware/validate-request');
-const ticketService = require('../services/ticket.services');
-const authorize = require('../_middleware/authorize');
-const Role = require('../_helpers/role');
+import validateRequest from '../_middleware/validate-request';
+import ticketService from '../services/ticket.services';
+import authorize from '../_middleware/authorize';
+import Role  from '../_helpers/role';
 
 /**
  * Middleware function to validate the request body for creating a ticket.

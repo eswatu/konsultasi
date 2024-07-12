@@ -1,12 +1,9 @@
-/* eslint-disable no-shadow */
-const express = require('express');
-
-const router = express.Router();
-const Joi = require('@hapi/joi');
-const validateRequest = require('../_middleware/validate-request');
-const authorize = require('../_middleware/authorize');
-const Role = require('../_helpers/role');
-const userService = require('../services/user.services');
+import express, {Router as router} from "express";
+import Joi from "@hapi/joi";
+import validateRequest from '../_middleware/validate-request';
+import authorize from '../_middleware/authorize';
+import Role from '../_helpers/role';
+import userService from '../services/user.services';
 
 function authenticateSchema(req, res, next) {
   const schema = Joi.object({
@@ -173,4 +170,4 @@ router.get('/:id/refresh-tokens', authorize(), getRefreshTokens);
 router.put('/:id', authorize(), updateUser);
 router.put('/:id/password', authorize(), updatePassword);
 
-module.exports = router;
+export default router;

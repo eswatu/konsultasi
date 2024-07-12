@@ -1,11 +1,15 @@
-/* eslint-disable no-console */
 const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = require('./config.json').secret;
 const userService = require('./services/user.services');
 const tService = require('./services/ticket.services');
+import dotenv from "dotenv";
+import { Application } from "express";
+import { AnyArray } from "mongoose";
 
-function ioApp(server) {
+dotenv.config();
+
+const JWT_SECRET = process.env.JWTSECRET
+function ioApp(server:Application) {
   const io = socketIO(server, {
     cors: {
       origin: ['http://localhost:4200',
@@ -23,7 +27,7 @@ function ioApp(server) {
     },
   });
   // register middleware untuk token
-  const authCheck = async (socket, next) => {
+  const authCheck = async (socket:any, next:any) => {
     // fetch token from handshake auth sent by FE
     const { token } = socket.handshake.auth;
     try {
@@ -41,13 +45,13 @@ function ioApp(server) {
       return next(new Error(e.message));
     }
   };
-  const globalFunction = (socket, next) => {
+  const globalFunction = (socket:any, next:any) => {
     // diskonek
     socket.on('disconnect', () => {
       console.log(`${socket.user.name} is disconnected`);
     });
     // leave room
-    socket.on('leave', (roomName) => {
+    socket.on('leave', (roomName:string) => {
       socket.leave(roomName);
       console.log(`${socket.user.name} leaves room id: ${roomName}`);
     });

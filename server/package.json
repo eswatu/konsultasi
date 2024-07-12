@@ -4,29 +4,37 @@
   "description": "Server untuk aplikasi bantuan dan layanan ke klien",
   "main": "server.js",
   "scripts": {
-    "start": "node ./server.js",
-    "start:dev": "nodemon ./server.js"
+    "start": "dotenv -e .env.prod ts-node server.ts",
+    "start:dev": "dotenv -e .env.dev ts-node server.ts"
   },
   "author": "jksdtr",
   "license": "MIT",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@types/body-parser": "^1.19.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
-    "cdk": "^2.99.1",
+    "body-parser": "^1.20.2",
+    "cdk": "^2.148.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "express-jwt": "^8.4.1",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.4.1",
+    "mongoose": "^8.5.0",
     "rootpath": "^0.1.2",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.28.1",
-    "nodemon": "^3.0.1"
+    "@types/node": "^20.14.10",
+    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3"
   }
 }

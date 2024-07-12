@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const File = require('../model/file.model');
+import { fs } from "fs";
+import {path } from 'path';
+import { File } from "../model/file.model";
 
-module.exports = {
+export default  {
   uploadFile: async (req, res) => {
     try {
       const files = req.files;
