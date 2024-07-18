@@ -1,13 +1,14 @@
 import { Schema, model } from "mongoose";
+import { ITicket } from "./interfaces";
 import { userSchema } from "./user.model";
 import { messageSchema } from "./message.model";
 
-const ticketSchema = new Schema({
+const ticketSchema = new Schema<ITicket>({
   dokumen: {
     aju: { type: String, required: false },
     daftar: { type: Number, required: false, index:true },
     tanggal: { type: Date, required: false },
-    nama: {type: string, required: true}
+    nama: {type: String, required: true}
   },
   problem: { type: String, required: true },
   messages: [messageSchema],
@@ -25,5 +26,4 @@ ticketSchema.set('toJSON', {
   },
 });
 
-const TICKET = model('Ticket', ticketSchema);
-export default TICKET;
+export default model<ITicket>('Ticket', ticketSchema);

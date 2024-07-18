@@ -1,31 +1,32 @@
-import express, { Router as router}  from "express";
-
 const Joi = require('@hapi/joi');
 import validateRequest from '../_middleware/validate-request';
-import {createTicket, updateTicket} from '../services/ticket.services';
+import {createTicket, updateTicket, getAllTicket } from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import Role  from '../_helpers/role';
 
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    aju: Joi.string().allow(null, ''),
-    nopen: Joi.number().allow(null, ''),
-    pendate: Joi.date().allow(null, ''),
-    name: Joi.string().required(),
+    dokumen: {
+      aju: Joi.string().allow(null, ''),
+      daftar: Joi.number().allow(null, ''),
+      tanggal: Joi.date().allow(null, ''),
+      nama: Joi.string().required(),
+    },
     problem: Joi.string().required(),
+    // nanti tambahkan creator
   });
   validateRequest(req, next, schema);
 }
 
 function updateSchema(req, res, next) {
   const schema = Joi.object({
-    aju: Joi.string().allow(null, ''),
-    nopen: Joi.number().allow(null, ''),
-    pendate: Joi.date().allow(null, ''),
-    name: Joi.string().allow(null, ''),
+    dokumen: {
+      aju: Joi.string().allow(null, ''),
+      daftar: Joi.number().allow(null, ''),
+      tanggal: Joi.date().allow(null, ''),
+      nama: Joi.string().required(),
+    },
     problem: Joi.string().allow(null, ''),
-    isSolved: Joi.boolean().allow(null, ''),
-    priority: Joi.boolean().allow(null, ''),
   });
   validateRequest(req, next, schema);
 }
@@ -51,18 +52,9 @@ async function createNewTicket(req, res, next) {
   }
 }
 
-/**
- * Route handler for retrieving all tickets.
- * It calls the ticketService module to get all tickets.
- * If the tickets are retrieved successfully, a success response with the ticket data is sent.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
-async function getAll(req, res, next) {
+async function getAllTickets(req, res, next) {
   try {
-    const tickets = await ticketService.getAllTicket(req);
+    const tickets = await getAllTicket(req);
     res.json(tickets);
   } catch (error) {
     next(error);
@@ -144,10 +136,11 @@ async function deleteById(req, res, next) {
   }
 }
 
-router.post('/', authorize(), createSchema, createTicket);
-router.get('/', authorize(Role.Admin), getAll);
-router.get('/:id', authorize(), getById);
-router.put('/:id', authorize(), updateSchema, updateById);
-router.delete('/:id', authorize(), deleteById);
-router.put('/close/:id', authorize(), closeTicket);
-module.exports = router;
+export default router => {
+  router.post('/', createSchema, createNewTicket);
+  router.get('/', getAllTickets);
+  router.get('/:id', authorize(), getById);
+  router.put('/:id', authorize(), updateSchema, updateById);
+  router.delete('/:id', authorize(), deleteById);
+  router.put('/close/:id', authorize(), closeTicket);
+}

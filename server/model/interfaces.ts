@@ -1,6 +1,6 @@
-import { ObjectId } from "mongoose";
+import { ObjectId, Document } from "mongoose";
 
-export interface Ticket {
+export interface ITicket extends Document {
     id: ObjectId;
     dokumen: {
       aju: string;
@@ -9,12 +9,12 @@ export interface Ticket {
       nama: string;
     }
     problem: string;
-    messages: [Message];
-    solver: User;
-    creator: User;
+    messages: [IMessage];
+    solver: IUser;
+    creator: IUser;
   }
 
-export interface User {
+export interface IUser extends Document{
     id?: ObjectId;
     name: string;
     username?: string;
@@ -33,9 +33,9 @@ export interface authParams {
   username: string;
   password: string;
 }
-export interface Message {
+export interface IMessage extends Document{
   id: ObjectId;
-  user: User;
+  user: IUser;
   type: string;
   value: string;
   responseTime: Date;

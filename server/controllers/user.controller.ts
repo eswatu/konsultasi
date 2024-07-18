@@ -1,4 +1,3 @@
-import express, {Router as router} from "express";
 import Joi from "@hapi/joi";
 import validateRequest from '../_middleware/validate-request';
 import authorize from '../_middleware/authorize';
