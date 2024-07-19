@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import USER from "../model/user.model";
-import TICKET from "../model/ticket.model";
+import { TICKET } from "../model/ticket.model";
 import MESSAGE from "../model/message.model";
 
 dotenv.config();

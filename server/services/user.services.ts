@@ -1,4 +1,4 @@
-import { authParams, User } from "../model/interfaces";
+import { authParams, IUser } from "../model/interfaces";
 import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import { db, isValidId } from "../_helpers/db";
@@ -24,7 +24,7 @@ export async function getUserById(id:string) {
   return user;
 }
 
-export async function createUser(user: User) {
+export async function createUser(user: IUser) {
   // if (au.role !== Roles.Admin) {
   //   return;
   // }
@@ -67,7 +67,7 @@ function randomTokenString() {
   return crypto.randomBytes(40).toString('hex');
 }
 
-export async function refreshTokenUser(user:User) {
+export async function refreshTokenUser(user:IUser) {
   const userCurrentToken = user.authentication!.token;
   const serverToken = await db.User.findOne({'authentication.token': user.authentication.token}).then( us => us.authentication.token);
   // generate token baru

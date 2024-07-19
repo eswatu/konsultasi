@@ -12,6 +12,7 @@ export interface ITicket extends Document {
     messages: [IMessage];
     solver: IUser;
     creator: IUser;
+    deleted: boolean;
   }
 
 export interface IUser extends Document{

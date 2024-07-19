@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 import { ITicket } from "./interfaces";
 import { userSchema } from "./user.model";
 import { messageSchema } from "./message.model";
@@ -14,6 +14,7 @@ const ticketSchema = new Schema<ITicket>({
   messages: [messageSchema],
   solver: userSchema,
   creator: userSchema,
+  deleted: {type: Boolean, required: true, default: false, select: false }
 }, {
   timestamps: true,
 });
@@ -26,4 +27,4 @@ ticketSchema.set('toJSON', {
   },
 });
 
-export default model<ITicket>('Ticket', ticketSchema);
+export const TICKET : Model<ITicket> = model<ITicket>('Ticket', ticketSchema);

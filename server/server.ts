@@ -3,6 +3,8 @@ import express from "express";
 import cookieParser from 'cookie-parser';
 const cors = require('cors');
 
+import { TicketRouter } from "./controllers/ticket.controller";
+import mongoose from "mongoose";
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
 
@@ -13,37 +15,65 @@ const ticketController = require('./controllers/ticket.controller');
 
 dotenv.config()
 
-// init app
-const app = express();
+class Server {
+  public app : express.Application;
 
-app.use(cors({
-  origin: ['http://localhost:4200',
-    'https://servicedesk-400808.et.r.appspot.com',
-    'http://10.52.44.61:4200',
-    '*'],
-  credentials: true,
-}));
+  constructor() {
+    this.app = express();
+    this.config();
+    this.routes();
+    this.mongoConnect();
+  }
+  // set rute
+  public routes(): void {
+  // set routes
+  // this.app.use('/users', userController);
+    this.app.use('/tickets', new TicketRouter().router);
+  }
+  // set konfigurasi
+  public config(): void {
+    this.app.set('port', process.env.PORT)
+    this.app.use(cors());
+    // middleware
+    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(express.json());
+    this.app.use(cookieParser());
+    // global error handler
+    this.app.use(errorHandler);
+  }
+  // konek ke mongodb
+  private mongoConnect(): void {
+    const MONGODB_URI = process.env.SERVER;
+    const connection = mongoose.connection
+    connection.on('connected', () => {
+      console.log('Mongo Connection Established')
+    })
+    connection.on('reconnected', () => {
+      console.log('Mongo Connection Reestablished')
+    })
+    connection.on('disconnected', () => {
+      console.log('Mongo Connection Disconnected')
+      console.log('Trying to reconnect to Mongo ...')
+      setTimeout(() => {
+        mongoose.connect(MONGODB_URI, {
+          socketTimeoutMS: 3000,
+          connectTimeoutMS: 3000,
+        })
+      }, 3000)
+    })
+    connection.on('close', () => {
+      console.log('Mongo Connection Closed')
+    })
+    connection.on('error', (error: Error) => {
+      console.log('Mongo Connection ERROR: ' + error)
+    })
 
-// middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(cookieParser());
+    const run = async () => {
+      await mongoose.connect(MONGODB_URI)
+    }
+    run().catch((error) => console.error(error))
+  }
 
-// set routes
-app.use('/users', userController);
-app.use('/tickets', ticketController);
-
-// global error handler
-app.use(errorHandler);
-
-// app.js
-const port  = process.env.PORT;
-
-// server app, tambahi option ya
-// const server =
-app.listen(port, () => {
-  console.log(`server is running in ${process.env.TZ}`);
-  console.log(`Server listening on port ${port}`);
-});
+}
 
 // const io = ioapp(server);

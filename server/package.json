@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "dotenv -e .env.prod ts-node server.ts",
-    "start:dev": "dotenv -e .env.dev ts-node server.ts"
+    "start:dev": "dotenv -e .env.dev nodemon server.ts"
   },
   "author": "jksdtr",
   "license": "MIT",

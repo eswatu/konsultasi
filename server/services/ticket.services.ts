@@ -4,7 +4,8 @@ import { BaseService } from "./baseService";
 // const { paginateTicket } = require('../_helpers/paginate');
 
 export class TicketService extends BaseService {
-  async create(tk:ITicket): Promise<ITicket> {
+  
+  public async create(tk:ITicket): Promise<ITicket> {
     try {
       const ticket = await new db.Ticket(tk);
       await ticket.save();
@@ -14,17 +15,15 @@ export class TicketService extends BaseService {
       console.log(error)
     } 
   }
-
-  async getbyId(id): Promise<ITicket> {
+  public async getbyId(id): Promise<ITicket> {
     const ticket:ITicket = await db.Ticket.findById({_id: id});
     if (!ticket) throw new Error('Ticket not found');
     return ticket;
   }
-
-  async update(doc): Promise<ITicket> {
+  public async update(id, doc): Promise<ITicket> {
     try {
-      const result = await db.Ticket.findOneAndUpdate(
-        { _id: doc.id },
+      const result: ITicket = await db.Ticket.findOneAndUpdate(
+        { _id: id },
         {
           dokumen: doc.dokumen,
           problem: doc.problem
@@ -36,10 +35,10 @@ export class TicketService extends BaseService {
       throw error
     }
   }
-  async delete(id): Promise<void> {
+  public async delete(id): Promise<void> {
     try {
-      await db.Ticket.deleteOne({_id : id}).then(result => {
-        if (result.deletedCount === 1) {
+      await db.Ticket.findOneAndUpdate({_id : id}, { deleted: true}).then(result => {
+        if (result !== null) {
           return {success: true, message: 'berhasil delete'}
         }
       })
@@ -47,7 +46,7 @@ export class TicketService extends BaseService {
       console.log(error)
     }
   }
-  async getAll(): Promise<ITicket[]> {
+  public async getAll(): Promise<ITicket[]> {
     // const { query } = req.query;
     try {
       return await db.Ticket.find({});
@@ -55,9 +54,8 @@ export class TicketService extends BaseService {
       throw error;
     }
   }
-  
   // ----------------------------------message------------------------------------------------
-  async createMessage(au, msg) {
+  public async createMessage(au, msg) {
     const us = await db.User.findById(au);
     const m = db.Message.create({
       user: {
