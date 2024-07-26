@@ -3,11 +3,11 @@ import validateRequest from '../_middleware/validate-request';
 import { TicketService }  from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import { Router, Request, Response, NextFunction } from "express";
-import { ITicket } from '../model';
+import { ITicket } from "../model/index";
 
 export class TicketRouter {
   public router: Router;
-  public ticketService: TicketService = new TicketService();
+  private ticketService: TicketService = new TicketService();
   
   constructor() {
     this.router = Router();
@@ -39,16 +39,18 @@ export class TicketRouter {
     });
     validateRequest(req, next, schema);
   }
+  
   async getAllTicket(req:Request, res: Response): Promise<void> {
     try {
-      const tickets: ITicket[] = await this.ticketService.getAll()
-      if (tickets.length < 1) {
-        res.sendStatus(404)
+      console.log('controller call')
+      const tickets = await this.ticketService.getAll();
+      if (tickets === null) {
+        res.sendStatus(404);
       } else {
         res.json(tickets);
       }
     } catch (error) {
-      console.log(error)
+      res.sendStatus(404).json({message: 'error get tickets'})
     }
   }
 
@@ -108,7 +110,7 @@ export class TicketRouter {
 
   routes() {
     this.router.post('/', this.createSchema, this.createTicket);
-    this.router.get('/', this.getAllTicket);
+    this.router.get('/', this.ticketService.getAll);
     this.router.get('/:id', this.getTicketById);
     this.router.put('/:id', this.updateSchema, this.updateById);
     this.router.delete('/:id', this.deleteById);

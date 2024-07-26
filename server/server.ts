@@ -8,11 +8,6 @@ import mongoose from "mongoose";
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
 
-// import routes
-const userController = require('./controllers/user.controller');
-const ticketController = require('./controllers/ticket.controller');
-
-
 dotenv.config()
 
 class Server {
@@ -39,7 +34,7 @@ class Server {
     this.app.use(express.json());
     this.app.use(cookieParser());
     // global error handler
-    this.app.use(errorHandler);
+    // this.app.use(errorHandler);
   }
   // konek ke mongodb
   private mongoConnect(): void {
@@ -73,7 +68,14 @@ class Server {
     }
     run().catch((error) => console.error(error))
   }
-
+  public start(): void {
+    this.app.listen(this.app.get('port'), () => {
+      console.log('  API is running at http://localhost:%d', this.app.get('port'))
+    })
+  }
 }
 
 // const io = ioapp(server);
+const server = new Server();
+
+server.start();

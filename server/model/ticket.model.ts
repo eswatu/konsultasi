@@ -1,7 +1,27 @@
 import { Schema, model, Model } from "mongoose";
-import { ITicket } from "./interfaces";
-import { userSchema } from "./user.model";
+import { IUser, userSchema } from "./user.model";
 import { messageSchema } from "./message.model";
+
+export interface ITicket extends Document {
+  dokumen: {
+    aju: string;
+    daftar: number;
+    tanggal: Date;
+    nama: string;
+  }
+  problem: string;
+  messages: [IMessage];
+  solver: IUser;
+  creator: IUser;
+  deleted: boolean;
+}
+
+export interface IMessage extends Document{
+  user: IUser;
+  type: string;
+  value: string;
+  responseTime: Date;
+}
 
 const ticketSchema = new Schema<ITicket>({
   dokumen: {
@@ -27,4 +47,4 @@ ticketSchema.set('toJSON', {
   },
 });
 
-export const TICKET : Model<ITicket> = model<ITicket>('Ticket', ticketSchema);
+export const Ticket : Model<ITicket> = model<ITicket>('Ticket', ticketSchema);
