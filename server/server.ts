@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
 import cookieParser from 'cookie-parser';
-import pino from 'pino';
 const cors = require('cors');
 
 import { TicketRouter } from "./controllers/ticket.controller";
@@ -28,7 +27,6 @@ class Server {
   }
   // set konfigurasi
   public config(): void {
-    this.app.use(pino);
     this.app.set('port', process.env.PORT)
     this.app.use(cors());
     // middleware

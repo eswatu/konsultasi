@@ -3,8 +3,6 @@ import { UserModel, UserDocument } from "../model/index";
 import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-import {Request, Response} from 'express'
-import { BaseService } from "./baseService";
 
 const bcrypt = require('bcryptjs');
 // const { paginateUser } = require('../_helpers/paginate');
