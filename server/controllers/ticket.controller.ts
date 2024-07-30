@@ -1,13 +1,13 @@
 const Joi = require('joi');
 import validateRequest from '../_middleware/validate-request';
-import { TicketService }  from '../services/ticket.services';
+import { createTicket, deleteTicketById, getAllTicket, getTicket, updateTicketById }  from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import { Router, Request, Response, NextFunction } from "express";
-import { ITicket } from "../model/index";
+import { TicketDocument } from "../model/index";
+import { FilterQuery } from 'mongoose';
 
 export class TicketRouter {
   public router: Router;
-  private ticketService: TicketService = new TicketService();
   
   constructor() {
     this.router = Router();
@@ -40,10 +40,10 @@ export class TicketRouter {
     validateRequest(req, next, schema);
   }
   
-  async getAllTicket(req:Request, res: Response): Promise<void> {
+  async getAllTicketDocument(req:Request, res: Response): Promise<void> {
     try {
       console.log('controller call')
-      const tickets = await this.ticketService.getAll();
+      const tickets = await getAllTicket();
       if (tickets === null) {
         res.sendStatus(404);
       } else {
@@ -54,12 +54,12 @@ export class TicketRouter {
     }
   }
 
-  async createTicket(req: Request, res:Response): Promise<void> {
+  async createTicketDocument(req: Request, res:Response): Promise<void> {
       try {
         if (!req.body) {
           res.sendStatus(400);
         }
-        const ticket : ITicket = await this.ticketService.create(req.body);
+        const ticket : TicketDocument = await createTicket(req.body);
         if (ticket === null) {
           res.status(500).json({ success: false, message: 'gagal membuat tiket' });
         }else {
@@ -69,9 +69,9 @@ export class TicketRouter {
          console.log(error);
       }
   }
-  async getTicketById(req:Request, res: Response): Promise<void> {
+  async getTicketDocumentById(req:Request<FilterQuery<TicketDocument>>, res: Response): Promise<void> {
     try {
-      const ticket = await this.ticketService.getbyId(req.params.id)
+      const ticket = await getTicket(req.params.id)
       if (ticket === null) {
         res.sendStatus(404);
       } else {
@@ -81,9 +81,9 @@ export class TicketRouter {
       console.log(error);
     }
   }
-  async updateById(req:Request, res:Response, next: NextFunction): Promise<void> {
+  async updateTicketDocumentById(req:Request, res:Response, next: NextFunction): Promise<void> {
     try {
-      const result = await this.ticketService.update(req.params.id, req.body);
+      const result = await updateTicketById(req.params.id, req.body);
       if (result === null) {
         res.status(500);
       } else {
@@ -94,9 +94,9 @@ export class TicketRouter {
     }
   }
 
-  async deleteById(req:Request, res:Response, next:NextFunction) {
+  async deleteTicketDocumentById(req:Request, res:Response, next:NextFunction) {
     try {
-      const ticket = await this.ticketService.delete(req.params.id);
+      const ticket = await deleteTicketById(req.params.id);
       if (ticket === null ) {
         res.sendStatus(500)
       } else {
@@ -109,11 +109,11 @@ export class TicketRouter {
   }
 
   routes() {
-    this.router.post('/', this.createSchema, this.createTicket);
-    this.router.get('/', this.ticketService.getAll);
-    this.router.get('/:id', this.getTicketById);
-    this.router.put('/:id', this.updateSchema, this.updateById);
-    this.router.delete('/:id', this.deleteById);
+    this.router.post('/', this.createSchema, this.createTicketDocument);
+    this.router.get('/', this.getAllTicketDocument);
+    this.router.get('/:id', this.getTicketDocumentById);
+    this.router.put('/:id', this.updateSchema, this.updateTicketDocumentById);
+    this.router.delete('/:id', this.deleteTicketDocumentById);
     // this.router.put('/close/:id', authorize(), closeTicket);
   }
 }

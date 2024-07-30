@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cookieParser from 'cookie-parser';
+import pino from 'pino';
 const cors = require('cors');
 
 import { TicketRouter } from "./controllers/ticket.controller";
@@ -27,12 +28,14 @@ class Server {
   }
   // set konfigurasi
   public config(): void {
+    this.app.use(pino);
     this.app.set('port', process.env.PORT)
     this.app.use(cors());
     // middleware
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
     this.app.use(cookieParser());
+
     // global error handler
     // this.app.use(errorHandler);
   }
@@ -64,7 +67,7 @@ class Server {
     })
 
     const run = async () => {
-      await mongoose.connect(MONGODB_URI)
+      await mongoose.connect(MONGODB_URI, {dbName: process.env.DBNAME})
     }
     run().catch((error) => console.error(error))
   }

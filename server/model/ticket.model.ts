@@ -1,8 +1,8 @@
 import { Schema, model, Model } from "mongoose";
-import { IUser, userSchema } from "./user.model";
+import { UserDocument, userSchema } from "./user.model";
 import { messageSchema } from "./message.model";
 
-export interface ITicket extends Document {
+export interface TicketDocument extends Document {
   dokumen: {
     aju: string;
     daftar: number;
@@ -11,19 +11,19 @@ export interface ITicket extends Document {
   }
   problem: string;
   messages: [IMessage];
-  solver: IUser;
-  creator: IUser;
+  solver: UserDocument;
+  creator: UserDocument;
   deleted: boolean;
 }
 
 export interface IMessage extends Document{
-  user: IUser;
+  user: UserDocument;
   type: string;
   value: string;
   responseTime: Date;
 }
 
-const ticketSchema = new Schema<ITicket>({
+const ticketSchema = new Schema<TicketDocument>({
   dokumen: {
     aju: { type: String, required: false },
     daftar: { type: Number, required: false, index:true },
@@ -47,4 +47,4 @@ ticketSchema.set('toJSON', {
   },
 });
 
-export const Ticket : Model<ITicket> = model<ITicket>('Ticket', ticketSchema);
+export const TicketModel : Model<TicketDocument> = model<TicketDocument>('Ticket', ticketSchema);
