@@ -5,6 +5,7 @@ const cors = require('cors');
 
 import { TicketRouter } from "./controllers/ticket.controller";
 import mongoose from "mongoose";
+import logger from "./_helpers/logger";
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
 
@@ -42,14 +43,14 @@ class Server {
     const MONGODB_URI = process.env.SERVER;
     const connection = mongoose.connection
     connection.on('connected', () => {
-      console.log('Mongo Connection Established')
+      logger.info('Mongo Connection Established')
     })
     connection.on('reconnected', () => {
-      console.log('Mongo Connection Reestablished')
+      logger.info('Mongo Connection Reestablished')
     })
     connection.on('disconnected', () => {
-      console.log('Mongo Connection Disconnected')
-      console.log('Trying to reconnect to Mongo ...')
+      logger.info('Mongo Connection Disconnected')
+      logger.info('Trying to reconnect to Mongo ...')
       setTimeout(() => {
         mongoose.connect(MONGODB_URI, {
           socketTimeoutMS: 3000,
@@ -58,10 +59,10 @@ class Server {
       }, 3000)
     })
     connection.on('close', () => {
-      console.log('Mongo Connection Closed')
+      logger.info('Mongo Connection Closed')
     })
     connection.on('error', (error: Error) => {
-      console.log('Mongo Connection ERROR: ' + error)
+      logger.info('Mongo Connection ERROR: ' + error)
     })
 
     const run = async () => {
@@ -71,7 +72,7 @@ class Server {
   }
   public start(): void {
     this.app.listen(this.app.get('port'), () => {
-      console.log('  API is running at http://localhost:%d', this.app.get('port'))
+      logger.info('API is running at http://localhost:%d', this.app.get('port'))
     })
   }
 }

@@ -20,12 +20,12 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dayjs": "^1.11.12",
     "express": "^4.19.2",
     "express-jwt": "^8.4.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^8.5.1",
+    "pino": "^9.3.2",
     "rootpath": "^0.1.2",
     "socket.io": "^4.7.5"
   },
@@ -34,6 +34,7 @@
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "nodemon": "^3.1.4",
+    "pino-pretty": "^11.2.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3"
