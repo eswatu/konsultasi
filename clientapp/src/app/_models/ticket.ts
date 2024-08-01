@@ -1,16 +1,19 @@
-import { ChatReply } from "./reply";
+import { MessageDocument } from "./message";
 import { User } from "./user";
 
 export class Ticket {
     id?: string;
-    aju?: string;
-    nopen?: number;
-    pendate?: Date;
-    name?: string;
-    messages: ChatReply[];
+    dokumen: {
+        aju?: string;
+        daftar?: number;
+        tanggal: Date;
+        nama: string;
+    }
+    messages: MessageDocument[];
     problem?: string;
-    isSolved?: boolean;
     creator?: User;
+    solver? : User;
     createdAt?: Date;
     updatedAt?: Date;
+    deleted: boolean;
 }

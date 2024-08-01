@@ -1,5 +1,5 @@
 import { Component, Injector, Input, ViewContainerRef, inject } from '@angular/core';
-import { ChatReply } from '@app/_models/reply';
+import { MessageDocument } from '@app/_models/message';
 
 @Component({
   selector: 'ticket-panel',
@@ -8,7 +8,7 @@ import { ChatReply } from '@app/_models/reply';
 })
 export class TicketPanelComponent {
   @Input({required:true}) ticket;
-  messages: ChatReply[];
+  messages: MessageDocument[];
   showTable = false;
   ngOnInit() {
     this.messages = this.ticket.messages;

@@ -1,11 +1,12 @@
 import { User, UserChat } from "./user";
 
-export class ChatReply {
+export class MessageDocument {
     id?: string;
     user: UserChat;
-    roomId: string;
-    message: string;
-    time: Date;
+    type: string;
+    value: string;
+    responseTime: Date;
+    isDeleted: boolean;
 }
 
 // Define the types for the emitted values

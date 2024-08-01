@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from '@app/_models';
-import { ChatReply,SolveData } from '@app/_models/reply';
+import { MessageDocument,SolveData } from '@app/_models/message';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
@@ -21,7 +21,7 @@ export class ChatComponent {
   // @Output() messageToParent = new EventEmitter<ChatReply>();
   @Output() startTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
   @Output() stopTrigger = new EventEmitter<{fromserver:boolean, room:string}>();
-  @Output() emitMessage = new EventEmitter<ChatReply>();
+  @Output() emitMessage = new EventEmitter<MessageDocument>();
   user: User;
   // untuk notify ke parent
   message = new FormControl('');
@@ -36,7 +36,7 @@ export class ChatComponent {
   }
 
   sendMessage(){
-    const cr = <ChatReply>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
+    const cr = <MessageDocument>{user:this.user, message:this.message.value, roomId:this.ticketdata.id};
     this.emitMessage.emit(cr);
     // this.cservice.sendMessage(cr);
     console.log('i send ', JSON.stringify(cr))

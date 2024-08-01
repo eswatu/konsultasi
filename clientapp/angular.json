@@ -64,15 +64,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app-konsultasi:build",
+            "buildTarget": "app-konsultasi:build",
             "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "clientapp:build:production"
+              "buildTarget": "clientapp:build:production"
             },
             "development": {
-              "browserTarget": "clientapp:build:development"
+              "buildTarget": "clientapp:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "clientapp:build"
+            "buildTarget": "clientapp:build"
           }
         },
         "test": {

@@ -89,10 +89,10 @@ export class TicketFormComponent {
         this.ticket = result;
 
         this.formInput.patchValue({
-          aju: this.ticket.aju,
-          pendate: new Date(this.ticket.pendate),
-          nopen: this.ticket.nopen,
-          name: this.ticket.name,
+          aju: this.ticket.dokumen.aju,
+          pendate: new Date(this.ticket.dokumen.tanggal),
+          nopen: this.ticket.dokumen.daftar,
+          name: this.ticket.dokumen.nama,
           problem: this.ticket.problem,
           creator: this.ticket.creator
         });
@@ -102,10 +102,10 @@ export class TicketFormComponent {
   }
 
   onSubmit(){
-    this.ticket.aju = this.formInput.get('aju').value;
-    this.ticket.pendate = new Date(this.formInput.get('pendate').value);
-    this.ticket.nopen = this.formInput.get('nopen').value;
-    this.ticket.name = this.formInput.get('name').value;
+    this.ticket.dokumen.aju = this.formInput.get('aju').value;
+    this.ticket.dokumen.tanggal = new Date(this.formInput.get('pendate').value);
+    this.ticket.dokumen.daftar = this.formInput.get('nopen').value;
+    this.ticket.dokumen.nama = this.formInput.get('name').value;
     this.ticket.problem = this.formInput.get('problem').value;
     
     if (this.idtc) {

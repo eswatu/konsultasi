@@ -9,7 +9,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from "@angular/material/table";
 
 
-const modules = [MatButtonModule,
+const modules = [
+  MatButtonModule,
   MatIconModule,
   MatFormFieldModule,
   MatInputModule,

@@ -10,17 +10,18 @@ export interface TicketDocument extends Document {
     nama: string;
   }
   problem: string;
-  messages: [IMessage];
+  messages: [MessageDocument];
   solver: UserDocument;
   creator: UserDocument;
   deleted: boolean;
 }
 
-export interface IMessage extends Document{
+export interface MessageDocument extends Document{
   user: UserDocument;
   type: string;
   value: string;
   responseTime: Date;
+  isDeleted: boolean;
 }
 
 const ticketSchema = new Schema<TicketDocument>({

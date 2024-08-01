@@ -2,7 +2,7 @@ import { Component, QueryList, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { User } from '@app/_models';
-import { ChatReply, CountdownData, SolveData } from '@app/_models/reply';
+import { MessageDocument, CountdownData, SolveData } from '@app/_models/message';
 import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService, TicketService } from '@app/_services';
 import { ChatService } from '@app/_services/chat.service';
@@ -69,7 +69,7 @@ export class MainFrameComponent {
               }
       });
       // waiting for new message
-      this.chatService.getMessage().subscribe((msg:ChatReply) => {
+      this.chatService.getMessage().subscribe((msg:MessageDocument) => {
         // console.log('saya dapat '+ msg);
         const roomticket = this.chatTabs.find(item => item.id === msg.roomId);
         roomticket.ticket.messages.push(msg);
@@ -138,7 +138,7 @@ export class MainFrameComponent {
         // emit ke server kalau mulai trigger (room)
         this.chatService.triggerCountDown(<CountdownData>{ roomId:room, trigger:true});
         // kirim pesan ke pub : memulai trigger
-        this.chatService.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:room});
+        this.chatService.sendMessage(<MessageDocument>{user:this.user, message:`${this.user.name} memulai trigger close case dan akan tertutup otomatis dalam 60 detik`, roomId:room});
         // console.log(this.user.name, 'start countdown ');
       }
     // mulai counter
@@ -172,7 +172,7 @@ stopCountDown(fromserver:boolean = false, room: string){
       // kirim pesan ke server untuk menghentikan trigger (room)
       this.chatService.triggerCountDown(<CountdownData>{roomId:room, trigger:false});
       // notif ke pub kalau trigger dihentikan
-      this.chatService.sendMessage(<ChatReply>{user:this.user, message:`${this.user.name} menghentikan trigger close case`, roomId:room});
+      this.chatService.sendMessage(<MessageDocument>{user:this.user, message:`${this.user.name} menghentikan trigger close case`, roomId:room});
     }
     chatRoom.timer.unsubscribe();
     chatRoom.triggerCountdown = false;

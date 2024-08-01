@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { ChatReply, CountdownData, SolveData } from '@app/_models/reply';
+import { MessageDocument, CountdownData, SolveData } from '@app/_models/message';
 import { User } from '@app/_models';
 import { environment }from '@environments/environment';
 
@@ -29,9 +29,9 @@ export class ChatService {
       this.socket.emit('sendMessage', message);
     }
   }
-  getMessage(): Observable<ChatReply>{
-    return new Observable<ChatReply>(observer => {
-      this.socket.on('sendMessage', (message: ChatReply) => {
+  getMessage(): Observable<MessageDocument>{
+    return new Observable<MessageDocument>(observer => {
+      this.socket.on('sendMessage', (message: MessageDocument) => {
         observer.next(message);
       }); 
     });
