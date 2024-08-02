@@ -2,7 +2,7 @@ import { Schema, model, Model } from "mongoose";
 
 export interface UserDocument extends Document{
   name: string;
-  username?: string;
+  username: string;
   password?: string;
   authentication: {
     passwordHash: string;
@@ -17,7 +17,7 @@ export interface UserDocument extends Document{
 
 export const userSchema = new Schema({
   name: { type: String, required: true },
-  username: { type: String, unique: true, required: true, select: false },
+  username: { type: String, required: true, select: false },
   authentication: {
     passwordHash: { type: String, required: true, select: false },
     salt: {type: String, required:true, select: false},

@@ -1,6 +1,6 @@
 import { Schema, model, Model } from "mongoose";
 import { UserDocument, userSchema } from "./user.model";
-import { messageSchema } from "./message.model";
+import { messageSchema, MessageDocument } from "./message.model";
 
 export interface TicketDocument extends Document {
   dokumen: {
@@ -16,14 +16,6 @@ export interface TicketDocument extends Document {
   deleted: boolean;
 }
 
-export interface MessageDocument extends Document{
-  user: UserDocument;
-  type: string;
-  value: string;
-  responseTime: Date;
-  isDeleted: boolean;
-}
-
 const ticketSchema = new Schema<TicketDocument>({
   dokumen: {
     aju: { type: String, required: false },
@@ -32,7 +24,7 @@ const ticketSchema = new Schema<TicketDocument>({
     nama: {type: String, required: true}
   },
   problem: { type: String, required: true },
-  messages: [messageSchema],
+  messages: {type: [messageSchema], default: [], required: false},
   solver: userSchema,
   creator: userSchema,
   deleted: {type: Boolean, required: true, default: false, select: false }

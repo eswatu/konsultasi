@@ -1,25 +1,21 @@
 import { Schema, model } from "mongoose";
-import { userSchema } from "./user.model";
+import { userSchema, UserDocument } from "./user.model";
 
-export const messageSchema = new Schema({
+export interface MessageDocument extends Document{
+  user: UserDocument;
+  type: string;
+  value: string;
+  responseTime: Date;
+  isDeleted: boolean;
+}
+
+export const messageSchema = new Schema<MessageDocument>({
   user: userSchema,
   value: { type: String, required: true, default:'' },
-  type: {type: String, required: true}
-}, {
+  type: {type: String, required: true, default: 'text'},
+  isDeleted: {type: Boolean, required: true, default: false}
+  }, {
   timestamps: {
     createdAt: 'responseTime',
   },
 });
-
-messageSchema.set('toJSON', {
-  virtuals: true,
-  transform(doc, ret) {
-    delete ret._id;
-  },
-});
-messageSchema.statics.addMessage = (message, callback) => {
-  message.save(callback);
-};
-
-const MESSAGE = model('Message', messageSchema);
-export default MESSAGE;

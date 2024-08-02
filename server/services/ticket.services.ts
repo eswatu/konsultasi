@@ -1,5 +1,6 @@
 import { FilterQuery, QueryOptions } from "mongoose";
 import { TicketDocument, TicketModel } from "../model/index";
+import logger from "../_helpers/logger";
 // const { paginateTicket } = require('../_helpers/paginate');
 export async function createTicket(tk:TicketDocument) {
     try {
@@ -12,24 +13,22 @@ export async function createTicket(tk:TicketDocument) {
     } 
 }
 
-export async function getTicket(
-  query: FilterQuery<TicketDocument>,
-  options: QueryOptions = { lean: true }
+export async function getTicketById(
+  FilterQuery
 ) {
-    const ticket:TicketDocument = await TicketModel.findOne(query, {}, options);
+  logger.info(FilterQuery);
+    const ticket:TicketDocument = await TicketModel.findOne(FilterQuery);
     if (!ticket) throw new Error('Ticket not found');
     return ticket;
 }
 
 export async function updateTicketById(id, doc) {
   try {
-    const result: TicketDocument = await TicketModel.findOneAndUpdate(
-      { _id: id },
-      {
-        dokumen: doc.dokumen,
-        problem: doc.problem
-      },
+    const result: TicketDocument = await TicketModel.findByIdAndUpdate(
+      id,
+      { $set: { dokumen : doc.dokumen, problem : doc.problem} }, {new: true, runValidators: true }
     );
+    // logger.info(result);
       return result;
   } catch (error) {
     // console.error(error);
@@ -39,7 +38,7 @@ export async function updateTicketById(id, doc) {
 
 export async function deleteTicketById(id){
     try {
-      await  TicketModel.findOneAndUpdate({_id : id}, { deleted: true}).then(result => {
+      await TicketModel.findOneAndUpdate({_id : id}, { deleted: true}).then(result => {
         if (result !== null) {
           return {success: true, message: 'berhasil delete'}
         }
@@ -50,7 +49,7 @@ export async function deleteTicketById(id){
 }
 
 export async function getAllTicket() {
-    console.log('service called')
+    // console.log('service called')
       return await TicketModel.find();
 }
   // ----------------------------------message------------------------------------------------

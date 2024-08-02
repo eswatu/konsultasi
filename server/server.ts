@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 const cors = require('cors');
 
 import { TicketRouter } from "./controllers/ticket.controller";
+import { UserRouter } from "./controllers/user.controller";
 import mongoose from "mongoose";
 import logger from "./_helpers/logger";
 const ioapp = require('./socketio');
@@ -23,7 +24,7 @@ class Server {
   // set rute
   public routes(): void {
   // set routes
-  // this.app.use('/users', userController);
+    this.app.use('/users', new UserRouter().router);
     this.app.use('/tickets', new TicketRouter().router);
   }
   // set konfigurasi

@@ -1,11 +1,11 @@
 const Joi = require('joi');
 import validateRequest from '../_middleware/validate-request';
-import { createTicket, deleteTicketById, getAllTicket, getTicket, updateTicketById }  from '../services/ticket.services';
+import { createTicket, deleteTicketById, getAllTicket, getTicketById, updateTicketById }  from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import { Router, Request, Response, NextFunction } from "express";
 import { TicketDocument } from "../model/index";
 import { FilterQuery } from 'mongoose';
-
+import logger from "../_helpers/logger";
 export class TicketRouter {
   public router: Router;
   
@@ -40,7 +40,7 @@ export class TicketRouter {
     validateRequest(req, next, schema);
   }
   
-  async getAllTicketDocument(req:Request, res: Response): Promise<void> {
+  async getAllTicketDocument(req:Request, res: Response) {
     try {
       console.log('controller call')
       const tickets = await getAllTicket();
@@ -54,24 +54,27 @@ export class TicketRouter {
     }
   }
 
-  async createTicketDocument(req: Request, res:Response): Promise<void> {
-      try {
-        if (!req.body) {
-          res.sendStatus(400);
-        }
-        const ticket : TicketDocument = await createTicket(req.body);
-        if (ticket === null) {
+  async createTicketDocument(req: Request, res:Response) {
+    try {
+      if (!req.body) {
+        res.sendStatus(400);
+      }
+      const ticket = await createTicket(req.body);
+      if (ticket === null) {
+          console.log(ticket);
           res.status(500).json({ success: false, message: 'gagal membuat tiket' });
-        }else {
-          res.status(201);
+        } else {
+          res.send(ticket);
         }
       } catch (error) {
          console.log(error);
       }
   }
-  async getTicketDocumentById(req:Request<FilterQuery<TicketDocument>>, res: Response): Promise<void> {
+  async getTicketDocumentById(req:Request, res: Response){
     try {
-      const ticket = await getTicket(req.params.id)
+      logger.info(req.params);
+      // logger.info(req.params);
+      const ticket = await getTicketById(req.query)
       if (ticket === null) {
         res.sendStatus(404);
       } else {
@@ -81,7 +84,7 @@ export class TicketRouter {
       console.log(error);
     }
   }
-  async updateTicketDocumentById(req:Request, res:Response, next: NextFunction): Promise<void> {
+  async updateTicketDocumentById(req:Request, res:Response, next: NextFunction) {
     try {
       const result = await updateTicketById(req.params.id, req.body);
       if (result === null) {
@@ -109,14 +112,11 @@ export class TicketRouter {
   }
 
   routes() {
-    this.router.post('/', this.createSchema, this.createTicketDocument);
     this.router.get('/', this.getAllTicketDocument);
     this.router.get('/:id', this.getTicketDocumentById);
     this.router.put('/:id', this.updateSchema, this.updateTicketDocumentById);
     this.router.delete('/:id', this.deleteTicketDocumentById);
+    this.router.post('/', this.createSchema, this.createTicketDocument);
     // this.router.put('/close/:id', authorize(), closeTicket);
   }
 }
-
-
-  

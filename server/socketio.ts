@@ -4,7 +4,6 @@ const userService = require('./services/user.services');
 const tService = require('./services/ticket.services');
 import dotenv from "dotenv";
 import { Application } from "express";
-import { AnyArray } from "mongoose";
 
 dotenv.config();
 
