@@ -3,9 +3,9 @@ import validateRequest from '../_middleware/validate-request';
 import { createTicket, deleteTicketById, getAllTicket, getTicketById, updateTicketById }  from '../services/ticket.services';
 import authorize from '../_middleware/authorize';
 import { Router, Request, Response, NextFunction } from "express";
-import { TicketDocument } from "../model/index";
-import { FilterQuery } from 'mongoose';
 import logger from "../_helpers/logger";
+
+
 export class TicketRouter {
   public router: Router;
   
@@ -13,7 +13,7 @@ export class TicketRouter {
     this.router = Router();
     this.routes();
   }
-  createSchema(req, res, next) {
+  createSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       dokumen: {
         aju: Joi.string().allow(null, ''),
@@ -27,7 +27,7 @@ export class TicketRouter {
     validateRequest(req, next, schema);
   }
   
-  updateSchema(req, res, next) {
+  updateSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       dokumen: {
         aju: Joi.string().allow(null, ''),

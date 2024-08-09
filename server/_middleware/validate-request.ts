@@ -1,4 +1,7 @@
-export default function validateRequest(req, next, schema) {
+import { Request, Response, NextFunction } from "express";
+import { Schema } from "joi";
+
+export default function validateRequest(req: Request, next: NextFunction, schema: Schema) {
   const options = {
     abortEarly: false, // include all errors
     allowUnknown: true, // ignore unknown props

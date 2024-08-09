@@ -1,4 +1,6 @@
-export async function errorHandler(err, req, res, _next) {
+import { Request, Response, NextFunction } from "express";
+
+export async function errorHandler(err: any, req: Request, res: Response, _next: NextFunction) {
   switch (true) {
     case typeof err === 'string':
       // custom application error

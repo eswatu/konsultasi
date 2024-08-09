@@ -41,7 +41,7 @@ class Server {
   }
   // konek ke mongodb
   private mongoConnect(): void {
-    const MONGODB_URI = process.env.SERVER;
+    const MONGODB_URI: string = process.env.SERVER!;
     const connection = mongoose.connection
     connection.on('connected', () => {
       logger.info('Mongo Connection Established')

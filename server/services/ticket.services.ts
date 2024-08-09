@@ -13,18 +13,18 @@ export async function createTicket(tk:TicketDocument) {
     } 
 }
 
-export async function getTicketById(
-  FilterQuery
+export async function getTicketById(q:
+  FilterQuery<TicketDocument>
 ) {
-  logger.info(FilterQuery);
-    const ticket:TicketDocument = await TicketModel.findOne(FilterQuery);
+  logger.info(q);
+    const ticket = await TicketModel.findOne(q);
     if (!ticket) throw new Error('Ticket not found');
     return ticket;
 }
 
-export async function updateTicketById(id, doc) {
+export async function updateTicketById(id: string, doc: TicketDocument) {
   try {
-    const result: TicketDocument = await TicketModel.findByIdAndUpdate(
+    const result = await TicketModel.findByIdAndUpdate(
       id,
       { $set: { dokumen : doc.dokumen, problem : doc.problem} }, {new: true, runValidators: true }
     );
@@ -36,7 +36,7 @@ export async function updateTicketById(id, doc) {
   }
 }
 
-export async function deleteTicketById(id){
+export async function deleteTicketById(id:string){
     try {
       await TicketModel.findOneAndUpdate({_id : id}, { deleted: true}).then(result => {
         if (result !== null) {

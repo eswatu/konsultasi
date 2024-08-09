@@ -27,9 +27,10 @@ export const userSchema = new Schema({
   company: { type: String, required: true },
   contact: { type: String, required: true, select: false },
   isActive: { type: Boolean, required: true, select: false },
+  deleted: {type: Boolean, required: true, default: false}
 }, {
   virtuals: {
-    getNameAndCompany: {
+    nameandcompany: {
       get() {
         return this.name + ' ' + this.company
       }
