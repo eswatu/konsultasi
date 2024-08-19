@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 import { UserModel, UserDocument } from "../model/user.model";
+import logger from "../_helpers/logger";
 
 dotenv.config();
 const bcrypt = require('bcrypt');
@@ -17,14 +18,17 @@ function generateJwtToken(auth: authParams): string {
     return jwt.sign({ sub: () => randomTokenString(), id: auth.username }, secret, { expiresIn: '2 days' });
 }
 export async function authenticateUser({ username, password }: authParams) {
-  const user = await UserModel.findOne({ username }).select('+passwordHash');
+  const user = await UserModel.findOne({ username }).select('+authentication.passwordHash');
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
   } else if (bcrypt.compareSync(password, user.authentication.passwordHash)) {
     user.authentication.token = generateJwtToken({username, password});
+    await user.save();
   }
+  const result = basicUser(user);
+  // logger.info(`dari auth service: ${JSON.stringify(result)}`);
   // return basic details and tokens
-  return user;
+  return result;
 }
 
 export async function refreshTokenUser(user: UserDocument) {
@@ -42,4 +46,10 @@ export async function refreshTokenUser(user: UserDocument) {
   }
   // return basic details and tokens
   return user;
+}
+
+function basicUser(user: UserDocument ) {
+  const { name, role, company , authentication } = user;
+  const token = authentication.token;
+  return { name, role, company , token };
 }

@@ -27,7 +27,7 @@ export const userSchema = new Schema({
   company: { type: String, required: true },
   contact: { type: String, required: true, select: false },
   isActive: { type: Boolean, required: true, select: false },
-  deleted: {type: Boolean, required: true, default: false}
+  deleted: {type: Boolean, required: true, default: false, select: false}
 }, {
   virtuals: {
     nameandcompany: {
@@ -44,6 +44,8 @@ userSchema.set('toJSON', {
   versionKey: false,
   transform(doc, ret) {
     // remove these props when object is serialized
+    delete doc.id;
+    delete ret.id;
     delete ret._id;
   },
 });

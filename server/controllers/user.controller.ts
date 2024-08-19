@@ -6,6 +6,7 @@ import { createUserDocument, updateUserDocumentById, getAllUserDocument, getUser
 import { authenticateUser, refreshTokenUser } from "../services/auth.service";
 import { NextFunction, Router, Request, Response } from "express";
 import {UserDocument } from '../model/index';
+import logger from "../_helpers/logger";
 
 export class UserRouter {
   public router:Router;
@@ -61,8 +62,9 @@ export class UserRouter {
   async authenticate(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
     authenticateUser({ username, password })
-      .then(({ ...user }) => {
-        this.setTokenCookie(res, user.authentication.token);
+      .then( ({ ...user }) =>{
+        logger.info(`dari controler: ${JSON.stringify(user)}`);
+        this.setTokenCookie(res, user.token);
         res.json(user);
       })
       .catch(next);
