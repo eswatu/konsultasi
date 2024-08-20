@@ -19,16 +19,21 @@ function generateJwtToken(auth: authParams): string {
 }
 export async function authenticateUser({ username, password }: authParams) {
   const user = await UserModel.findOne({ username }).select('+authentication.passwordHash');
+
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
-  } else if (bcrypt.compareSync(password, user.authentication.passwordHash)) {
-    user.authentication.token = generateJwtToken({username, password});
-    await user.save();
   }
+  const token = generateJwtToken({username, password});
+  user.authentication.token = token;
+  await user.save();
+  
   const result = basicUser(user);
   // logger.info(`dari auth service: ${JSON.stringify(result)}`);
   // return basic details and tokens
-  return result;
+  return {
+    ...basicUser(user),
+    token
+  };
 }
 
 export async function refreshTokenUser(user: UserDocument) {
@@ -49,7 +54,6 @@ export async function refreshTokenUser(user: UserDocument) {
 }
 
 function basicUser(user: UserDocument ) {
-  const { name, role, company , authentication } = user;
-  const token = authentication.token;
-  return { name, role, company , token };
+  const { name, role, company } = user;
+  return { name, role, company };
 }

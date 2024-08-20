@@ -5,7 +5,6 @@ import authorize from '../_middleware/authorize';
 import { createUserDocument, updateUserDocumentById, getAllUserDocument, getUserDocumentById, deleteUserDocumentById} from '../services/user.services';
 import { authenticateUser, refreshTokenUser } from "../services/auth.service";
 import { NextFunction, Router, Request, Response } from "express";
-import {UserDocument } from '../model/index';
 import logger from "../_helpers/logger";
 
 export class UserRouter {
@@ -52,25 +51,28 @@ export class UserRouter {
       res.sendStatus(201);
     }
 }
-  authenticateSchema(req: Request, res: Response, next: NextFunction) {
+// authentication
+  authenticateSchema(req: Request, next: NextFunction) {
     const schema = Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
     });
     validateRequest(req, next, schema);
   }
-  async authenticate(req: Request, res: Response, next: NextFunction) {
+
+  authenticate(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
     authenticateUser({ username, password })
-      .then( ({ ...user }) =>{
-        logger.info(`dari controler: ${JSON.stringify(user)}`);
-        this.setTokenCookie(res, user.token);
+      .then(({token, ...user}) => {
+        logger.info(`dari controler, token berisi: ${token}`);
+        // logger.info(`dari controler, user berisi: ${JSON.stringify(user)}`);
+        this.setTokenCookie(res, token);
         res.json(user);
       })
       .catch(next);
   }
   
-  async getAllUser(req:Request, res:Response) {
+async getAllUser(req:Request, res:Response) {
     getAllUserDocument()
       .then((users) => res.json(users))
   }
@@ -123,15 +125,6 @@ revokeToken(req: Request, res: Response, next: NextFunction) {
       .catch(next);
   }
   
-  // getRefreshTokens(req: Request, res: Response, next: NextFunction) {
-  //   // users can get their own refresh tokens and admins can get any user's refresh tokens
-  //   if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-  //     return res.status(401).json({ message: 'Unauthorized' });
-  //   }
-  //   return refreshTokenUser(req.params.id)
-  //     .then((tokens) => (tokens ? res.json(tokens) : res.sendStatus(404)))
-  //     .catch(next);
-  // }
   // routes
   routes() {
   this.router.post('/', this.createSchema, this.createNewUser);
