@@ -7,15 +7,9 @@ import { authenticateUser, refreshTokenUser } from "../services/auth.service";
 import { NextFunction, Router, Request, Response } from "express";
 import logger from "../_helpers/logger";
 
-export class UserRouter {
-  public router:Router;
+export const router = Router();
 
-  constructor() {
-    this.router = Router();
-    this.routes();
-  }
-
-  createSchema(req: Request, res: Response, next: NextFunction) {
+ async function createSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       name: Joi.string().required(),
       username: Joi.string().required(),
@@ -27,7 +21,7 @@ export class UserRouter {
     });
     validateRequest(req, next, schema);
   }
-  async createNewUser(req:Request, res:Response) {
+  async function createNewUser(req:Request, res:Response) {
       if (!req.body) {
         res.sendStatus(400);
       }
@@ -39,7 +33,7 @@ export class UserRouter {
         res.sendStatus(201);
       }
   }
-  async updateUserById(req:Request, res:Response) {
+  async function updateUserById(req:Request, res:Response) {
     if (!req.body) {
       res.sendStatus(400);
     }
@@ -52,7 +46,7 @@ export class UserRouter {
     }
 }
 // authentication
-  authenticateSchema(req: Request, next: NextFunction) {
+function authenticateSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
@@ -60,24 +54,24 @@ export class UserRouter {
     validateRequest(req, next, schema);
   }
 
-  authenticate(req: Request, res: Response, next: NextFunction) {
+async function authenticate(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
     authenticateUser({ username, password })
       .then(({token, ...user}) => {
-        logger.info(`dari controler, token berisi: ${token}`);
+        // logger.info(`dari controler, token berisi: ${token}`);
         // logger.info(`dari controler, user berisi: ${JSON.stringify(user)}`);
-        this.setTokenCookie(res, token);
+        setTokenCookie(res, token);
         res.json(user);
       })
       .catch(next);
   }
   
-async getAllUser(req:Request, res:Response) {
+async function getAllUser(req:Request, res:Response) {
     getAllUserDocument()
       .then((users) => res.json(users))
   }
   
-async getUserById(req:Request, res:Response) {
+async function getUserById(req:Request, res:Response) {
   const user = await getUserDocumentById(req.params.id);
   if (user === null) {
     res.sendStatus(404);
@@ -85,7 +79,7 @@ async getUserById(req:Request, res:Response) {
     res.json(user);
   }
 }
-async deleteUserById(req:Request, res:Response) {
+async function deleteUserById(req:Request, res:Response) {
   const user = await deleteUserDocumentById(req.params.id);
   if (user === null) {
     res.sendStatus(404);
@@ -94,7 +88,7 @@ async deleteUserById(req:Request, res:Response) {
   }
 }
   
- setTokenCookie(res: Response, token: string) {
+async function  setTokenCookie(res: Response, token: string) {
     // create http only cookie with refresh token that expires in 7 days
     const cookieOptions = {
       httpOnly: true,
@@ -103,14 +97,14 @@ async deleteUserById(req:Request, res:Response) {
     res.cookie('refreshToken', token, cookieOptions);
   }
 
-revokeTokenSchema(req: Request, res: Response, next: NextFunction) {
+  async function revokeTokenSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       token: Joi.string().empty(''),
     });
     validateRequest(req, next, schema);
 }
   
-revokeToken(req: Request, res: Response, next: NextFunction) {
+async function revokeToken(req: Request, res: Response, next: NextFunction) {
     // accept token from request body or cookie
     const token = req.body.token || req.cookies.refreshToken;
     const user = req.body.user;
@@ -126,19 +120,17 @@ revokeToken(req: Request, res: Response, next: NextFunction) {
   }
   
   // routes
-  routes() {
-  this.router.post('/', this.createSchema, this.createNewUser);
-  this.router.get('/', this.getAllUser);
-  this.router.get('/:id', this.getUserById);
-  this.router.put('/:id', this.updateUserById);
-  this.router.delete('/:id', this.deleteUserById);
-  this.router.post('/authenticate', this.authenticateSchema, this.authenticate);
-  this.router.post('/refresh-token', this.revokeToken);
-  this.router.post('/revoke-token',  this.revokeTokenSchema, this.revokeToken);
+ 
+  router.post('/', createSchema, createNewUser);
+  router.get('/', getAllUser);
+  router.get('/:id', authorize,  getUserById);
+  router.put('/:id', updateUserById);
+  router.delete('/:id', deleteUserById);
+  router.post('/authenticate', authenticateSchema, authenticate);
+  router.post('/refresh-token', revokeToken);
+  router.post('/revoke-token',  revokeTokenSchema, revokeToken);
   
   // this.router.get('/:id/refresh-tokens', this.getRefreshTokens);
   // router.put('/:id', updateUser);
   // router.put('/:id/password', authorize(), updatePassword);
-  }
-  
-}
+

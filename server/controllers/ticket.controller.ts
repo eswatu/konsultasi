@@ -5,15 +5,9 @@ import authorize from '../_middleware/authorize';
 import { Router, Request, Response, NextFunction } from "express";
 import logger from "../_helpers/logger";
 
+export const router = Router();
 
-export class TicketRouter {
-  public router: Router;
-  
-  constructor() {
-    this.router = Router();
-    this.routes();
-  }
-  createSchema(req: Request, res: Response, next: NextFunction) {
+function createSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       dokumen: {
         aju: Joi.string().allow(null, ''),
@@ -27,7 +21,7 @@ export class TicketRouter {
     validateRequest(req, next, schema);
   }
   
-  updateSchema(req: Request, res: Response, next: NextFunction) {
+  function updateSchema(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       dokumen: {
         aju: Joi.string().allow(null, ''),
@@ -40,7 +34,7 @@ export class TicketRouter {
     validateRequest(req, next, schema);
   }
   
-  async getAllTicketDocument(req:Request, res: Response) {
+  async function getAllTicketDocument(req:Request, res: Response) {
     try {
       console.log('controller call')
       const tickets = await getAllTicket();
@@ -54,7 +48,7 @@ export class TicketRouter {
     }
   }
 
-  async createTicketDocument(req: Request, res:Response) {
+  async function createTicketDocument(req: Request, res:Response) {
     try {
       if (!req.body) {
         res.sendStatus(400);
@@ -70,7 +64,7 @@ export class TicketRouter {
          console.log(error);
       }
   }
-  async getTicketDocumentById(req:Request, res: Response){
+  async function getTicketDocumentById(req:Request, res: Response){
     try {
       logger.info(req.params);
       // logger.info(req.params);
@@ -84,7 +78,7 @@ export class TicketRouter {
       console.log(error);
     }
   }
-  async updateTicketDocumentById(req:Request, res:Response, next: NextFunction) {
+  async function updateTicketDocumentById(req:Request, res:Response, next: NextFunction) {
     try {
       const result = await updateTicketById(req.params.id, req.body);
       if (result === null) {
@@ -97,7 +91,7 @@ export class TicketRouter {
     }
   }
 
-  async deleteTicketDocumentById(req:Request, res:Response, next:NextFunction) {
+  async function deleteTicketDocumentById(req:Request, res:Response, next:NextFunction) {
     try {
       const ticket = await deleteTicketById(req.params.id);
       if (ticket === null ) {
@@ -111,12 +105,9 @@ export class TicketRouter {
     }
   }
 
-  routes() {
-    this.router.get('/', this.getAllTicketDocument);
-    this.router.get('/:id', this.getTicketDocumentById);
-    this.router.put('/:id', this.updateSchema, this.updateTicketDocumentById);
-    this.router.delete('/:id', this.deleteTicketDocumentById);
-    this.router.post('/', this.createSchema, this.createTicketDocument);
+router.get('/', getAllTicketDocument);
+router.get('/:id', getTicketDocumentById);
+router.put('/:id', updateSchema, updateTicketDocumentById);
+router.delete('/:id', deleteTicketDocumentById);
+router.post('/', createSchema, createTicketDocument);
     // this.router.put('/close/:id', authorize(), closeTicket);
-  }
-}

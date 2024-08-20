@@ -3,8 +3,8 @@ import express from "express";
 import cookieParser from 'cookie-parser';
 const cors = require('cors');
 
-import { TicketRouter } from "./controllers/ticket.controller";
-import { UserRouter } from "./controllers/user.controller";
+import { router as ticketRouter } from "./controllers/ticket.controller";
+import { router as userRouter} from "./controllers/user.controller";
 import mongoose from "mongoose";
 import logger from "./_helpers/logger";
 const ioapp = require('./socketio');
@@ -24,8 +24,8 @@ class Server {
   // set rute
   public routes(): void {
   // set routes
-    this.app.use('/users', new UserRouter().router);
-    this.app.use('/tickets', new TicketRouter().router);
+    this.app.use('/users', userRouter);
+    this.app.use('/tickets', ticketRouter);
   }
   // set konfigurasi
   public config(): void {
