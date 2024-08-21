@@ -9,6 +9,6 @@
         "strict": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
+        "typeRoots": ["./typings", "./node_modules/@types"]
     },
-    "files": ["./types.d.ts"]
 }
