@@ -57,10 +57,10 @@ function authenticateSchema(req: Request, res: Response, next: NextFunction) {
 async function authenticate(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
     authenticateUser({ username, password })
-      .then(({token, ...user}) => {
+      .then((user) => {
         // logger.info(`dari controler, token berisi: ${token}`);
-        // logger.info(`dari controler, user berisi: ${JSON.stringify(user)}`);
-        setTokenCookie(res, token);
+        logger.info(`dari controler, user berisi: ${JSON.stringify(user)}`);
+        setTokenCookie(res, user.token);
         res.json(user);
       })
       .catch(next);

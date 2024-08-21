@@ -23,16 +23,12 @@ export async function authenticateUser({ username, password }: authParams) {
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
   }
-  const token = generateJwtToken({username, password});
-  user.authentication.token = token;
+  user.authentication.token = generateJwtToken({username, password});
   await user.save();
-  
-  const result = basicUser(user);
-  // logger.info(`dari auth service: ${JSON.stringify(result)}`);
+  // logger.info(`dari auth service: ${JSON.stringify(basicUser(user))}`);
   // return basic details and tokens
   return {
-    ...basicUser(user),
-    token
+    ...basicUser(user)
   };
 }
 
@@ -54,6 +50,6 @@ export async function refreshTokenUser(user: UserDocument) {
 }
 
 function basicUser(user: UserDocument ) {
-  const { name, role, company } = user;
-  return { name, role, company };
+  const { name, role, company, authentication : {token} } = user;
+  return { name, role, company, token };
 }

@@ -10,11 +10,6 @@
   "author": "jksdtr",
   "license": "MIT",
   "dependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/body-parser": "^1.19.5",
-    "@types/cookie-parser": "^1.4.7",
-    "@types/express": "^4.17.21",
-    "@types/passport-jwt": "^4.0.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cdk": "^2.149.0",
@@ -32,6 +27,11 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/body-parser": "^1.19.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/express-jwt": "^6.0.4",
     "@types/node": "^20.14.11",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
