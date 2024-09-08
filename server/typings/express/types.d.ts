@@ -1,20 +1,13 @@
-declare namespace Express {
-    interface Request {
-        user?: {
-            id: string;
-            name: string;
-            role: string;
-            token: string;
-        };
-        auth?: any;
+import { Request } from "express";
+
+declare module 'express-serve-static-core' {
+    interface User {
+        id: string;
+        name: string;
+        role: string;
+        company: string;
     }
-    interface Response {
-        user?: {
-            id: string;
-            name: string;
-            role: string;
-            token: string;
-        };
-        auth?: any;
+    interface Request {
+        user?: User;
     }
 }

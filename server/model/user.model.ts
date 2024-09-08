@@ -1,6 +1,7 @@
 import { Schema, model, Model } from "mongoose";
 
 export interface UserDocument extends Document{
+  id: string;
   name: string;
   username: string;
   password?: string;
@@ -42,12 +43,7 @@ export const userSchema = new Schema({
 userSchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
-  transform(doc, ret) {
-    // remove these props when object is serialized
-    delete doc.id;
-    delete ret.id;
-    delete ret._id;
-  },
+
 });
 
 export const UserModel: Model<UserDocument> = model<UserDocument>('User', userSchema)

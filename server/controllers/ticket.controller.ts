@@ -1,7 +1,7 @@
 const Joi = require('joi');
 import validateRequest from '../_middleware/validate-request';
 import { createTicket, deleteTicketById, getAllTicket, getTicketById, updateTicketById }  from '../services/ticket.services';
-import authorize from '../_middleware/authorize';
+import   authorize from '../_middleware/authorize'
 import { Router, Request, Response, NextFunction } from "express";
 import logger from "../_helpers/logger";
 
@@ -106,7 +106,7 @@ function createSchema(req: Request, res: Response, next: NextFunction) {
   }
 
 router.get('/', getAllTicketDocument);
-router.get('/:id', getTicketDocumentById);
+router.get('/:id',authorize, getTicketDocumentById);
 router.put('/:id', updateSchema, updateTicketDocumentById);
 router.delete('/:id', deleteTicketDocumentById);
 router.post('/', createSchema, createTicketDocument);

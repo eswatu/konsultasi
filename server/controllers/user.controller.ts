@@ -6,6 +6,7 @@ import { createUserDocument, updateUserDocumentById, getAllUserDocument, getUser
 import { authenticateUser, refreshTokenUser } from "../services/auth.service";
 import { NextFunction, Router, Request, Response } from "express";
 import logger from "../_helpers/logger";
+// import logger from "../_helpers/logger";
 
 export const router = Router();
 
@@ -58,15 +59,16 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
     authenticateUser({ username, password })
       .then((user) => {
-        // logger.info(`dari controler, token berisi: ${token}`);
-        logger.info(`dari controler, user berisi: ${JSON.stringify(user)}`);
+        // logger.info(`dari controler, user berisi: ${JSON.stringify(req.headers.authorization?.at)}`);
         setTokenCookie(res, user.token);
-        res.json(user);
+        res.json({id: user.id, name: user.name, role: user.role, company: user.company});
       })
       .catch(next);
   }
   
 async function getAllUser(req:Request, res:Response) {
+  logger.info(req);
+  // logger.info(req);
     getAllUserDocument()
       .then((users) => res.json(users))
   }
@@ -88,7 +90,7 @@ async function deleteUserById(req:Request, res:Response) {
   }
 }
   
-async function  setTokenCookie(res: Response, token: string) {
+async function setTokenCookie(res: Response, token: string) {
     // create http only cookie with refresh token that expires in 7 days
     const cookieOptions = {
       httpOnly: true,
@@ -122,11 +124,11 @@ async function revokeToken(req: Request, res: Response, next: NextFunction) {
   // routes
  
   router.post('/', createSchema, createNewUser);
-  router.get('/', getAllUser);
-  router.get('/:id', authorize,  getUserById);
+  router.get('/',authorize(), getAllUser);
+  router.get('/:id', authorize(),  getUserById);
   router.put('/:id', updateUserById);
   router.delete('/:id', deleteUserById);
-  router.post('/authenticate', authenticateSchema, authenticate);
+  router.post('/authenticate',authenticateSchema, authenticate);
   router.post('/refresh-token', revokeToken);
   router.post('/revoke-token',  revokeTokenSchema, revokeToken);
   

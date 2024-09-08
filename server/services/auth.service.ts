@@ -15,10 +15,10 @@ function randomTokenString() {
 }
 function generateJwtToken(auth: authParams): string {
   // create a jwt token containing the user id that expires in 15 minutes
-    return jwt.sign({ sub: () => randomTokenString(), id: auth.username }, secret, { expiresIn: '2 days' });
+    return jwt.sign({ sub: () => randomTokenString(), id: auth.username }, secret, { expiresIn: '18000s' });
 }
 export async function authenticateUser({ username, password }: authParams) {
-  const user = await UserModel.findOne({ username }).select('+authentication.passwordHash');
+  const user = await UserModel.findOne({ username }).select(['+authentication.passwordHash']);
 
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
@@ -50,6 +50,6 @@ export async function refreshTokenUser(user: UserDocument) {
 }
 
 function basicUser(user: UserDocument ) {
-  const { name, role, company, authentication : {token} } = user;
-  return { name, role, company, token };
+  const { id, name, role, company, authentication : {token} } = user;
+  return { id, name, role, company, token };
 }

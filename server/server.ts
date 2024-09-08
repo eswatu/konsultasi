@@ -7,6 +7,7 @@ import { router as ticketRouter } from "./controllers/ticket.controller";
 import { router as userRouter} from "./controllers/user.controller";
 import mongoose from "mongoose";
 import logger from "./_helpers/logger";
+import { expressjwt } from "express-jwt";
 const ioapp = require('./socketio');
 const errorHandler = require('./_middleware/error-handler');
 
@@ -29,6 +30,7 @@ class Server {
   }
   // set konfigurasi
   public config(): void {
+    // this.app.use(expressjwt({ secret: process.env.secret, algorithms: ['HS256']}))
     this.app.set('port', process.env.PORT)
     this.app.use(cors());
     // middleware
