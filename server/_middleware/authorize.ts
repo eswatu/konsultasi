@@ -26,11 +26,13 @@ export default function authorize(roles: Array<string> = []) {
       jwt.verify(tokenString, secret, (err, decodedToken: any) => {
         if (err) {
           console.log(err);
-          return res.status(401).json({message: "error decode token"});
+          return res.status(401).json({message: "error decode token or expired token"});
         }
+        if (!decodedToken.role) return res.status(401).json({message: "no role found"})
         const userRole: string = decodedToken.role;
         if (roles.length && !roles.includes(userRole)) return res.status(401).json({message: "insufficient role access"})
-        req.user = decodedToken;
+          // logger.info(decodedToken);
+        req.headers.user = decodedToken;
         next();
         // if (!decodedToken?.role) return res.status(403).json({message: "Missing role"})
       })

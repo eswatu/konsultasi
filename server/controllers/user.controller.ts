@@ -67,7 +67,6 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
   }
   
 async function getAllUser(req:Request, res:Response) {
-  logger.info(req);
   // logger.info(req);
     getAllUserDocument()
       .then((users) => res.json(users))
@@ -75,6 +74,7 @@ async function getAllUser(req:Request, res:Response) {
   
 async function getUserById(req:Request, res:Response) {
   const user = await getUserDocumentById(req.params.id);
+  logger.info(req.headers)
   if (user === null) {
     res.sendStatus(404);
   } else {
@@ -124,8 +124,8 @@ async function revokeToken(req: Request, res: Response, next: NextFunction) {
   // routes
  
   router.post('/', createSchema, createNewUser);
-  router.get('/',authorize(), getAllUser);
-  router.get('/:id', authorize(),  getUserById);
+  router.get('/',authorize(["myrole"]), getAllUser);
+  router.get('/:id',authorize(["myrole", "theirrole"]),  getUserById);
   router.put('/:id', updateUserById);
   router.delete('/:id', deleteUserById);
   router.post('/authenticate',authenticateSchema, authenticate);

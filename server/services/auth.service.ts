@@ -15,7 +15,7 @@ function randomTokenString() {
 }
 function generateJwtToken(auth: authParams): string {
   // create a jwt token containing the user id that expires in 15 minutes
-    return jwt.sign({ sub: () => randomTokenString(), id: auth.username }, secret, { expiresIn: '18000s' });
+    return jwt.sign({ sub: () => randomTokenString(), username: auth.username, role:auth.role }, secret, { expiresIn: '18000s' });
 }
 export async function authenticateUser({ username, password }: authParams) {
   const user = await UserModel.findOne({ username }).select(['+authentication.passwordHash']);
@@ -23,7 +23,8 @@ export async function authenticateUser({ username, password }: authParams) {
   if (!user || !bcrypt.compareSync(password, user.authentication.passwordHash)) {
     throw new Error('Username or password is incorrect');
   }
-  user.authentication.token = generateJwtToken({username, password});
+  const role = user.role;
+  user.authentication.token = generateJwtToken({username, password,role});
   await user.save();
   // logger.info(`dari auth service: ${JSON.stringify(basicUser(user))}`);
   // return basic details and tokens
