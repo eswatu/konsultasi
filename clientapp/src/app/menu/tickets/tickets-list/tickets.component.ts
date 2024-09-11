@@ -6,7 +6,7 @@ import { Ticket } from '@app/_models/ticket';
 import { AuthenticationService } from '@app/_services';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
-import { TicketFormComponent } from '../../consult/ticket-form/ticket-form.component';
+// import { TicketFormComponent } from '../../consult/ticket-form/ticket-form.component';
 import { User } from '@app/_models';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -109,7 +109,7 @@ async getData(event: PageEvent) {
       this.paginator.pageSize = result.pageSize;
       this.tickets = result.data;
       //debug tickets
-      //console.log(result.data);
+      // console.log(result);
     });
   } catch (error) {
     console.error(error);
@@ -126,8 +126,8 @@ async getData(event: PageEvent) {
     if (tc) {
       dialogConfig.data = { id: tc.id };
     }
-    const dialogRef = this.dialog.open(TicketFormComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(() => this.loadData(null));
+    // const dialogRef = this.dialog.open(TicketFormComponent, dialogConfig);
+    // dialogRef.afterClosed().subscribe(() => this.loadData(null));
   }
   onFilterTextChanged(filterText: string) {
     if (this.filterTextChanged.observers.length === 0) {

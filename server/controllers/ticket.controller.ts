@@ -4,6 +4,7 @@ import { createTicket, deleteTicketById, getAllTicket, getTicketById, updateTick
 import   authorize from '../_middleware/authorize'
 import { Router, Request, Response, NextFunction } from "express";
 import logger from "../_helpers/logger";
+import { TicketDocument } from '../model';
 
 export const router = Router();
 
@@ -41,7 +42,7 @@ function createSchema(req: Request, res: Response, next: NextFunction) {
       if (tickets === null) {
         res.sendStatus(404);
       } else {
-        res.json(tickets);
+        res.json({data: tickets});
       }
     } catch (error) {
       res.sendStatus(404).json({message: 'error get tickets'})

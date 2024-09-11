@@ -32,7 +32,7 @@ class Server {
   public config(): void {
     // this.app.use(expressjwt({ secret: process.env.secret, algorithms: ['HS256']}))
     this.app.set('port', process.env.PORT)
-    this.app.use(cors());
+    this.app.use(cors({credentials: true, origin:true}));
     // middleware
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());

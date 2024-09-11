@@ -1,8 +1,8 @@
 <mat-accordion >
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-          <mat-panel-title>{{ticket.name}}</mat-panel-title>
-          <mat-panel-description>{{ticket.creator.company + '-' + ticket.creator.name + ' ----------> ' + ( ticket.createdAt | date: 'dd-MM-yyyy HH:mm:ss')}}</mat-panel-description>
+          <mat-panel-title>{{ticket.dokumen.nama}}</mat-panel-title>
+          <!-- <mat-panel-description>{{ticket.creator.company + '-' + ticket.creator.name + ' ---- ' + ( ticket.createdAt | date: 'dd-MM-yyyy HH:mm:ss')}}</mat-panel-description> -->
       </mat-expansion-panel-header>
       <div class="container">
         <div id="item-a">
@@ -26,7 +26,7 @@
                       <th> message </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody *ngIf="ticket.messages">
                   <tr *ngFor="let item of messages">
                     <td>{{item.time | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td>{{item.user.name}}</td>
@@ -39,4 +39,4 @@
         </div>
       </div>
     </mat-expansion-panel>
-  </mat-accordion>
+</mat-accordion>
