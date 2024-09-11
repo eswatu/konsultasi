@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { AuthenticationService } from '@app/_services';
+import { User } from '@app/_models';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -12,6 +13,7 @@ export class JwtInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add auth header with jwt if user is logged in and request is to the api url
         const user = this.authenticationService.userValue;
+        // console.log("dari interceptor: ", user);
         const isLoggedIn = user?.jwtToken;
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (isLoggedIn && isApiUrl) {
@@ -19,6 +21,7 @@ export class JwtInterceptor implements HttpInterceptor {
                 setHeaders: { Authorization: `Bearer ${user.jwtToken}` },
                 withCredentials: true
             });
+            console.log("interceptor, ", isLoggedIn);
         }
         return next.handle(request);
     }

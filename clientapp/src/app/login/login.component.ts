@@ -19,7 +19,11 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService
-  ) {}
+  ) {
+    if(this.authenticationService.userValue) {
+      this.router.navigate(['/'])
+    }
+  }
 
   ngOnInit() {
     this.createLoginForm();
@@ -48,15 +52,16 @@ export class LoginComponent implements OnInit {
     const password = this.f.password.value;
 
     this.authenticationService.login(username, password)
-      .subscribe(
-        () => {
+      .subscribe({
+        next:  () => {
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigate([returnUrl]);
         },
-        error => {
+        error: (error) => {
           this.error = error;
           this.loading = false;
         }
+      }
       );
   }
 

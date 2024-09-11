@@ -37,7 +37,6 @@ function createSchema(req: Request, res: Response, next: NextFunction) {
   
   async function getAllTicketDocument(req:Request, res: Response) {
     try {
-      console.log('controller call')
       const tickets = await getAllTicket();
       if (tickets === null) {
         res.sendStatus(404);
@@ -106,7 +105,7 @@ function createSchema(req: Request, res: Response, next: NextFunction) {
     }
   }
 
-router.get('/', getAllTicketDocument);
+router.get('/', authorize(), getAllTicketDocument);
 router.get('/:id',authorize, getTicketDocumentById);
 router.put('/:id', updateSchema, updateTicketDocumentById);
 router.delete('/:id', deleteTicketDocumentById);

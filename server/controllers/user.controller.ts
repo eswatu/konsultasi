@@ -61,7 +61,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
       .then((user) => {
         // logger.info(`dari controler, user berisi: ${JSON.stringify(req.headers.authorization?.at)}`);
         setTokenCookie(res, user.token);
-        res.json({id: user.id, name: user.name, role: user.role, company: user.company});
+        res.json({id: user.id, name: user.name, role: user.role, company: user.company, jwtToken: user.token});
       })
       .catch(next);
   }

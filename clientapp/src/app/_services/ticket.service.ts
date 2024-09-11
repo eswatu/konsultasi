@@ -5,9 +5,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { User } from '@app/_models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root' })
 export class TicketService extends BaseService{
   url: string;
   getsData<ApiResult>(

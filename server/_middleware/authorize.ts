@@ -19,6 +19,7 @@ export default function authorize(roles: Array<string> = []) {
     // expressjwt({ secret: secret, algorithms: ['HS256']}),    // authorize based on user role
   return async (req:Request, res:Response, next: NextFunction)  => {
     try {
+      // logger.info("isi dari request ", JSON.stringify(req));
       const token = (req.headers["Authorization"] || req.headers["authorization"]) as string;
       if (!token) return res.status(403).json({message: "no token provided"});
       if (token.indexOf("Bearer") !== 0) return res.status(401).json({message: "invalid token format"});

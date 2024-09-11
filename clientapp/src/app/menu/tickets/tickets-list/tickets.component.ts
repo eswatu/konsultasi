@@ -56,15 +56,17 @@ export class TicketsComponent implements OnInit {
     private authService: AuthenticationService,
     public dialog: MatDialog,
     
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     this.authService.user.subscribe((u) => {
       this.user = u;
       if (this.user) {
         this.authUserId = u.id;
       }
     });
+  }
+
+  ngOnInit(): void {
+
     this.loadData(null);
   }
 
