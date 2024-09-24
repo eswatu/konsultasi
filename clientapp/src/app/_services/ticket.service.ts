@@ -77,7 +77,7 @@ return this.http.get<ApiResult>(this.url, {params});
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
       super(http, baseUrl);
-      this.url = `${environment.apiUrl}/tickets/`;
+      this.url = `${environment.apiUrl}tickets/`;
      }
 
 }

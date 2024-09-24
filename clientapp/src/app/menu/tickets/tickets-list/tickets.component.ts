@@ -66,7 +66,6 @@ export class TicketsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.loadData(null);
   }
 

@@ -108,7 +108,7 @@ async function setTokenCookie(res: Response, token: string) {
   
 async function revokeToken(req: Request, res: Response, next: NextFunction) {
     // accept token from request body or cookie
-    const token = req.body.token || req.cookies.refreshToken;
+    const token = req.headers.authorization || req.cookies.refreshToken;
     const user = req.body.user;
     if (!token) return res.status(400).json({ message: 'Token is required' });
   
@@ -120,6 +120,12 @@ async function revokeToken(req: Request, res: Response, next: NextFunction) {
       .then(() => res.json({ message: 'Token revoked' }))
       .catch(next);
   }
+  async function refreshtoken(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization!.split(' ')[1];
+    return refreshTokenUser(token)
+    .then(() => res.json({ message: 'Token refreshed' }))
+    .catch(next);
+  }
   
   // routes
  
@@ -129,7 +135,7 @@ async function revokeToken(req: Request, res: Response, next: NextFunction) {
   router.put('/:id', updateUserById);
   router.delete('/:id', deleteUserById);
   router.post('/authenticate',authenticateSchema, authenticate);
-  router.post('/refresh-token', revokeToken);
+  router.post('/refresh-token', authorize(), refreshtoken);
   router.post('/revoke-token',  revokeTokenSchema, revokeToken);
   
   // this.router.get('/:id/refresh-tokens', this.getRefreshTokens);

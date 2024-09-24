@@ -4,7 +4,8 @@ import { TicketTabComponent } from './ticket-tab/ticket-tab.component';
 
 
 const routes: Routes = [
-  {path: '', component: TicketTabComponent},
+  {path: '', redirectTo: '/ticketmenu', pathMatch: 'full'},
+  {path: 'ticketmenu', component: TicketTabComponent},
 ]
 
 @NgModule({

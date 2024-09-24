@@ -18,9 +18,11 @@ export class AppComponent {
       get isAuthorized() {
         return this.user;
       }
-      
+      refresh() {
+        this.authenticationService.refreshToken();
+      }
       logout() {
-        this.authenticationService.logout();
+        this.authenticationService.refreshToken();
       }
       ngOnInit() {
         // this.loading = true;

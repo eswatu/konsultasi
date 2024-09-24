@@ -8,7 +8,6 @@ import { environment } from '@environments/environment';
 import { User } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
-
 export class AuthenticationService {
     private userSubject: BehaviorSubject<User | null>;
     public user: Observable<User | null>;
@@ -26,7 +25,7 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string) {
-        return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password }, { withCredentials: false })
+        return this.http.post<any>(`${environment.apiUrl}users/authenticate`, { username, password }, { withCredentials: false })
             .pipe(map(user => {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
@@ -35,9 +34,18 @@ export class AuthenticationService {
                 return user;
             }));
     }
-
+    refreshToken() {
+        const currentuser = this.userValue;
+        return this.http.post<any>(`${environment.apiUrl}users/refresh-token`, {currentuser}, { withCredentials: true })
+            .pipe(map((user) => {
+                this.userSubject.next(user);
+                this.startRefreshTokenTimer();
+                return user;
+            }));
+    }
+    
     logout() {
-        this.http.post<any>(`${environment.apiUrl}/users/revoke-token`, {}, { withCredentials: true }).subscribe();
+        this.http.post<any>(`${environment.apiUrl}users/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         // remove user from local storage to log user out
         localStorage.removeItem('user');
@@ -45,14 +53,7 @@ export class AuthenticationService {
         this.router.navigate(['/login']);
     }
 
-    refreshToken() {
-        return this.http.post<any>(`${environment.apiUrl}/users/refresh-token`, {}, { withCredentials: true })
-            .pipe(map((user) => {
-                this.userSubject.next(user);
-                this.startRefreshTokenTimer();
-                return user;
-            }));
-    }
+
 
     // helper methods
 
@@ -64,9 +65,9 @@ export class AuthenticationService {
         const jwtToken = JSON.parse(atob(jwtBase64));
 
         // set a timeout to refresh the token a minute before it expires
-        const expires = new Date(jwtToken.exp * 1000);
-        const timeout = expires.getTime() - Date.now() - (60 * 1000);
-        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+        const expires = new Date(jwtToken.exp * 1);
+        const timeout = expires.getTime() - Date.now() - (6 * 1000);
+        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 600);
     }
 
     private stopRefreshTokenTimer() {

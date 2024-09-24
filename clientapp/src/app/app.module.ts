@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { environment } from '@environments/environment';
+import { InMemoryAuthService } from './auth/auth.inmemory.service';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { environment } from '@environments/environment';
         {provide: "BASE_URL", useValue: environment.apiUrl},
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: AuthenticationService, useClass: InMemoryAuthService},
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
     bootstrap: [AppComponent]

@@ -15,7 +15,7 @@ function randomTokenString() {
 }
 function generateJwtToken(auth: authParams): string {
   // create a jwt token containing the user id that expires in 15 minutes
-    return jwt.sign({ sub: () => randomTokenString(), username: auth.username, role:auth.role }, secret, { expiresIn: '18000s' });
+    return jwt.sign({ sub: () => randomTokenString(), username: auth.username, role:auth.role }, secret, { expiresIn: '180s' });
 }
 export async function authenticateUser({ username, password }: authParams) {
   const user = await UserModel.findOne({ username }).select(['+authentication.passwordHash']);
@@ -33,17 +33,12 @@ export async function authenticateUser({ username, password }: authParams) {
   };
 }
 
-export async function refreshTokenUser(user: UserDocument) {
-  const userCurrentToken = user.authentication!.token;
-  const serverToken = await UserModel.findOne({'authentication.token': user.authentication.token})
-                    .then(srv => {
-                        if (srv) {
-                            return srv.authentication.token;
-                        }
-                    });             
+export async function refreshTokenUser(token: string) {
+
+  const user = await UserModel.findOne({'authentication.token': token});             
   // generate token baru
-  if (userCurrentToken === serverToken) {
-    const auths = { username: user.username, password: user.password } as authParams;
+  if (user) {
+    const auths = { username: user.username, password: user.password, role: user.role } as authParams;
     user.authentication.token = generateJwtToken(auths);
   }
   // return basic details and tokens
