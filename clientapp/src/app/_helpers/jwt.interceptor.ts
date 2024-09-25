@@ -1,28 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { AuthenticationService } from '@app/_services';
+import { AuthService } from '@app/auth/auth.service';
 import { User } from '@app/_models';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private authenticationService: AuthenticationService) { }
+    constructor(private authenticationService: AuthService, private router: Router) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add auth header with jwt if user is logged in and request is to the api url
-        const user = this.authenticationService.userValue;
-        console.log("dari interceptor: valid login");
-        const isLoggedIn = user?.jwtToken;
-        const isApiUrl = request.url.startsWith(environment.apiUrl);
-        if (isLoggedIn && isApiUrl) {
-            request = request.clone({
-                setHeaders: { Authorization: `Bearer ${user.jwtToken}` },
-                withCredentials: true
-            });
-            // console.log("interceptor, ", isLoggedIn);
-        }
-        return next.handle(request);
+        const jwt = this.authenticationService.getToken()
+        const authRequest = request.clone({setHeaders: {authorization: `Bearer ${jwt}`}})
+        return next.handle(authRequest).pipe(
+            catchError((err, caught) => {
+                if (err.status === 401) {
+                    this.router.navigate(['/login', {queryParams: {redirectUrl: this.router.routerState.snapshot.url}}])
+                }
+                return throwError(err)
+            })
+        );
     }
 }

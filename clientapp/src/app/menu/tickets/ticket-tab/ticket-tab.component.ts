@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthenticationService } from '@app/_services';
+import { AuthService } from '@app/auth/auth.service';
 
 @Component({
   selector: 'ticket-tab',
@@ -12,8 +12,8 @@ export class TicketTabComponent implements OnInit, OnDestroy {
   user: any;
   private userSubscription: Subscription;
 
-  constructor(private authSrvc: AuthenticationService) {
-    this.userSubscription = this.authSrvc.user.subscribe(x => {
+  constructor(private authSrvc: AuthService) {
+    this.userSubscription = this.authSrvc.currentUser$.subscribe(x => {
       this.user = x;
       if (this.user) {
         this.isUser = this.user.role === 'Client';

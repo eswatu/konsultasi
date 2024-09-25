@@ -3,10 +3,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Ticket } from '@app/_models/ticket';
-import { AuthenticationService } from '@app/_services';
+import { AuthService } from '@app/auth/auth.service';
 import { ApiResult } from '@app/_services/base.service';
 import { TicketService } from '@app/_services/ticket.service';
-// import { TicketFormComponent } from '../../consult/ticket-form/ticket-form.component';
 import { User } from '@app/_models';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -53,14 +52,14 @@ export class TicketsComponent implements OnInit {
 
   constructor(
     private tService: TicketService,
-    private authService: AuthenticationService,
+    private authService: AuthService,
     public dialog: MatDialog,
     
   ) {
-    this.authService.user.subscribe((u) => {
-      this.user = u;
+    this.authService.currentUser$.subscribe((u) => {
+      this.user = u as User;
       if (this.user) {
-        this.authUserId = u.id;
+        this.authUserId = u._id;
       }
     });
   }

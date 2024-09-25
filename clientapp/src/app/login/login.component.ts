@@ -1,32 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { AuthenticationService } from '@app/_services';
+import { AuthService } from '@app/auth/auth.service';
+import { SubSink } from 'subsink';
+import { catchError, combineLatest, filter, tap } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   loading = false;
   submitted = false;
   error = '';
-
+  redirectUrl: string
+  private subs = new SubSink()
   constructor(
+    private authService: AuthService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
+    route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService
+    // private authenticationService: AuthenticationService
   ) {
-    if(this.authenticationService.userValue) {
-      this.router.navigate(['/'])
-    }
+    this.subs.sink = route.paramMap.subscribe((params) => (this.redirectUrl = params.get('redirectUrl') ?? ''))
   }
 
   ngOnInit() {
+    this.authService.logout
     this.createLoginForm();
+  }
+  ngOnDestroy(): void {
+    this.subs.unsubscribe()
   }
 
   createLoginForm() {
@@ -36,33 +42,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  get f() {
-    return this.loginForm.controls;
-  }
+  async login(submittedForm: FormGroup) {
+    this.authService
+    .login(submittedForm.value.username, submittedForm.value.password)
+    .pipe(catchError((err) => (this.error = err)))
 
-  onSubmit() {
-    this.submitted = true;
-
-    if (this.loginForm.invalid) {
-      return;
-    }
-
-    this.loading = true;
-    const username = this.f.username.value;
-    const password = this.f.password.value;
-
-    this.authenticationService.login(username, password)
-      .subscribe({
-        next:  () => {
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigate([returnUrl]);
-        },
-        error: (error) => {
-          this.error = error;
-          this.loading = false;
-        }
-      }
-      );
+    this.subs.sink = combineLatest([
+      this.authService.authStatus$,
+      this.authService.currentUser$
+    ])
+    .pipe(
+      filter(([authStatus, user]) => authStatus.isAuthenticated && user?._id !== ''),
+      tap(([authStatus, user]) => {
+        this.router.navigate([this.redirectUrl])
+      })
+    )
+    .subscribe()
   }
 
   getErrorMessage(controlName: string): string {
@@ -74,5 +69,8 @@ export class LoginComponent implements OnInit {
     } else {
       return '';
     }
+  }
+  get f() {
+    return this.loginForm.controls;
   }
 }

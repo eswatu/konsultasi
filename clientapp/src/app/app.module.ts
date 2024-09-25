@@ -1,13 +1,13 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
-import { AuthenticationService } from './_services';
+import { AuthService } from './auth/auth.service';
 import { HomeComponent } from './menu/home/home.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,9 +34,8 @@ import { InMemoryAuthService } from './auth/auth.inmemory.service';
             withInterceptorsFromDi()
         ),
         {provide: "BASE_URL", useValue: environment.apiUrl},
-        { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: AuthenticationService, useClass: InMemoryAuthService},
+        { provide: AuthService, useClass: InMemoryAuthService},
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
     bootstrap: [AppComponent]

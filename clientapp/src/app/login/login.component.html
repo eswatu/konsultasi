@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="item" style="width: 250px;">
+  <form [formGroup]="loginForm" (ngSubmit)="login(loginForm)" class="item" style="width: 250px;">
     <div class="form-group">
       <mat-form-field appearance="fill" style="width: 250px;">
         <mat-label for="username">Username</mat-label>

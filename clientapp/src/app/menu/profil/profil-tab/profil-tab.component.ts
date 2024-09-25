@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '@app/_services';
-
+import { AuthService } from '@app/auth/auth.service';
+import { Role } from "@app/auth/auth.enum";
 @Component({
   selector: 'app-profil-tab',
   templateUrl: './profil-tab.component.html',
@@ -8,9 +8,9 @@ import { AuthenticationService } from '@app/_services';
 })
 export class ProfilTabComponent {
   isAdmin: boolean;
-  constructor(private authService: AuthenticationService) {
-    this.authService.user.subscribe(x => {
-      this.isAdmin = x.role === 'Admin';
+  constructor(private authService: AuthService) {
+    this.authService.currentUser$.subscribe(x => {
+      this.isAdmin = x.role === Role.Admin;
     })
   }
 

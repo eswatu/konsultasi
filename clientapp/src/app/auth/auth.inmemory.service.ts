@@ -7,9 +7,10 @@ import { Role } from "./auth.enum";
 
 @Injectable()
 export class InMemoryAuthService extends AuthService {
+  
   private defaultUser = User.Build({
     _id: '5da01751da27cc462d265913',
-    username: 'duluca@gmail.com',
+    username: 'pegawai',
     name: 'Doguhan Uluca' ,
     role: Role.Admin,
     company: 'your company',

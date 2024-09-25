@@ -1,4 +1,8 @@
-<mat-toolbar color="primary" *ngIf="isAuthorized" style="display: grid; grid-template-columns: 15% 15% 15% 40% 15%;" >
+<mat-toolbar color="primary" *ngIf="{
+  status: authService.authStatus$ | async,
+  user: authService.currentUser$ | async
+  } as auth;"
+  style="display: grid; grid-template-columns: 15% 15% 15% 40% 15%;" >
   <div class="dashboard">
     <button mat-button [routerLink]="['chats']">
       <mat-icon>group_work</mat-icon>
@@ -12,22 +16,14 @@
     </button>
   </div>
   <div class="profile">
-    <button  mat-button (click)="refresh()">
+    <button  mat-button >
       <mat-icon>badge</mat-icon>
       Profil
     </button>
   </div>
-  <div class="loginid">
-    <button mat-button>
-      Andal Login Sebagai {{user!.name}}
-    </button>
-  </div>
-  <div class="logout">
-    <button mat-button (click)="logout()">
+    <button mat-button (click)="logout()" *ngIf="auth?.status?.isAuthenticated">
       <mat-icon>logout</mat-icon>
       LogOut
     </button>
-  </div>
-
 </mat-toolbar>
 <router-outlet></router-outlet>
