@@ -1,29 +1,20 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '@app/auth/auth.service';
+import { Role } from '@app/auth/auth.enum';
 
 @Component({
   selector: 'ticket-tab',
   templateUrl: './ticket-tab.component.html',
   styleUrls: ['./ticket-tab.component.css']
 })
-export class TicketTabComponent implements OnInit, OnDestroy {
-  isUser: boolean;
-  user: any;
-  private userSubscription: Subscription;
-
-  constructor(private authSrvc: AuthService) {
-    this.userSubscription = this.authSrvc.currentUser$.subscribe(x => {
-      this.user = x;
-      if (this.user) {
-        this.isUser = this.user.role === 'Client';
-      }
-    });
+export class TicketTabComponent implements OnInit {
+  isAdmin : boolean
+  constructor(private authService: AuthService) {
+    this.isAdmin = authService.currentUser$.value.role === Role.Admin ? true : false
   }
 
   ngOnInit(): void {
   }
-  ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-  }
+
 }

@@ -7,8 +7,7 @@ const routes: Routes = [
   {path: '',
     component: TicketTabComponent,
     children: [
-          { path: '', redirectTo: '/tickets/home', pathMatch: 'full'},
-          { path: 'home', component: TicketTabComponent }
+          { path: 'tickets', component: TicketTabComponent }
   ]},
 ]
 

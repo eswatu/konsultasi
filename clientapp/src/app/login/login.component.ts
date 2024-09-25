@@ -11,12 +11,12 @@ import { catchError, combineLatest, filter, tap } from 'rxjs';
   styleUrls: ['login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private subs = new SubSink()
   loginForm!: FormGroup;
   loading = false;
   submitted = false;
   error = '';
   redirectUrl: string
-  private subs = new SubSink()
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -24,7 +24,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     // private authenticationService: AuthenticationService
   ) {
-    this.subs.sink = route.paramMap.subscribe((params) => (this.redirectUrl = params.get('redirectUrl') ?? ''))
+    this.subs.sink = route.paramMap.subscribe(
+      (params) => (this.redirectUrl = params.get('redirectUrl') ?? '')
+    )
   }
 
   ngOnInit() {

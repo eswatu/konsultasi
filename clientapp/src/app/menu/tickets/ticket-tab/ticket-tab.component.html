@@ -9,7 +9,7 @@
             <tickets-component [isSolved]="true"></tickets-component>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Laporan" *ngIf="!isUser">
+    <mat-tab label="Laporan" *ngIf="!isAdmin">
         <ng-template matTabContent>
             <tickets-component [isSolved]="null"></tickets-component>
         </ng-template>

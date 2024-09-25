@@ -3,25 +3,25 @@
   user: authService.currentUser$ | async
   } as auth;"
   style="display: grid; grid-template-columns: 15% 15% 15% 40% 15%;" >
-  <div class="dashboard">
-    <button mat-button [routerLink]="['chats']">
-      <mat-icon>group_work</mat-icon>
-      Chat
-    </button>
-  </div>
-  <div class="ticket">
-    <button  mat-button routerLink="tickets">
-      <mat-icon>work</mat-icon>
-      Tiket
-    </button>
-  </div>
-  <div class="profile">
-    <button  mat-button >
-      <mat-icon>badge</mat-icon>
-      Profil
-    </button>
-  </div>
-    <button mat-button (click)="logout()" *ngIf="auth?.status?.isAuthenticated">
+    <div class="dashboard"  *ngIf="auth.status.isAuthenticated">
+      <button mat-button [routerLink]="['chats']">
+        <mat-icon>group_work</mat-icon>
+        Chat
+      </button>
+    </div>
+    <div class="ticket"  *ngIf="auth.status.isAuthenticated">
+      <button  mat-button routerLink="tickets">
+        <mat-icon>work</mat-icon>
+        Tiket
+      </button>
+    </div>
+    <div class="profile"  *ngIf="auth.status.isAuthenticated">
+      <button  mat-button >
+        <mat-icon>badge</mat-icon>
+        Profil
+      </button>
+    </div>
+    <button mat-button (click)="logout()" *ngIf="auth.status.isAuthenticated">
       <mat-icon>logout</mat-icon>
       LogOut
     </button>
