@@ -1,6 +1,12 @@
 {
   "name": "clientapp",
   "version": "1.0.0",
+  "config": {
+    "imageRepo": "eswatu/konsultasi-clientapp",
+    "imageName": "konsultasiapp",
+    "imagePort": "0000",
+    "internalContainerPort": "4300"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
